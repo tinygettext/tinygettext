@@ -1,0 +1,12 @@
+ * tinygettext has gained a lot of external dependecies in SuperTux:
+   SDL, physfs, log.h, config.h, ... these have to be trimmed down or
+   #ifdef'ed with HAVE_LIBSDL, HAVE_PHYSFS
+
+ * comments should be parsed, since they contain meta information such
+   as fuzzy markers
+
+ * a hashmap instead of std::map might be a good idea
+
+ * support for .gmo files would be cool
+
+# EOF #
