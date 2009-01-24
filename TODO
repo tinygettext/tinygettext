@@ -9,4 +9,10 @@
 
  * support for .gmo files would be cool
 
+ * a recomment procedure do handle words with multiple meanings should
+   be documented:
+
+   Exit -> Ausgang
+   Exit -> Beenden
+
 # EOF #
