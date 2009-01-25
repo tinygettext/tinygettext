@@ -92,7 +92,6 @@ DictionaryManager::parseLocaleAliases()
 Dictionary&
 DictionaryManager::get_dictionary(const std::string& spec)
 {
-
   //log_debug << "Dictionary for language \"" << spec << "\" requested" << std::endl;
 
   std::string lang = get_language_from_spec(spec);
@@ -240,7 +239,6 @@ DictionaryManager::get_language_from_spec(const std::string& spec)
   }
 
   return lang;
-
 }
 
 void

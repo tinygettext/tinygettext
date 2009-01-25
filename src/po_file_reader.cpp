@@ -19,6 +19,8 @@
 
 #include "po_file_reader.hpp"
 
+#define log_warning std::cout
+
 namespace tinygettext {
 
 POFileReader::POFileReader(std::istream& in_, Dictionary& dict_)

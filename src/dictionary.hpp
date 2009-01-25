@@ -40,6 +40,7 @@ private:
 
   LanguageDef language;
   std::string charset;
+
 public:
   /** */
   Dictionary(const LanguageDef& language_, const std::string& charset = "");

@@ -26,8 +26,6 @@
 #include "tinygettext.hpp"
 #include "dictionary.hpp"
 
-#define log_warning std::cout
-
 namespace tinygettext {
 
 class POFileReader
