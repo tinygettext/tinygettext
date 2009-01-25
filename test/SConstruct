@@ -1,0 +1,8 @@
+# -*- python -*- 
+
+env = Environment(CXXFLAGS=['-O2', '-Wall', '-Werror', '-I../src'], LIBS=['physfs'])
+env.ParseConfig('sdl-config --cflags --libs')
+env.Program('tinygettext-test', ['test.cpp', '../src/libtinygettext.a'])
+
+
+# EOF #

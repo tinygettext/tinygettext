@@ -1,0 +1,15 @@
+# -*- python -*-
+
+env = Environment()
+env.ParseConfig("sdl-config --cflags --libs")
+env.StaticLibrary('tinygettext', 
+                  ['tinygettext.cpp',
+                   'language_def.cpp',
+                   'po_file_reader.cpp',
+                   'dictionary.cpp',
+                   'dictionary_manager.cpp',
+                   'physfs_stream.cpp',
+                   'findlocale.cpp'])
+
+
+# EOF #
