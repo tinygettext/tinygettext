@@ -1,5 +1,16 @@
+dictionary.hpp (synced with Pingus)
+dictionary_manager.hpp (PhysFS vs opendir())
+language_def.hpp (synced with Pingus)
+po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
+tinygettext.hpp (iconv vs convert)
+
+* get rid of TRANSLATION_DEBUG
+
+* ICONV_CONST is unneeded when SDL is used
+
 * DictionaryManager::DictionaryManager() is highly unportable, seems
-  best to kick it out and let the application deal with the problem
+  best to kick it out and let the application deal with the problem.
+  This also means kicking out findlocale.cpp and findlocale.hpp
 
 * DictionaryManager manager parses /usr/share/locale/locale.alias,
   which doesn't sound like a good idea and would likely be better if

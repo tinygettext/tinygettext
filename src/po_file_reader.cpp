@@ -28,11 +28,15 @@ POFileReader::POFileReader(std::istream& in_, Dictionary& dict_)
 {
   line_num = 0;
   nextChar();
-  if(c == 0xef) { // skip UTF-8 intro that some text editors produce
-    nextChar();
-    nextChar();
-    nextChar();
-  }
+
+  // skip UTF-8 intro that some text editors produce
+  // see http://en.wikipedia.org/wiki/Byte-order_mark
+  if(c == 0xef)
+    { 
+      nextChar();
+      nextChar();
+      nextChar();
+    }
   tokenize_po();
 }
 
