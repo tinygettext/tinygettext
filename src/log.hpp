@@ -40,8 +40,8 @@ public:
   std::ostream& get() { return out; }
 };
 
-#define log_warning Log().get()
-#define log_info    if(0) Log().get()
+#define log_warning if (!log_callback); else Log().get()
+#define log_info    if (!log_callback); else if(0) Log().get()
 
 } // namespace tinygettext
 
