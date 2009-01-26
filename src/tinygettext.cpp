@@ -67,7 +67,7 @@ std::string convert(const std::string& text,
 #define SDL_free free
 #endif
 #ifndef ICONV_CONST
-#define ICONV_CONST const
+#define ICONV_CONST
 #endif
 
   iconv_t cd = SDL_iconv_open(to_charset.c_str(), from_charset.c_str());
