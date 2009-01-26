@@ -8,7 +8,7 @@ env.StaticLibrary('tinygettext',
                    'po_file_reader.cpp',
                    'dictionary.cpp',
                    'dictionary_manager.cpp',
-                   'physfs_stream.cpp',
+                   'directory.cpp',
                    'findlocale.cpp'])
 
 

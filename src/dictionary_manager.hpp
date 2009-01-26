@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 
+#include "directory.hpp"
 #include "dictionary.hpp"
 
 namespace tinygettext {
@@ -45,6 +46,8 @@ private:
   std::string language;
   Dictionary* current_dict;
   Dictionary empty_dict;
+
+  DirOp dir_op;
 
 public:
   DictionaryManager();
@@ -74,6 +77,8 @@ public:
 
   /** Return a set of the available languages in their country code */
   std::set<std::string> get_languages();
+
+  void set_dir_op(const DirOp& dir_op);
 
 private:
   void parseLocaleAliases();

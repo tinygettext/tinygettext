@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <fstream>
 #include <algorithm>
-#include "physfs_stream.hpp"
 
 #include "tinygettext.hpp"
 #include "dictionary_manager.hpp"
@@ -33,6 +32,10 @@ namespace tinygettext {
 DictionaryManager::DictionaryManager()
   : current_dict(&empty_dict)
 {
+  dir_op.enumerate_files = unix_enumerate_files;
+  dir_op.free_list       = unix_free_list;
+  dir_op.open_file       = unix_open_file;
+
   parseLocaleAliases();
   // Environment variable SUPERTUX_LANG overrides language settings.
   const char* lang = getenv( "SUPERTUX_LANG" );
@@ -114,7 +117,7 @@ DictionaryManager::get_dictionary(const std::string& spec)
 
       for (SearchPath::iterator p = search_path.begin(); p != search_path.end(); ++p)
         {
-          char** files = PHYSFS_enumerateFiles(p->c_str());
+          char** files = dir_op.enumerate_files(p->c_str());
           if(!files)
             {
               log_warning << "Error: enumerateFiles() failed on " << *p << std::endl;
@@ -122,7 +125,7 @@ DictionaryManager::get_dictionary(const std::string& spec)
           else
             {
               for(const char* const* filename = files;
-                      *filename != 0; filename++) {
+                  *filename != 0; filename++) {
 
                 // check if filename matches requested language
                 std::string fname = std::string(*filename);
@@ -143,17 +146,21 @@ DictionaryManager::get_dictionary(const std::string& spec)
                 if (load_from_file != "") {
                   //log_debug << "Loading dictionary for language \"" << lang << "\" from \"" << filename << "\"" << std::endl;
                   std::string pofile = *p + "/" + *filename;
-                  try {
-                      IFileStream in(pofile);
-                      read_po_file(dict, in);
-                  } catch(std::exception& e) {
+                  try 
+                    {
+                      std::istream* in = dir_op.open_file(pofile.c_str());
+                      read_po_file(dict, *in);
+                      delete in;
+                    } 
+                  catch(std::exception& e) 
+                    {
                       log_warning << "Error: Failure file opening: " << pofile << std::endl;
                       log_warning << e.what() << "" << std::endl;
-                  }
+                    }
                 }
 
               }
-              PHYSFS_freeList(files);
+              dir_op.free_list(files);
             }
         }
 
@@ -168,7 +175,7 @@ DictionaryManager::get_languages()
 
   for (SearchPath::iterator p = search_path.begin(); p != search_path.end(); ++p)
     {
-      char** files = PHYSFS_enumerateFiles(p->c_str());
+      char** files = dir_op.enumerate_files(p->c_str());
       if (!files)
         {
           log_warning << "Error: opendir() failed on " << *p << std::endl;
@@ -176,12 +183,12 @@ DictionaryManager::get_languages()
       else
         {
           for(const char* const* file = files; *file != 0; file++) {
-              if(has_suffix(*file, ".po")) {
-                  std::string filename = *file;
-                  languages.insert(filename.substr(0, filename.length()-3));
-              }
+            if(has_suffix(*file, ".po")) {
+              std::string filename = *file;
+              languages.insert(filename.substr(0, filename.length()-3));
+            }
           }
-          PHYSFS_freeList(files);
+          dir_op.free_list(files);
         }
     }
   return languages;
@@ -212,7 +219,7 @@ DictionaryManager::set_charset(const std::string& charset)
 
 void
 DictionaryManager::set_language_alias(const std::string& alias,
-    const std::string& language)
+                                      const std::string& language)
 {
   language_aliases.insert(std::make_pair(alias, language));
 }
@@ -247,6 +254,12 @@ DictionaryManager::add_directory(const std::string& pathname)
   dictionaries.clear(); // adding directories invalidates cache
   search_path.push_back(pathname);
   set_language(language);
+}
+
+void
+DictionaryManager::set_dir_op(const DirOp& dir_op_)
+{
+  dir_op = dir_op_;
 }
 
 } // namespace tinygettext
