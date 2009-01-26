@@ -1,3 +1,13 @@
+* Customizability:
+
+  - enumerate_files (list files in directory)
+  - free_list (cleanup, of the above)
+  - open file (return std::istream)
+  - iconv (???)
+  - logging (???)  
+
+* seperate logging
+
 * translate() char* vs string needs cleanup
 
 * document how to use tinygettext and make it work like gettext

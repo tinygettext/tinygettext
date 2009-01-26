@@ -23,9 +23,8 @@
 
 #include "tinygettext.hpp"
 #include "dictionary_manager.hpp"
+#include "log.hpp"
 #include "findlocale.hpp"
-
-#define log_warning std::cout
 
 namespace tinygettext {
 

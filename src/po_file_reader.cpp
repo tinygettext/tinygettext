@@ -18,11 +18,8 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "po_file_reader.hpp"
-
+#include "log.hpp"
 #include "dictionary.hpp"
-
-#define log_warning std::cerr
-#define log_info if(0) std::cerr
 
 namespace tinygettext {
 

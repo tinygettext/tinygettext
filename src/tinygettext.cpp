@@ -33,11 +33,10 @@
 
 #include "po_file_reader.hpp"
 #include "tinygettext.hpp"
+#include "log.hpp"
 #include "findlocale.hpp"
 
 //#define TRANSLATION_DEBUG
-
-#define log_warning std::cout
 
 namespace tinygettext {
 
