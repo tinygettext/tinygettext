@@ -72,8 +72,8 @@ std::string convert(const std::string& text,
 
   iconv_t cd = SDL_iconv_open(to_charset.c_str(), from_charset.c_str());
 
-  size_t in_len = text.length();
-  size_t out_len = text.length()*3; // FIXME: cross fingers that this is enough
+  size_t in_len  = text.length();
+  size_t out_len = text.length()*4;
 
   char*  out_orig = new char[out_len];
   char*  in_orig  = new char[in_len+1];
