@@ -1,3 +1,5 @@
+* document how to use tinygettext and make it work like gettext
+
 dictionary.hpp (synced with Pingus)
 dictionary_manager.hpp (PhysFS vs opendir())
 language_def.hpp (synced with Pingus)

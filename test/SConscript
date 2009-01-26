@@ -3,6 +3,6 @@
 env = Environment(CXXFLAGS=['-O2', '-Wall', '-Werror'], CPPPATH=['../src'], LIBS=['physfs'])
 env.ParseConfig('sdl-config --cflags --libs')
 env.Program('tinygettext-test', ['test.cpp', '../src/libtinygettext.a'])
-
+env.Program('tinygettext', ['tinygettext.cpp', '../src/libtinygettext.a'])
 
 # EOF #
