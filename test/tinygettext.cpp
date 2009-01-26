@@ -24,9 +24,6 @@
 #include <iostream>
 #include <stdexcept>
 #include "tinygettext/tinygettext.hpp"
-#include "tinygettext/dictionary.hpp"
-#include "tinygettext/dictionary_manager.hpp"
-#include "tinygettext/po_file_reader.hpp"
 
 using namespace tinygettext;
 

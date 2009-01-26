@@ -22,10 +22,13 @@
 
 #include <fstream>
 #include "po_file_reader.hpp"
+#include "dictionary.hpp"
+#include "directory.hpp"
+#include "language_def.hpp"
+#include "tinygettext.hpp"
+#include "dictionary_manager.hpp"
 
 namespace tinygettext {
-
-class Dictionary;
 
 /** Convert \a which is in \a from_charset to \a to_charset and return it */
 std::string convert(const std::string& text,

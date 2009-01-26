@@ -20,8 +20,7 @@
 #include <string.h>
 #include <fstream>
 #include <iostream>
-#include "tinygettext.hpp"
-#include "dictionary.hpp"
+#include "tinygettext/tinygettext.hpp"
 
 #define _(String) gettext(String)
 #define gettext(String) dict.translate(String)
