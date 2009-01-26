@@ -1,3 +1,5 @@
+* SUPERTUX_LANG needs to be handled in SuperTux
+
 * Customizability:
 
   - enumerate_files (list files in directory)

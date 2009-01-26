@@ -37,12 +37,6 @@ DictionaryManager::DictionaryManager()
 
   init_language_aliases();
 
-  // Environment variable SUPERTUX_LANG overrides language settings.
-  const char* lang = getenv( "SUPERTUX_LANG" );
-  if( lang ){
-    set_language( lang );
-    return;
-  }
   // use findlocale to setup language
   FL_Locale *locale;
   FL_FindLocale( &locale, FL_MESSAGES );
