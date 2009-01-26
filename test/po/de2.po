@@ -13,8 +13,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "...walking..."
-msgstr "...laufen..."
+msgid "umlaut"
+msgstr "ÄÖÜäöüß€¢"
 
 msgid "You got %d error.\n"
 msgid_plural "You got %d error.\n"
