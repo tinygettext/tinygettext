@@ -1,3 +1,5 @@
+* translate() char* vs string needs cleanup
+
 * document how to use tinygettext and make it work like gettext
 
 dictionary.hpp (synced with Pingus)

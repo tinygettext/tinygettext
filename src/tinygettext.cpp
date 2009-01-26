@@ -25,8 +25,10 @@
 #include <errno.h>
 #include <string.h>
 
-#ifndef SDL_iconv_string
-#include <iconv.h>
+#ifdef HAVE_SDL
+#  include "SDL.h"
+#else
+#  include <iconv.h>
 #endif
 
 #include "po_file_reader.hpp"
@@ -43,7 +45,7 @@ std::string convert(const std::string& text,
                     const std::string& from_charset,
                     const std::string& to_charset)
 {
-#ifdef SDL_iconv_string
+#ifdef HAVE_SDL
   if (from_charset == to_charset)
     return text;
 
@@ -60,17 +62,12 @@ std::string convert(const std::string& text,
   SDL_free(out);
   return ret;
 #else
-#ifndef SDL_iconv_open
-#define SDL_iconv_open iconv_open
-#define SDL_iconv iconv
-#define SDL_iconv_close iconv_close
-#define SDL_free free
-#endif
+
 #ifndef ICONV_CONST
-#define ICONV_CONST
+#  define ICONV_CONST
 #endif
 
-  iconv_t cd = SDL_iconv_open(to_charset.c_str(), from_charset.c_str());
+  iconv_t cd = iconv_open(to_charset.c_str(), from_charset.c_str());
 
   size_t in_len  = text.length();
   size_t out_len = text.length()*4;
@@ -84,7 +81,7 @@ std::string convert(const std::string& text,
   size_t out_len_temp = out_len; // iconv is counting down the bytes it has
                                  // written from this...
 
-  size_t retval = SDL_iconv(cd, &in, &in_len, &out, &out_len_temp);
+  size_t retval = iconv(cd, &in, &in_len, &out, &out_len_temp);
   out_len -= out_len_temp; // see above
   if (retval == (size_t) -1)
     {
@@ -92,7 +89,7 @@ std::string convert(const std::string& text,
       log_warning << "Error: conversion from " << from_charset << " to " << to_charset << " went wrong: " << retval << std::endl;
       return "";
     }
-  SDL_iconv_close(cd);
+  iconv_close(cd);
 
   std::string ret(out_orig, out_len);
   delete[] out_orig;
