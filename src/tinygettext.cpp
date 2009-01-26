@@ -101,22 +101,6 @@ std::string convert(const std::string& text,
 #endif
 }
 
-bool has_suffix(const std::string& lhs, const std::string rhs)
-{
-  if (lhs.length() < rhs.length())
-    return false;
-  else
-    return lhs.compare(lhs.length() - rhs.length(), rhs.length(), rhs) == 0;
-}
-
-bool has_prefix(const std::string& lhs, const std::string rhs)
-{
-  if (lhs.length() < rhs.length())
-    return false;
-  else
-    return lhs.compare(0, rhs.length(), rhs) == 0;
-}
-
 } // namespace tinygettext
 
 /* EOF */

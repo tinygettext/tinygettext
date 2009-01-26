@@ -26,6 +26,14 @@
 
 namespace tinygettext {
 
+static bool has_prefix(const std::string& lhs, const std::string rhs)
+{
+  if (lhs.length() < rhs.length())
+    return false;
+  else
+    return lhs.compare(0, rhs.length(), rhs) == 0;
+}
+
 POFileReader::POFileReader(std::istream& in_, Dictionary& dict_)
   : in(in_), dict(dict_)
 {

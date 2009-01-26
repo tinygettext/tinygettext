@@ -32,9 +32,6 @@ std::string convert(const std::string& text,
                     const std::string& from_charset,
                     const std::string& to_charset);
 
-bool has_suffix(const std::string& lhs, const std::string rhs);
-bool has_prefix(const std::string& lhs, const std::string rhs);
-
 } // namespace tinygettext
 
 #endif

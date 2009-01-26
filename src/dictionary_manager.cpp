@@ -168,6 +168,14 @@ DictionaryManager::get_dictionary(const std::string& spec)
     }
 }
 
+static bool has_suffix(const std::string& lhs, const std::string rhs)
+{
+  if (lhs.length() < rhs.length())
+    return false;
+  else
+    return lhs.compare(lhs.length() - rhs.length(), rhs.length(), rhs) == 0;
+}
+
 std::set<std::string>
 DictionaryManager::get_languages()
 {
