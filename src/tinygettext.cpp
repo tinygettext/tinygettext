@@ -25,10 +25,8 @@
 #include <errno.h>
 #include <string.h>
 
-#include <SDL.h>
-
-#ifndef GP2X
-#include <SDL_stdinc.h>
+#ifndef SDL_iconv_string
+#include <iconv.h>
 #endif
 
 #include "po_file_reader.hpp"
@@ -45,7 +43,7 @@ std::string convert(const std::string& text,
                     const std::string& from_charset,
                     const std::string& to_charset)
 {
-#ifndef GP2X
+#ifdef SDL_iconv_string
   if (from_charset == to_charset)
     return text;
 
@@ -62,10 +60,16 @@ std::string convert(const std::string& text,
   SDL_free(out);
   return ret;
 #else
-  log_warning << "FIXME: Char conversion not supported on GP2X!" << std::endl;
-  return "";
+#ifndef SDL_iconv_open
+#define SDL_iconv_open iconv_open
+#define SDL_iconv iconv
+#define SDL_iconv_close iconv_close
+#define SDL_free free
 #endif
-#if 0
+#ifndef ICONV_CONST
+#define ICONV_CONST const
+#endif
+
   iconv_t cd = SDL_iconv_open(to_charset.c_str(), from_charset.c_str());
 
   size_t in_len = text.length();

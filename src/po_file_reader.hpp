@@ -24,9 +24,10 @@
 #include <vector>
 #include <string.h>
 #include "tinygettext.hpp"
-#include "dictionary.hpp"
 
 namespace tinygettext {
+
+class Dictionary;
 
 class POFileReader
 {

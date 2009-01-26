@@ -21,7 +21,6 @@
 #define HEADER_TINYGETTEXT_H
 
 #include <fstream>
-#include "dictionary_manager.hpp"
 
 namespace tinygettext {
 

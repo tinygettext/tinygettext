@@ -19,7 +19,10 @@
 
 #include "po_file_reader.hpp"
 
-#define log_warning std::cout
+#include "dictionary.hpp"
+
+#define log_warning std::cerr
+#define log_info if(0) std::cerr
 
 namespace tinygettext {
 
@@ -137,7 +140,8 @@ POFileReader::expectContent(std::string type, std::string wanted) {
 void
 POFileReader::tokenize_po()
 {
-  while((token = nextToken()) != TOKEN_EOF)
+  token = nextToken();
+  while(token != TOKEN_EOF)
     {
       if(!expectToken("'msgid' keyword", TOKEN_KEYWORD) || !expectContent("'msgid' keyword", "msgid")) break;
 
@@ -168,6 +172,7 @@ POFileReader::tokenize_po()
               msgstr_plural[num] = convert(tokenContent, from_charset, to_charset);
             }
           dict.add_translation(current_msgid, current_msgid_plural, msgstr_plural);
+          // No nextToken()
         }
       else
         {
@@ -185,6 +190,7 @@ POFileReader::tokenize_po()
             {
               dict.add_translation(current_msgid, convert(tokenContent, from_charset, to_charset));
             }
+          token = nextToken();
         }
     }
 }
@@ -206,6 +212,7 @@ POFileReader::nextToken()
         tokenContent += c;
         nextChar();
       } while(c != EOF && !isspace(static_cast<unsigned char>(c)));
+      log_info << "Read Keyword: " << tokenContent << std::endl;
       return TOKEN_KEYWORD;
     }
   else
@@ -236,8 +243,10 @@ POFileReader::nextToken()
         }
 
         // Read more strings?
+        nextChar();
         skipSpace();
       } while(c == '"');
+      log_info << "Read String: " << tokenContent << std::endl;
       return TOKEN_CONTENT;
     }
 }

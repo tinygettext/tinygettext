@@ -21,6 +21,7 @@
 #include <fstream>
 #include <iostream>
 #include "tinygettext.hpp"
+#include "dictionary.hpp"
 
 #define _(String) gettext(String)
 #define gettext(String) dict.translate(String)
@@ -32,6 +33,7 @@ int main(int argc, char** argv)
     {
       std::cout << "Usage: tinygettext [FILE] ..." << std::endl;
     }
+/*
   else if (argc == 2 && strcmp(argv[1], "--mgr") == 0)
     {
       std::cout << "Using DictionaryManager" << std::endl;
@@ -47,6 +49,7 @@ int main(int argc, char** argv)
       printf(dictmgr.get_dictionary().translate("You got %d error.\n", 
                                                 "You got %d errors.\n", num).c_str(), num);
     }
+*/
   else
     {
       tinygettext::Dictionary dict;
@@ -60,6 +63,9 @@ int main(int argc, char** argv)
       std::cout << _("disabled") << std::endl;
       std::cout << _("...walking...") << std::endl;
       int num = 3;
+      printf(ngettext("You got %d error.\n", 
+                      "You got %d errors.\n", num), num);
+      num = 1;
       printf(ngettext("You got %d error.\n", 
                       "You got %d errors.\n", num), num);
     }
