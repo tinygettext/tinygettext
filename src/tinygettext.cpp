@@ -117,11 +117,6 @@ bool has_prefix(const std::string& lhs, const std::string rhs)
     return lhs.compare(0, rhs.length(), rhs) == 0;
 }
 
-void read_po_file(Dictionary& dict_, std::istream& in)
-{
-  POFileReader reader(in, dict_);
-}
-
 } // namespace tinygettext
 
 /* EOF */

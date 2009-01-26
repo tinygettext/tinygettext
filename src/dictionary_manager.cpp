@@ -149,7 +149,7 @@ DictionaryManager::get_dictionary(const std::string& spec)
                   try 
                     {
                       std::istream* in = dir_op.open_file(pofile.c_str());
-                      read_po_file(dict, *in);
+                      POFileReader::read(*in, dict);
                       delete in;
                     } 
                   catch(std::exception& e) 

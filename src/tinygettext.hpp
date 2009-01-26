@@ -21,6 +21,7 @@
 #define HEADER_TINYGETTEXT_H
 
 #include <fstream>
+#include "po_file_reader.hpp"
 
 namespace tinygettext {
 
@@ -33,10 +34,6 @@ std::string convert(const std::string& text,
 
 bool has_suffix(const std::string& lhs, const std::string rhs);
 bool has_prefix(const std::string& lhs, const std::string rhs);
-
-/** Read the content of the .po file given as \a in into the
-    dictionary given as \a dict */
-void read_po_file(Dictionary& dict, std::istream& in);
 
 } // namespace tinygettext
 

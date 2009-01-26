@@ -251,6 +251,12 @@ POFileReader::nextToken()
     }
 }
 
+void
+POFileReader::read(std::istream& in, Dictionary& dict)
+{
+  POFileReader reader(in, dict);
+}
+
 } // namespace tinygettext
 
 /* EOF */

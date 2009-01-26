@@ -57,8 +57,12 @@ private:
   void tokenize_po();
   Token nextToken();
 
-public:
   POFileReader(std::istream& in_, Dictionary& dict_);
+
+public:
+  /** Read the content of the .po file given as \a in into the
+    dictionary given as \a dict */
+  static void read(std::istream& in, Dictionary& dict);
 };
 
 } // namespace tinygettext

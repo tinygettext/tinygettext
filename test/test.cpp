@@ -57,7 +57,7 @@ int main(int argc, char** argv)
       for (int i = 1; i < argc; ++i)
         {
           std::ifstream in(argv[i]);
-          tinygettext::read_po_file(dict, in);
+          tinygettext::POFileReader::read(in, dict);
         }
 
       std::cout << _("disabled") << std::endl;

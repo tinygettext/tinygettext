@@ -47,7 +47,7 @@ void read_dictionary(const std::string& filename, Dictionary& dict)
     }
   else
     {
-      POFileReader(in, dict);
+      POFileReader::read(in, dict);
       in.close();
     }
 }
