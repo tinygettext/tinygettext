@@ -6,8 +6,6 @@
   - iconv (???)
   - logging (???)  
 
-* seperate logging
-
 * translate() char* vs string needs cleanup
 
 * document how to use tinygettext and make it work like gettext
@@ -18,9 +16,7 @@ language_def.hpp (synced with Pingus)
 po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
 tinygettext.hpp (iconv vs convert)
 
-* get rid of TRANSLATION_DEBUG
-
-* ICONV_CONST is unneeded when SDL is used
+* get rid of TRANSLATION_DEBUG, turn it into a specific log level
 
 * DictionaryManager::DictionaryManager() is highly unportable, seems
   best to kick it out and let the application deal with the problem.

@@ -35,7 +35,8 @@ DictionaryManager::DictionaryManager()
   dir_op.free_list       = unix_free_list;
   dir_op.open_file       = unix_open_file;
 
-  parseLocaleAliases();
+  init_language_aliases();
+
   // Environment variable SUPERTUX_LANG overrides language settings.
   const char* lang = getenv( "SUPERTUX_LANG" );
   if( lang ){
@@ -56,39 +57,55 @@ DictionaryManager::DictionaryManager()
 }
 
 void
-DictionaryManager::parseLocaleAliases()
+DictionaryManager::init_language_aliases()
 {
-  // try to parse language alias list
-  std::ifstream in("/usr/share/locale/locale.alias");
-
-  char c = ' ';
-  while(in.good() && !in.eof()) {
-    while(isspace(static_cast<unsigned char>(c)) && !in.eof())
-      in.get(c);
-
-    if(c == '#') { // skip comments
-      while(c != '\n' && !in.eof())
-        in.get(c);
-      continue;
-    }
-
-    std::string alias;
-    while(!isspace(static_cast<unsigned char>(c)) && !in.eof()) {
-      alias += c;
-      in.get(c);
-    }
-    while(isspace(static_cast<unsigned char>(c)) && !in.eof())
-      in.get(c);
-    std::string language;
-    while(!isspace(static_cast<unsigned char>(c)) && !in.eof()) {
-      language += c;
-      in.get(c);
-    }
-
-    if(in.eof())
-      break;
-    set_language_alias(alias, language);
-  }
+  language_aliases["bokmal"]           = "nb_NO.ISO-8859-1";
+  language_aliases["bokmål"]           = "nb_NO.ISO-8859-1";
+  language_aliases["catalan"]          = "ca_ES.ISO-8859-1";
+  language_aliases["croatian"]         = "hr_HR.ISO-8859-2";
+  language_aliases["czech"]            = "cs_CZ.ISO-8859-2";
+  language_aliases["danish"]           = "da_DK.ISO-8859-1";
+  language_aliases["dansk"]            = "da_DK.ISO-8859-1";
+  language_aliases["deutsch"]          = "de_DE.ISO-8859-1";
+  language_aliases["dutch"]            = "nl_NL.ISO-8859-1";
+  language_aliases["eesti"]            = "et_EE.ISO-8859-1";
+  language_aliases["estonian"]         = "et_EE.ISO-8859-1";
+  language_aliases["finnish"]          = "fi_FI.ISO-8859-1";
+  language_aliases["français"]         = "fr_FR.ISO-8859-1";
+  language_aliases["french"]           = "fr_FR.ISO-8859-1";
+  language_aliases["galego"]           = "gl_ES.ISO-8859-1";
+  language_aliases["galician"]         = "gl_ES.ISO-8859-1";
+  language_aliases["german"]           = "de_DE.ISO-8859-1";
+  language_aliases["greek"]            = "el_GR.ISO-8859-7";
+  language_aliases["hebrew"]           = "he_IL.ISO-8859-8";
+  language_aliases["hrvatski"]         = "hr_HR.ISO-8859-2";
+  language_aliases["hungarian"]        = "hu_HU.ISO-8859-2";
+  language_aliases["icelandic"]        = "is_IS.ISO-8859-1";
+  language_aliases["italian"]          = "it_IT.ISO-8859-1";
+  language_aliases["japanese"]         = "ja_JP.eucJP";
+  language_aliases["japanese.euc"]     = "ja_JP.eucJP";
+  language_aliases["ja_JP"]            = "ja_JP.eucJP";
+  language_aliases["ja_JP.ujis"]       = "ja_JP.eucJP";
+  language_aliases["japanese.sjis"]    = "ja_JP.SJIS";
+  language_aliases["korean"]           = "ko_KR.eucKR";
+  language_aliases["korean.euc"]       = "ko_KR.eucKR";
+  language_aliases["ko_KR"]            = "ko_KR.eucKR";
+  language_aliases["lithuanian"]       = "lt_LT.ISO-8859-13";
+  language_aliases["no_NO"]            = "nb_NO.ISO-8859-1";
+  language_aliases["no_NO.ISO-8859-1"] = "nb_NO.ISO-8859-1";
+  language_aliases["norwegian"]        = "nb_NO.ISO-8859-1";
+  language_aliases["nynorsk"]          = "nn_NO.ISO-8859-1";
+  language_aliases["polish"]           = "pl_PL.ISO-8859-2";
+  language_aliases["portuguese"]       = "pt_PT.ISO-8859-1";
+  language_aliases["romanian"]         = "ro_RO.ISO-8859-2";
+  language_aliases["russian"]          = "ru_RU.ISO-8859-5";
+  language_aliases["slovak"]           = "sk_SK.ISO-8859-2";
+  language_aliases["slovene"]          = "sl_SI.ISO-8859-2";
+  language_aliases["slovenian"]        = "sl_SI.ISO-8859-2";
+  language_aliases["spanish"]          = "es_ES.ISO-8859-1";
+  language_aliases["swedish"]          = "sv_SE.ISO-8859-1";
+  language_aliases["thai"]             = "th_TH.TIS-620";
+  language_aliases["turkish"]          = "tr_TR.ISO-8859-9";
 }
 
 Dictionary&

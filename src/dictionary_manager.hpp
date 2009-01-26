@@ -81,7 +81,7 @@ public:
   void set_dir_op(const DirOp& dir_op);
 
 private:
-  void parseLocaleAliases();
+  void init_language_aliases();
   /// returns the language part in a language spec (like de_DE.UTF-8 -> de)
   std::string get_language_from_spec(const std::string& spec);
 };
