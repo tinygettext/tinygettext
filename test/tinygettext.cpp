@@ -25,14 +25,16 @@
 #include <stdexcept>
 #include "tinygettext/tinygettext.hpp"
 #include "tinygettext/dictionary.hpp"
+#include "tinygettext/dictionary_manager.hpp"
 #include "tinygettext/po_file_reader.hpp"
 
 using namespace tinygettext;
 
 void print_usage(int argc, char** argv)
 {
-  std::cout << "Usage: " << argv[0] << " translate FILE MSG" << std::endl;
-  std::cout << "       " << argv[0] << " translate FILE MSG_S MSG_P NUM" << std::endl;
+  std::cout << "Usage: " << argv[0] << " translate FILE MESSAGE" << std::endl;
+  std::cout << "       " << argv[0] << " translate FILE MESSAGE_S MESSAGE_P NUM" << std::endl;
+  std::cout << "       " << argv[0] << " directory DIRECTORY MESSAGE [LANG]" << std::endl;
 }
 
 void read_dictionary(const std::string& filename, Dictionary& dict)
@@ -73,6 +75,23 @@ int main(int argc, char** argv)
           Dictionary dict;
           read_dictionary(filename, dict);
           std::cout << dict.translate(message_singular, message_plural, num) << std::endl;
+        }
+      else if ((argc == 4 || argc == 5) && strcmp(argv[1], "directory") == 0)
+        {
+          const char* directory = argv[2];
+          const char* message   = argv[3];
+          const char* language  = (argc == 5) ? argv[4] : NULL;
+          
+          DictionaryManager manager;
+          manager.add_directory(directory);
+
+          if (language)
+            manager.set_language(language);
+
+          std::cout << "Directory:   '" << directory << "'"  << std::endl;
+          std::cout << "Message:     '" << message << "'" << std::endl;
+          std::cout << "Language:    '" << language << "'" << std::endl;
+          std::cout << "Translation: '" << manager.get_dictionary().translate(message) << std::endl;
         }
       else
         {
