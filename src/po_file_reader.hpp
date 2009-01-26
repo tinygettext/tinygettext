@@ -20,7 +20,6 @@
 #ifndef HEADER_PO_FILE_READER_HPP
 #define HEADER_PO_FILE_READER_HPP
 
-#include <iostream>
 #include <vector>
 #include <string.h>
 #include "tinygettext.hpp"

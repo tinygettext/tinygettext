@@ -1,7 +1,7 @@
 //  $Id$
 //
 //  TinyGetText
-//  Copyright (C) 2006 Ingo Ruhnke <grumbel@gmx.de>
+//  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -20,10 +20,28 @@
 #ifndef HEADER_LOG_HPP
 #define HEADER_LOG_HPP
 
+#include <sstream>
+
 namespace tinygettext {
 
-#define log_warning std::cerr
-#define log_info    if(0) std::cerr
+extern void (*log_callback)(const std::string&);
+
+class Log
+{
+private:
+  std::ostringstream out;
+
+public:
+  Log() {}
+  ~Log() {
+    log_callback(out.str());
+  }
+  
+  std::ostream& get() { return out; }
+};
+
+#define log_warning Log().get()
+#define log_info    if(0) Log().get()
 
 } // namespace tinygettext
 

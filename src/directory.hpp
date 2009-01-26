@@ -20,8 +20,6 @@
 #ifndef HEADER_DIRECTORY_HPP
 #define HEADER_DIRECTORY_HPP
 
-#include <iostream>
-
 namespace tinygettext {
 
 struct DirOp
