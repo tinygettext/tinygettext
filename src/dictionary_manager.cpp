@@ -245,23 +245,29 @@ DictionaryManager::set_language_alias(const std::string& alias,
 std::string
 DictionaryManager::get_language_from_spec(const std::string& spec)
 {
+  // Look if the spec is an alias and resolve it
   std::string lang = spec;
   Aliases::iterator i = language_aliases.find(lang);
-  if(i != language_aliases.end()) {
-    lang = i->second;
-  }
+  if (i != language_aliases.end()) 
+    {
+      lang = i->second;
+    }
 
+  // Remove encoding from the language variable (i.e. "da_DK.ISO-8859-1")
   std::string::size_type s = lang.find(".");
-  if(s != std::string::npos) {
-    lang = std::string(lang, 0, s);
-  }
+  if (s != std::string::npos) 
+    {
+      lang = std::string(lang, 0, s);
+    }
 
+  // Bring language into a form of de_DE
   s = lang.find("_");
-  if(s == std::string::npos) {
-    std::string lang_big = lang;
-    std::transform (lang_big.begin(), lang_big.end(), lang_big.begin(), toupper);
-    lang += "_" + lang_big;
-  }
+  if (s == std::string::npos) 
+    {
+      std::string lang_big = lang;
+      std::transform(lang_big.begin(), lang_big.end(), lang_big.begin(), toupper);
+      lang += "_" + lang_big;
+    }
 
   return lang;
 }
