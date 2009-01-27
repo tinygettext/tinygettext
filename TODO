@@ -1,3 +1,38 @@
+* Dictionary should have charset in the constructor, so that it can't
+  have empty charset
+
+* DictionaryManager: Does it need to have current_dict? Or should that
+  be handled at application level?
+
+* move this into SuperTux:
+
+  // use findlocale to setup language
+  FL_Locale *locale;
+  FL_FindLocale( &locale, FL_MESSAGES );
+  if(locale->lang) {
+    if (locale->country) {
+      set_language(get_language_def(std::string(locale->lang)+"_"+std::string(locale->country)));
+    } else {
+      set_language(get_language_def(locale->lang));
+    }
+  }
+  FL_FreeLocale( &locale );
+
+
+* implent for LanguageDef
+
+  /** Language code: de, en, ... (always two letters lowercase) */
+  std::string get_language_code() {}
+
+  /** Country code: US, BR, AT, DE, ... (always two letters uppercase) */
+  std::string get_country_code()  {}
+
+* std::set<std::string> DictionaryManager::get_languages() should return std::set<Language>
+
+* enumerating files should fallback to more generic languages, i.e.:
+
+  de_AT should load de.po (somewhat already the case, but different mechanic then supertux
+
 * SUPERTUX_LANG needs to be handled in SuperTux
 
 * Customizability:
@@ -6,7 +41,7 @@
   - free_list (cleanup, of the above)
   - open file (return std::istream)
   - iconv (???)
-  - logging (???)  
+  - logging (log_callback(std::string))
 
 * translate() char* vs string needs cleanup
 

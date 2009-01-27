@@ -31,9 +31,9 @@
 namespace tinygettext {
 
 /** Convert \a which is in \a from_charset to \a to_charset and return it */
-std::string convert(const std::string& text,
-                    const std::string& from_charset,
-                    const std::string& to_charset);
+std::string iconv_convert(const std::string& text,
+                          const std::string& from_charset,
+                          const std::string& to_charset);
 
 } // namespace tinygettext
 

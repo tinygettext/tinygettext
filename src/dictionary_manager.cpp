@@ -43,12 +43,31 @@ static bool has_suffix(const std::string& lhs, const std::string rhs)
     return lhs.compare(lhs.length() - rhs.length(), rhs.length(), rhs) == 0;
 }
 
-DictionaryManager::DictionaryManager()
-  : current_dict(&empty_dict)
+DictionaryManager::DictionaryManager(const std::string& charset_)
+  : charset(charset_),
+    current_dict(&empty_dict)    
 {
   dir_op.enumerate_files = unix_enumerate_files;
   dir_op.free_list       = unix_free_list;
   dir_op.open_file       = unix_open_file;
+}
+
+DictionaryManager::~DictionaryManager()
+{
+  for(Dictionaries::iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
+    {
+      delete i->second;
+    }
+}
+
+void
+DictionaryManager::clear_cache()
+{
+  for(Dictionaries::iterator i = dictionaries.begin(); i != dictionaries.end(); ++i)
+    {
+      delete i->second;
+    }
+  dictionaries.clear();
 }
 
 Dictionary&
@@ -61,17 +80,14 @@ DictionaryManager::get_dictionary(Language language)
   Dictionaries::iterator i = dictionaries.find(language); 
   if (i != dictionaries.end())
     {
-      return i->second;
+      return *i->second;
     }
   else // Dictionary for languages lang isn't loaded, so we load it
     {
       //log_debug << "get_dictionary: " << lang << std::endl;
-      Dictionary& dict = dictionaries[language];
+      Dictionary* dict = new Dictionary(language, charset);
 
-      dict.set_language(language);
-
-      if (charset != "")
-        dict.set_charset(charset);
+      dictionaries[language] = dict;
 
       for (SearchPath::iterator p = search_path.begin(); p != search_path.end(); ++p)
         {
@@ -97,7 +113,7 @@ DictionaryManager::get_dictionary(Language language)
                           try 
                             {
                               std::istream* in = dir_op.open_file(pofile.c_str());
-                              POFileReader::read(*in, dict);
+                              POFileReader::read(*in, *dict);
                               delete in;
                             } 
                           catch(std::exception& e) 
@@ -112,7 +128,7 @@ DictionaryManager::get_dictionary(Language language)
             }
         }
 
-      return dict;
+      return *dict;
     }
 }
 
@@ -160,7 +176,7 @@ void
 DictionaryManager::set_charset(const std::string& charset_)
 {
   Language current_language = current_dict->get_language();
-  dictionaries.clear(); // changing charset invalidates cache
+  clear_cache(); // changing charset invalidates cache
   charset = charset_;
   set_language(current_language);
 }
@@ -169,7 +185,7 @@ void
 DictionaryManager::add_directory(const std::string& pathname)
 {
   Language current_language = current_dict->get_language();
-  dictionaries.clear(); // adding directories invalidates cache
+  clear_cache(); // adding directories invalidates cache
   search_path.push_back(pathname);
   set_language(current_language); // FIXME: Seems very stupid, since it triggers a re-read of the .po files
 }

@@ -35,7 +35,6 @@ private:
   Dictionary& dict;
 
   std::string from_charset;
-  std::string to_charset;
 
   int line_num;
   int c; //TODO: char c? unsigned char c?

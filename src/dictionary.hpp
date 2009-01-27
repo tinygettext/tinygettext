@@ -43,21 +43,10 @@ private:
 
 public:
   /** */
-  Dictionary(Language language_, const std::string& charset = "");
-
-  Dictionary();
+  Dictionary(Language language = &lang_en, const std::string& charset = "utf-8");
 
   /** Return the charset used for this dictionary */
   std::string get_charset() const;
-
-  /** Set a charset for this dictionary, this will NOT convert stuff,
-      it is for information only, you have to convert stuff yourself
-      when you add it with \a add_translation() */
-  void set_charset(const std::string& charset);
-
-  /** Set the language that is used for this dictionary, this is
-      mainly needed to evaluate plural forms */
-  void set_language(Language lang);
 
   Language get_language() const;
 

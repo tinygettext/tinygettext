@@ -77,13 +77,6 @@ POFileReader::parse_header(const std::string& header)
       log_warning << "Error: Charset not specified for .po, fallback to ISO-8859-1" << std::endl;
       from_charset = "ISO-8859-1";
     }
-
-  to_charset = dict.get_charset();
-  if (to_charset.empty())
-    { // No charset requested from the dict, use utf-8
-      to_charset = "utf-8";
-      dict.set_charset(from_charset);
-    }
 }
 
 void
@@ -174,7 +167,7 @@ POFileReader::tokenize_po()
 
               token = nextToken();
               if(!expectToken("msgstr[x] content", TOKEN_CONTENT)) break;
-              msgstr_plural[num] = convert(tokenContent, from_charset, to_charset);
+              msgstr_plural[num] = iconv_convert(tokenContent, from_charset, dict.get_charset());
             }
           dict.add_translation(current_msgid, current_msgid_plural, msgstr_plural);
           // No nextToken()
@@ -193,7 +186,7 @@ POFileReader::tokenize_po()
             }
           else
             {
-              dict.add_translation(current_msgid, convert(tokenContent, from_charset, to_charset));
+              dict.add_translation(current_msgid, iconv_convert(tokenContent, from_charset, dict.get_charset()));
             }
           token = nextToken();
         }

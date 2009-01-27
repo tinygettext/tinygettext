@@ -26,27 +26,10 @@ Dictionary::Dictionary(Language language_, const std::string& charset_)
 {
 }
 
-Dictionary::Dictionary()
-  : language(&lang_en)
-{
-}
-
 std::string
 Dictionary::get_charset() const
 {
   return charset;
-}
-
-void
-Dictionary::set_charset(const std::string& charset_)
-{
-  charset = charset_;
-}
-
-void
-Dictionary::set_language(Language lang)
-{
-  language = lang;
 }
 
 std::string

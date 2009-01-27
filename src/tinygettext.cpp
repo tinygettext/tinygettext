@@ -38,9 +38,9 @@
 
 namespace tinygettext {
 
-std::string convert(const std::string& text,
-                    const std::string& from_charset,
-                    const std::string& to_charset)
+std::string iconv_convert(const std::string& text,
+                          const std::string& from_charset,
+                          const std::string& to_charset)
 {
 #ifdef HAVE_SDL
   if (from_charset == to_charset)
@@ -53,7 +53,7 @@ std::string convert(const std::string& text,
 
       if(out == 0)
         {
-          log_warning << "Error: conversion from " << from_charset << " to " << to_charset << " failed" << std::endl;
+          log_warning << "Error: conversion from '" << from_charset << "' to '" << to_charset << "' failed" << std::endl;
           return text;
         }
       else
@@ -88,7 +88,7 @@ std::string convert(const std::string& text,
   if (retval == (size_t) -1)
     {
       log_warning << strerror(errno) << std::endl;
-      log_warning << "Error: conversion from " << from_charset << " to " << to_charset << " went wrong: " << retval << std::endl;
+      log_warning << "Error: conversion from '" << from_charset << "' to '" << to_charset << "' went wrong: " << retval << std::endl;
       return "";
     }
   iconv_close(cd);

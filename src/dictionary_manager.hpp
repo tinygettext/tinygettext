@@ -36,7 +36,7 @@ namespace tinygettext {
 class DictionaryManager
 {
 private:
-  typedef std::map<Language, Dictionary> Dictionaries;
+  typedef std::map<Language, Dictionary*> Dictionaries;
   Dictionaries dictionaries;
 
   typedef std::vector<std::string> SearchPath;
@@ -49,8 +49,11 @@ private:
 
   DirOp dir_op;
 
+  void clear_cache();
+
 public:
-  DictionaryManager();
+  DictionaryManager(const std::string& charset_ = "utf-8");
+  ~DictionaryManager();
 
   /** Return the currently active dictionary, if none is set, an empty
       dictionary is returned. */
