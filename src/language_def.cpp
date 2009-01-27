@@ -21,6 +21,15 @@
 
 namespace tinygettext {
 
+/** 
+ *  Plural functions are used to select a string that matches a given
+ *  count. \a n is the count and the return value is the string index
+ *  used in the .po file, for example:
+ *   
+ *   msgstr[0] = "You got %d error";
+ *   msgstr[1] = "You got %d errors";        
+ *          ^-- return value of plural function 
+ */
 int plural1(int )     { return 0; }
 int plural2_1(int n)  { return (n != 1); }
 int plural2_2(int n)  { return (n > 1); }
@@ -196,18 +205,6 @@ DictionaryManager::init_language_aliases()
   language_aliases["thai"]             = "th_TH.TIS-620";
   language_aliases["turkish"]          = "tr_TR.ISO-8859-9";
 }
-
-
-  /** Define an alias for a language */
-  void set_language_alias(const std::string& alias, const std::string& lang);
-
-void
-DictionaryManager::set_language_alias(const std::string& alias,
-                                      const std::string& language)
-{
-  language_aliases.insert(std::make_pair(alias, language));
-}
-
 
 #endif 
 
