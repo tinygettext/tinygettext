@@ -31,8 +31,8 @@ class Dictionary;
 class POFileReader
 {
 private:
-  Dictionary& dict;
   std::istream& in;
+  Dictionary& dict;
 
   std::string from_charset;
   std::string to_charset;

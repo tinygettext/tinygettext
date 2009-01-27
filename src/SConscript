@@ -1,6 +1,6 @@
 # -*- python -*-
 
-env = Environment()
+env = Environment(CXXFLAGS=['-g', '-O0', '-ansi', '-pedantic', '-Wall', '-Werror'])
 env.ParseConfig("sdl-config --cflags --libs")
 env.StaticLibrary('tinygettext', 
                   ['tinygettext.cpp',

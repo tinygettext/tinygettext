@@ -36,16 +36,16 @@ namespace tinygettext {
 class DictionaryManager
 {
 private:
-  typedef std::map<std::string, Dictionary> Dictionaries;
+  typedef std::map<Language, Dictionary> Dictionaries;
   Dictionaries dictionaries;
+
   typedef std::vector<std::string> SearchPath;
   SearchPath search_path;
-  typedef std::map<std::string, std::string> Aliases;
-  Aliases language_aliases;
+
   std::string charset;
-  std::string language;
+
   Dictionary* current_dict;
-  Dictionary empty_dict;
+  Dictionary  empty_dict;
 
   DirOp dir_op;
 
@@ -57,20 +57,17 @@ public:
   Dictionary& get_dictionary()
   { return *current_dict; }
 
-  /** Get dictionary for lang */
-  Dictionary& get_dictionary(const std::string& langspec);
+  /** Get dictionary for language */
+  Dictionary& get_dictionary(Language language);
 
   /** Set a language based on a four? letter country code */
-  void set_language(const std::string& langspec);
+  void set_language(Language language);
 
   /** returns the (normalized) country code of the currently used language */
-  const std::string& get_language() const;
+  Language get_language() const;
 
   /** Set a charset that will be set on the returned dictionaries */
   void set_charset(const std::string& charset);
-
-  /** Define an alias for a language */
-  void set_language_alias(const std::string& alias, const std::string& lang);
 
   /** Add a directory to the search path for dictionaries */
   void add_directory(const std::string& pathname);

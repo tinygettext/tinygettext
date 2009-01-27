@@ -83,7 +83,7 @@ int main(int argc, char** argv)
           manager.add_directory(directory);
 
           if (language)
-            manager.set_language(language);
+            manager.set_language(get_language_def(language));
 
           std::cout << "Directory:   '" << directory << "'"  << std::endl;
           std::cout << "Message:     '" << message << "'" << std::endl;

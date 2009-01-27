@@ -38,12 +38,12 @@ private:
   typedef std::map<std::string, std::map<int, std::string> > PluralEntries;
   PluralEntries plural_entries;
 
-  LanguageDef language;
+  Language language;
   std::string charset;
 
 public:
   /** */
-  Dictionary(const LanguageDef& language_, const std::string& charset = "");
+  Dictionary(Language language_, const std::string& charset = "");
 
   Dictionary();
 
@@ -57,7 +57,9 @@ public:
 
   /** Set the language that is used for this dictionary, this is
       mainly needed to evaluate plural forms */
-  void set_language(const LanguageDef& lang);
+  void set_language(Language lang);
+
+  Language get_language() const;
 
   /** Translate the string \a msgid to its correct plural form, based
       on the number of items given by \a num. \a msgid2 is \a msgid in

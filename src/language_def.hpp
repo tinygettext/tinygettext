@@ -27,8 +27,12 @@ namespace tinygettext {
 typedef int (*PluralFunc)(int n);
 
 struct LanguageDef {
+  /** Language code: "de", "pt_BR", ... */
   const char* code;
+
+  /** Language name: "German", "English", "French", ... */
   const char* name;
+
   int         nplural;
   PluralFunc  plural;
 
@@ -37,7 +41,9 @@ struct LanguageDef {
   {}
 };
 
-LanguageDef& get_language_def(const std::string& name);
+typedef LanguageDef* Language;
+
+Language get_language_def(const std::string& name);
 
 // Englishe Language defaults
 extern LanguageDef lang_en;
