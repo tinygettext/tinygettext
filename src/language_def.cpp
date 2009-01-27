@@ -123,6 +123,8 @@ get_language_def(const std::string& name)
 
 #if 0
 // This belongs into language_def.cpp, work it into get_language_def()
+
+/// returns the language part in a language spec (like de_DE.UTF-8 -> de)
 std::string
 DictionaryManager::get_language_from_spec(const std::string& spec)
 {

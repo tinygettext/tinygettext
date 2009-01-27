@@ -48,6 +48,7 @@ public:
   /** Return the charset used for this dictionary */
   std::string get_charset() const;
 
+  /** Return the language used for this dictionary */
   Language get_language() const;
 
   /** Translate the string \a msgid to its correct plural form, based
