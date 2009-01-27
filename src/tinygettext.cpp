@@ -45,20 +45,25 @@ std::string convert(const std::string& text,
 {
 #ifdef HAVE_SDL
   if (from_charset == to_charset)
-    return text;
+    {
+      return text;
+    }
+  else
+    {
+      char *out = SDL_iconv_string(to_charset.c_str(), from_charset.c_str(), text.c_str(), text.length() + 1);
 
-  char *in = new char[text.length() + 1];
-  strcpy(in, text.c_str());
-  char *out = SDL_iconv_string(to_charset.c_str(), from_charset.c_str(), in, text.length() + 1);
-  delete[] in; 
-  if(out == 0)
-  {
-    log_warning << "Error: conversion from " << from_charset << " to " << to_charset << " failed" << std::endl;
-    return "";
-  }
-  std::string ret(out);
-  SDL_free(out);
-  return ret;
+      if(out == 0)
+        {
+          log_warning << "Error: conversion from " << from_charset << " to " << to_charset << " failed" << std::endl;
+          return text;
+        }
+      else
+        {
+          std::string ret(out);
+          SDL_free(out);
+          return ret;
+        }
+    }
 #else
 
 #ifndef ICONV_CONST
