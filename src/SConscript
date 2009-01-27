@@ -9,8 +9,7 @@ env.StaticLibrary('tinygettext',
                    'dictionary.cpp',
                    'dictionary_manager.cpp',
                    'directory.cpp',
-                   'log.cpp',
-                   'findlocale.cpp'])
+                   'log.cpp'])
 
 
 # EOF #

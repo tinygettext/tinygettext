@@ -24,7 +24,6 @@
 #include "tinygettext.hpp"
 #include "dictionary_manager.hpp"
 #include "log.hpp"
-#include "findlocale.hpp"
 
 namespace tinygettext {
 
@@ -50,18 +49,6 @@ DictionaryManager::DictionaryManager()
   dir_op.enumerate_files = unix_enumerate_files;
   dir_op.free_list       = unix_free_list;
   dir_op.open_file       = unix_open_file;
-
-  // use findlocale to setup language
-  FL_Locale *locale;
-  FL_FindLocale( &locale, FL_MESSAGES );
-  if(locale->lang) {
-    if (locale->country) {
-      set_language(get_language_def(std::string(locale->lang)+"_"+std::string(locale->country)));
-    } else {
-      set_language(get_language_def(locale->lang));
-    }
-  }
-  FL_FreeLocale( &locale );
 }
 
 Dictionary&
