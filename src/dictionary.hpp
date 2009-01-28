@@ -61,7 +61,11 @@ public:
   std::string translate_plural(const std::string& msgid, const std::string& msgidplural, int num);
   const char* translate_plural(const char* msgid, const char* msgidplural, int num);
 
-  /** Translate the string \a msgid that is in context \a msgctx. */
+  /** Translate the string \a msgid that is in context \a msgctx. A
+      context is a way to disambiguate msgids that contain the same
+      letters, but different meaning. For example "exit" might mean to
+      quit doing something or it might refer to a door that leads
+      outside (i.e. 'Ausgang' vs 'Beenden' in german) */
   std::string translate_ctx(const std::string& msgctx, const std::string& msgid);
   const char* translate_ctx(const char* msgctx, const char* msgid);
 

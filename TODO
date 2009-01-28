@@ -71,7 +71,8 @@ tinygettext specific stuff:
 
 * iconv handling needs cleanup, since some systems don't provide
   iconv, but SDL does and is used by many games, currently HAVE_SDL
-  macro seems to weak a fix
+  macro seems to weak a fix. We could copy SDL's iconv handling into
+  tinygettext.
 
 * translate() char* vs string needs cleanup
 
