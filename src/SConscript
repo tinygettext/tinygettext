@@ -4,7 +4,7 @@ env = Environment(CXXFLAGS=['-g', '-O0', '-ansi', '-pedantic', '-Wall', '-Werror
 env.ParseConfig("sdl-config --cflags --libs")
 env.StaticLibrary('tinygettext', 
                   ['tinygettext.cpp',
-                   'language_def.cpp',
+                   'language.cpp',
                    'po_file_reader.cpp',
                    'dictionary.cpp',
                    'dictionary_manager.cpp',

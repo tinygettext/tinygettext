@@ -24,7 +24,7 @@
 #include "po_file_reader.hpp"
 #include "dictionary.hpp"
 #include "directory.hpp"
-#include "language_def.hpp"
+#include "language.hpp"
 #include "tinygettext.hpp"
 #include "dictionary_manager.hpp"
 

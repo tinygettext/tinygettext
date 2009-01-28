@@ -22,7 +22,7 @@
 
 #include <map>
 #include <string>
-#include "language_def.hpp"
+#include "language.hpp"
 
 namespace tinygettext {
 
