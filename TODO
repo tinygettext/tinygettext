@@ -1,5 +1,10 @@
-* Dictionary should have charset in the constructor, so that it can't
-  have empty charset
+* void
+DictionaryManager::add_directory(const std::string& pathname)
+{
+...
+  set_language(current_language); // FIXME: Seems very stupid, since it triggers a re-read of the .po files
+...
+}
 
 * DictionaryManager: Does it need to have current_dict? Or should that
   be handled at application level?

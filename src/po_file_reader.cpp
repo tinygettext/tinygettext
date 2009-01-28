@@ -199,18 +199,29 @@ POFileReader::nextToken()
   //Clear token contents
   tokenContent = "";
 
+  // FIXME: This is way to tolerant, real gettext is much more picky
+  // about the format (only a single space between msgid and the
+  // folowing "" and stuff like that). It would likely be best if this
+  // worked line by line instead of just eating up tokens no matter
+  // what space
   skipSpace();
 
   if(c == EOF)
-    return TOKEN_EOF;
+    {
+      return TOKEN_EOF;
+    }
   else if(c != '"')
     {
       // Read a keyword
-      do {
-        tokenContent += c;
-        nextChar();
-      } while(c != EOF && !isspace(static_cast<unsigned char>(c)));
+      do 
+        {
+          tokenContent += c;
+          nextChar();
+        } 
+      while(c != EOF && !isspace(static_cast<unsigned char>(c)));
+
       log_info << "Read Keyword: " << tokenContent << std::endl;
+
       return TOKEN_KEYWORD;
     }
   else
@@ -218,27 +229,30 @@ POFileReader::nextToken()
       do {
         nextChar();
         // Read content
-        while(c != EOF && c != '"') {
-          if (c == '\\') {
-            nextChar();
-            if (c == 'n') c = '\n';
-            else if (c == 't') c = '\t';
-            else if (c == 'r') c = '\r';
-            else if (c == '"') c = '"';
-            else if (c == '\\') c = '\\';
-            else
+        while(c != EOF && c != '"') 
+          {
+            if (c == '\\') 
               {
-                log_warning << "Unhandled escape character: " << char(c) << std::endl;
-                c = ' ';
+                nextChar();
+                if      (c == 'n')  c = '\n';
+                else if (c == 't')  c = '\t';
+                else if (c == 'r')  c = '\r';
+                else if (c == '"')  c = '"';
+                else if (c == '\\') c = '\\';
+                else
+                  {
+                    log_warning << "Unhandled escape character: " << char(c) << std::endl;
+                    c = ' ';
+                  }
               }
+            tokenContent += c;
+            nextChar();
           }
-          tokenContent += c;
-          nextChar();
-        }
-        if(c == EOF) {
-          log_warning << "Unclosed string literal: " << tokenContent << std::endl;
-          return TOKEN_CONTENT;
-        }
+        if(c == EOF) 
+          {
+            log_warning << "Unclosed string literal: " << tokenContent << std::endl;
+            return TOKEN_CONTENT;
+          }
 
         // Read more strings?
         nextChar();
