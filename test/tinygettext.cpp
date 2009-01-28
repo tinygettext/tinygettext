@@ -83,7 +83,18 @@ int main(int argc, char** argv)
           manager.add_directory(directory);
 
           if (language)
-            manager.set_language(Language(language));
+            {
+              Language lang(language);
+              if (lang)
+                {
+                  manager.set_language(lang);
+                }
+              else
+                {
+                  std::cout << "Unknown language: " << language << std::endl;
+                  exit(EXIT_FAILURE);
+                }              
+            }
 
           std::cout << "Directory:   '" << directory << "'"  << std::endl;
           std::cout << "Message:     '" << message << "'" << std::endl;

@@ -17,10 +17,38 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <map>
 #include "language_def.hpp"
 
 namespace tinygettext {
 
+typedef int (*PluralFunc)(int n);
+
+struct LanguageSpec {
+  /** Language code: "de", "en", ... */
+  const char* language;
+
+  /** Country code: "BR", "DE", ..., can be 0 */
+  const char* country;
+
+  /** Language name: "German", "English", "French", ... */
+  const char* name;
+
+  // FIXME: Not actually used by tinygettext, I guess only used by po
+  // edit tools to check if all translations are in place
+  int         nplural;
+
+  PluralFunc  plural;
+
+  LanguageSpec(const char* language_, const char* country_, const char* name_,  int nplural_, PluralFunc plural_)
+    : language(language_),
+      country(country_),
+      name(name_), 
+      nplural(nplural_), 
+      plural(plural_)
+  {}
+};
+
 /** 
  *  Plural functions are used to select a string that matches a given
  *  count. \a n is the count and the return value is the string index
@@ -40,217 +68,235 @@ int plural3_1(int n)  { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 &&
 int plural3_sk(int n) { return (n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2; }
 int plural3_pl(int n) { return (n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
 int plural3_sl(int n) { return (n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3); }
-
+
 /** Language Definitions */
 //*{
-LanguageDef lang_hu("hu", "Hungarian",         1, plural1); // "nplurals=1; plural=0;"
-LanguageDef lang_ja("ja", "Japanese",          1, plural1); // "nplurals=1; plural=0;"
-LanguageDef lang_ko("ko", "Korean",            1, plural1); // "nplurals=1; plural=0;"
-LanguageDef lang_tr("tr", "Turkish",           1, plural1); // "nplurals=1; plural=0;"
-LanguageDef lang_da("da", "Danish",            2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_nl("nl", "Dutch",             2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_en("en", "English",           2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_fo("fo", "Faroese",           2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_de("de", "German",            2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_nb("nb", "Norwegian Bokmal",  2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_no("no", "Norwegian",         2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_nn("nn", "Norwegian Nynorsk", 2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_sv("sv", "Swedish",           2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_et("et", "Estonian",          2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_fi("fi", "Finnish",           2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_el("el", "Greek",             2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_he("he", "Hebrew",            2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_it("it", "Italian",           2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_pt("pt", "Portuguese",        2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_es("es", "Spanish",           2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_eo("eo", "Esperanto",         2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageDef lang_fr("fr", "French",            2, plural2_2); // "nplurals=2; plural=(n > 1);"
-LanguageDef lang_pt_BR("pt_BR", "Brazilian",   2, plural2_2); // "nplurals=2; plural=(n > 1);"
-LanguageDef lang_lv("lv", "Latvian",           3, plural3_lv); // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
-LanguageDef lang_ga("ga", "Irish",             3, plural3_ga); // "nplurals=3; plural=n==1 ? 0 : n==2 ? 1 : 2;"
-LanguageDef lang_lt("lt", "Lithuanian",        3, plural3_lt); // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);"
-LanguageDef lang_hr("hr", "Croatian",          3, plural3_1); // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
-LanguageDef lang_cs("cs", "Czech",             3, plural3_1); // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
-LanguageDef lang_ru("ru", "Russian",           3, plural3_1); // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
-LanguageDef lang_uk("uk", "Ukrainian",         3, plural3_1); // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
-LanguageDef lang_sk("sk", "Slovak",            3, plural3_sk); // "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
-LanguageDef lang_pl("pl", "Polish",            3, plural3_pl); // "nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-LanguageDef lang_sl("sl", "Slovenian",         3, plural3_sl); // "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
-LanguageDef lang_sr("sr", "Serbian",           2, plural2_2); // "nplurals=2; plural=n>1;"
-LanguageDef lang_zh_TW("zh_TW", "Chinese (traditional)",  1, plural1); // "nplurals=1; plural=0;"
+LanguageSpec lang_cs   ("cs", 0,    "Czech",             3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_da   ("da", 0,    "Danish",            2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_de   ("de", 0,    "German",            2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_el   ("el", 0,    "Greek",             2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_en   ("en", 0,    "English",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_eo   ("eo", 0,    "Esperanto",         2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_es   ("es", 0,    "Spanish",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_et   ("et", 0,    "Estonian",          2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_fi   ("fi", 0,    "Finnish",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_fo   ("fo", 0,    "Faroese",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_fr   ("fr", 0,    "French",            2, plural2_2);    // "nplurals=2; plural=(n > 1);"
+LanguageSpec lang_ga   ("ga", 0,    "Irish",             3, plural3_ga);   // "nplurals=3; plural=n==1 ? 0 : n==2 ? 1 : 2;"
+LanguageSpec lang_he   ("he", 0,    "Hebrew",            2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_hr   ("hr", 0,    "Croatian",          3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_hu   ("hu", 0,    "Hungarian",         1, plural1);      // "nplurals=1; plural=0;"
+LanguageSpec lang_it   ("it", 0,    "Italian",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_ja   ("ja", 0,    "Japanese",          1, plural1);      // "nplurals=1; plural=0;"
+LanguageSpec lang_ko   ("ko", 0,    "Korean",            1, plural1);      // "nplurals=1; plural=0;"
+LanguageSpec lang_lt   ("lt", 0,    "Lithuanian",        3, plural3_lt);   // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_lv   ("lv", 0,    "Latvian",           3, plural3_lv);   // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
+LanguageSpec lang_nb   ("nb", 0,    "Norwegian Bokmal",  2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_nl   ("nl", 0,    "Dutch",             2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_nn   ("nn", 0,    "Norwegian Nynorsk", 2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_no   ("no", 0,    "Norwegian",         2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_pl   ("pl", 0,    "Polish",            3, plural3_pl);   // "nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
+LanguageSpec lang_pt   ("pt", 0,    "Portuguese",        2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_pt_BR("pt", "BR", "Brazilian",         2, plural2_2);    // "nplurals=2; plural=(n > 1);"
+LanguageSpec lang_ru   ("ru", 0,    "Russian",           3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_sk   ("sk", 0,    "Slovak",            3, plural3_sk);   // "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
+LanguageSpec lang_sl   ("sl", 0,    "Slovenian",         3, plural3_sl);   // "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
+LanguageSpec lang_sr   ("sr", 0,    "Serbian",           2, plural2_2);    // "nplurals=2; plural=n>1;"
+LanguageSpec lang_sv   ("sv", 0,    "Swedish",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_tr   ("tr", 0,    "Turkish",           1, plural1);      // "nplurals=1; plural=0;"
+LanguageSpec lang_uk   ("uk", 0,    "Ukrainian",         3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_zh_TW("zh", "TW", "Chinese (traditional)",  1, plural1); // "nplurals=1; plural=0;"
 //*}
-
-LanguageDef*
-get_language_def(const std::string& language, const std::string& country)
+
+LanguageSpec*
+get_language_spec(const std::string& language, const std::string& country)
 {
-  if      (language == "hu") return &lang_hu;
-  else if (language == "ja") return &lang_ja;
-  else if (language == "ko") return &lang_ko;
-  else if (language == "tr") return &lang_tr;
+  if      (language == "cs") return &lang_cs;
   else if (language == "da") return &lang_da;
-  else if (language == "nl") return &lang_nl;
-  else if (language == "en") return &lang_en;
-  else if (language == "fo") return &lang_fo;
   else if (language == "de") return &lang_de;
-  else if (language == "nb") return &lang_nb;
-  else if (language == "no") return &lang_no;
-  else if (language == "nn") return &lang_nn;
-  else if (language == "sv") return &lang_sv;
+  else if (language == "el") return &lang_el;
+  else if (language == "en") return &lang_en;
+  else if (language == "eo") return &lang_eo;
+  else if (language == "es") return &lang_es;
   else if (language == "et") return &lang_et;
   else if (language == "fi") return &lang_fi;
-  else if (language == "el") return &lang_el;
-  else if (language == "he") return &lang_he;
-  else if (language == "it") return &lang_it;
-  else if (language == "pt") return &lang_pt;
-  else if (language == "es") return &lang_es;
-  else if (language == "eo") return &lang_eo;
+  else if (language == "fo") return &lang_fo;
   else if (language == "fr") return &lang_fr;
-  else if (language == "pt_BR") return &lang_pt_BR;
-  else if (language == "lv") return &lang_lv;
   else if (language == "ga") return &lang_ga;
-  else if (language == "lt") return &lang_lt;
+  else if (language == "he") return &lang_he;
   else if (language == "hr") return &lang_hr;
-  else if (language == "cs") return &lang_cs;
-  else if (language == "ru") return &lang_ru;
-  else if (language == "uk") return &lang_uk;
-  else if (language == "sk") return &lang_sk;
+  else if (language == "hu") return &lang_hu;
+  else if (language == "it") return &lang_it;
+  else if (language == "ja") return &lang_ja;
+  else if (language == "ko") return &lang_ko;
+  else if (language == "lt") return &lang_lt;
+  else if (language == "lv") return &lang_lv;
+  else if (language == "nb") return &lang_nb;
+  else if (language == "nl") return &lang_nl;
+  else if (language == "nn") return &lang_nn;
+  else if (language == "no") return &lang_no;
   else if (language == "pl") return &lang_pl;
+  else if (language == "pt") return &lang_pt;
+  else if (language == "pt") return &lang_pt_BR;
+  else if (language == "ru") return &lang_ru;
+  else if (language == "sk") return &lang_sk;
   else if (language == "sl") return &lang_sl;
   else if (language == "sr") return &lang_sr;
-  else if (language == "zh_TW") return &lang_zh_TW;
-  else return &lang_en;
+  else if (language == "sv") return &lang_sv;
+  else if (language == "tr") return &lang_tr;
+  else if (language == "uk") return &lang_uk;
+  else if (language == "zh") return &lang_zh_TW;
+  else return 0;
 }
-
+
+void
+resolve_language_alias(std::string& name)
+{
+  typedef std::map<std::string, std::string> Aliases;
+  static Aliases language_aliases;
+  if (language_aliases.empty())
+    {
+      // FIXME: Many of those are not useful for us, since we leave
+      // encoding to the app, not to the language
+      language_aliases["bokmal"]           = "nb_NO.ISO-8859-1";
+      language_aliases["bokmål"]           = "nb_NO.ISO-8859-1";
+      language_aliases["catalan"]          = "ca_ES.ISO-8859-1";
+      language_aliases["croatian"]         = "hr_HR.ISO-8859-2";
+      language_aliases["czech"]            = "cs_CZ.ISO-8859-2";
+      language_aliases["danish"]           = "da_DK.ISO-8859-1";
+      language_aliases["dansk"]            = "da_DK.ISO-8859-1";
+      language_aliases["deutsch"]          = "de_DE.ISO-8859-1";
+      language_aliases["dutch"]            = "nl_NL.ISO-8859-1";
+      language_aliases["eesti"]            = "et_EE.ISO-8859-1";
+      language_aliases["estonian"]         = "et_EE.ISO-8859-1";
+      language_aliases["finnish"]          = "fi_FI.ISO-8859-1";
+      language_aliases["français"]         = "fr_FR.ISO-8859-1";
+      language_aliases["french"]           = "fr_FR.ISO-8859-1";
+      language_aliases["galego"]           = "gl_ES.ISO-8859-1";
+      language_aliases["galician"]         = "gl_ES.ISO-8859-1";
+      language_aliases["german"]           = "de_DE.ISO-8859-1";
+      language_aliases["greek"]            = "el_GR.ISO-8859-7";
+      language_aliases["hebrew"]           = "he_IL.ISO-8859-8";
+      language_aliases["hrvatski"]         = "hr_HR.ISO-8859-2";
+      language_aliases["hungarian"]        = "hu_HU.ISO-8859-2";
+      language_aliases["icelandic"]        = "is_IS.ISO-8859-1";
+      language_aliases["italian"]          = "it_IT.ISO-8859-1";
+      language_aliases["japanese"]         = "ja_JP.eucJP";
+      language_aliases["japanese.euc"]     = "ja_JP.eucJP";
+      language_aliases["ja_JP"]            = "ja_JP.eucJP";
+      language_aliases["ja_JP.ujis"]       = "ja_JP.eucJP";
+      language_aliases["japanese.sjis"]    = "ja_JP.SJIS";
+      language_aliases["korean"]           = "ko_KR.eucKR";
+      language_aliases["korean.euc"]       = "ko_KR.eucKR";
+      language_aliases["ko_KR"]            = "ko_KR.eucKR";
+      language_aliases["lithuanian"]       = "lt_LT.ISO-8859-13";
+      language_aliases["no_NO"]            = "nb_NO.ISO-8859-1";
+      language_aliases["no_NO.ISO-8859-1"] = "nb_NO.ISO-8859-1";
+      language_aliases["norwegian"]        = "nb_NO.ISO-8859-1";
+      language_aliases["nynorsk"]          = "nn_NO.ISO-8859-1";
+      language_aliases["polish"]           = "pl_PL.ISO-8859-2";
+      language_aliases["portuguese"]       = "pt_PT.ISO-8859-1";
+      language_aliases["romanian"]         = "ro_RO.ISO-8859-2";
+      language_aliases["russian"]          = "ru_RU.ISO-8859-5";
+      language_aliases["slovak"]           = "sk_SK.ISO-8859-2";
+      language_aliases["slovene"]          = "sl_SI.ISO-8859-2";
+      language_aliases["slovenian"]        = "sl_SI.ISO-8859-2";
+      language_aliases["spanish"]          = "es_ES.ISO-8859-1";
+      language_aliases["swedish"]          = "sv_SE.ISO-8859-1";
+      language_aliases["thai"]             = "th_TH.TIS-620";
+      language_aliases["turkish"]          = "tr_TR.ISO-8859-9";
+    }
+  else
+    {
+      Aliases::iterator i = language_aliases.find(name);
+      if (i != language_aliases.end()) 
+        {
+          name = i->second;
+        }
+    }
+}
+
 Language::Language(const std::string& language, const std::string& country)
 {
-  language_def = get_language_def(language, country);
+  language_spec = get_language_spec(language, country);
 }
 
-Language::Language(const std::string& str)
+Language::Language(const std::string& spec_str_)
 {
+  std::string spec_str = spec_str_;
+
+  resolve_language_alias(spec_str);
+
+  { // Remove encoding from the language variable (i.e. "da_DK.ISO-8859-1")
+    std::string::size_type s = spec_str.find(".");
+    if (s != std::string::npos) 
+      {
+        spec_str = std::string(spec_str, 0, s);
+      }
+  }
+
+  std::string language;
+  std::string country;
+
+  { // Bring language into a form of de_DE
+    std::string::size_type s = language.find("_");
+    if (s != std::string::npos) 
+      {
+        language = spec_str.substr(0, s);
+        country  = spec_str.substr(s+1);
+      }
+    else
+      {
+        language = spec_str;
+      }
+  }
+
   // FIXME: Do alias mapping and stuff
-  language_def = get_language_def(str, "");
+  language_spec = get_language_spec(language, country);
 }
 
 Language::Language()
-  : language_def(&lang_en)
+  : language_spec(0)
 {
 }
 
 std::string
 Language::get_language() const
 {
-  return language_def->code; // FIXME: Wrong
+  if (language_spec)
+    return language_spec->language;
+  else
+    return "";
 }
 
 std::string
 Language::get_country()  const
 {
-  return language_def->code; // FIXME: Wrong
+  if (language_spec && language_spec->country)
+    return language_spec->country;
+  else
+    return "";
 }
 
 
 std::string
 Language::get_name()  const
 {
-  return language_def->name;
+  if (language_spec)
+    return language_spec->name;
+  else
+    return "";
 }
 
 int
 Language::plural(int n) const
 {
-  return language_def->plural(n);
+  if (language_spec)
+    return language_spec->plural(n);
+  else
+    return 0;
 }
-
-#if 0
-// This belongs into language_def.cpp, work it into get_language_def()
-
-/// returns the language part in a language spec (like de_DE.UTF-8 -> de)
-std::string
-DictionaryManager::get_language_from_spec(const std::string& spec)
-{
-  // Look if the spec is an alias and resolve it
-  std::string lang = spec;
-  Aliases::iterator i = language_aliases.find(lang);
-  if (i != language_aliases.end()) 
-    {
-      lang = i->second;
-    }
-
-  // Remove encoding from the language variable (i.e. "da_DK.ISO-8859-1")
-  std::string::size_type s = lang.find(".");
-  if (s != std::string::npos) 
-    {
-      lang = std::string(lang, 0, s);
-    }
-
-  // Bring language into a form of de_DE
-  s = lang.find("_");
-  if (s == std::string::npos) 
-    {
-      std::string lang_big = lang;
-      std::transform(lang_big.begin(), lang_big.end(), lang_big.begin(), toupper);
-      lang += "_" + lang_big;
-    }
-
-  return lang;
-}
-
-
-void
-DictionaryManager::init_language_aliases()
-{
-  language_aliases["bokmal"]           = "nb_NO.ISO-8859-1";
-  language_aliases["bokmål"]           = "nb_NO.ISO-8859-1";
-  language_aliases["catalan"]          = "ca_ES.ISO-8859-1";
-  language_aliases["croatian"]         = "hr_HR.ISO-8859-2";
-  language_aliases["czech"]            = "cs_CZ.ISO-8859-2";
-  language_aliases["danish"]           = "da_DK.ISO-8859-1";
-  language_aliases["dansk"]            = "da_DK.ISO-8859-1";
-  language_aliases["deutsch"]          = "de_DE.ISO-8859-1";
-  language_aliases["dutch"]            = "nl_NL.ISO-8859-1";
-  language_aliases["eesti"]            = "et_EE.ISO-8859-1";
-  language_aliases["estonian"]         = "et_EE.ISO-8859-1";
-  language_aliases["finnish"]          = "fi_FI.ISO-8859-1";
-  language_aliases["français"]         = "fr_FR.ISO-8859-1";
-  language_aliases["french"]           = "fr_FR.ISO-8859-1";
-  language_aliases["galego"]           = "gl_ES.ISO-8859-1";
-  language_aliases["galician"]         = "gl_ES.ISO-8859-1";
-  language_aliases["german"]           = "de_DE.ISO-8859-1";
-  language_aliases["greek"]            = "el_GR.ISO-8859-7";
-  language_aliases["hebrew"]           = "he_IL.ISO-8859-8";
-  language_aliases["hrvatski"]         = "hr_HR.ISO-8859-2";
-  language_aliases["hungarian"]        = "hu_HU.ISO-8859-2";
-  language_aliases["icelandic"]        = "is_IS.ISO-8859-1";
-  language_aliases["italian"]          = "it_IT.ISO-8859-1";
-  language_aliases["japanese"]         = "ja_JP.eucJP";
-  language_aliases["japanese.euc"]     = "ja_JP.eucJP";
-  language_aliases["ja_JP"]            = "ja_JP.eucJP";
-  language_aliases["ja_JP.ujis"]       = "ja_JP.eucJP";
-  language_aliases["japanese.sjis"]    = "ja_JP.SJIS";
-  language_aliases["korean"]           = "ko_KR.eucKR";
-  language_aliases["korean.euc"]       = "ko_KR.eucKR";
-  language_aliases["ko_KR"]            = "ko_KR.eucKR";
-  language_aliases["lithuanian"]       = "lt_LT.ISO-8859-13";
-  language_aliases["no_NO"]            = "nb_NO.ISO-8859-1";
-  language_aliases["no_NO.ISO-8859-1"] = "nb_NO.ISO-8859-1";
-  language_aliases["norwegian"]        = "nb_NO.ISO-8859-1";
-  language_aliases["nynorsk"]          = "nn_NO.ISO-8859-1";
-  language_aliases["polish"]           = "pl_PL.ISO-8859-2";
-  language_aliases["portuguese"]       = "pt_PT.ISO-8859-1";
-  language_aliases["romanian"]         = "ro_RO.ISO-8859-2";
-  language_aliases["russian"]          = "ru_RU.ISO-8859-5";
-  language_aliases["slovak"]           = "sk_SK.ISO-8859-2";
-  language_aliases["slovene"]          = "sl_SI.ISO-8859-2";
-  language_aliases["slovenian"]        = "sl_SI.ISO-8859-2";
-  language_aliases["spanish"]          = "es_ES.ISO-8859-1";
-  language_aliases["swedish"]          = "sv_SE.ISO-8859-1";
-  language_aliases["thai"]             = "th_TH.TIS-620";
-  language_aliases["turkish"]          = "tr_TR.ISO-8859-9";
-}
-
-#endif 
-
+
 } // namespace tinygettext
 
 /* EOF */
