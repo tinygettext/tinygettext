@@ -1,3 +1,9 @@
+* rework Language somehow or accept
+  set_language(char[3] language, char[3] code)
+  calls or something like this
+
+* make a release and let SuperTux link to the tags/tinygettext-0.1.0 instead of trunk/
+
 * add a way to toggle if fuzzy messages should be included or not
 
 * Limit parser to only accept valid .po files, currently it seems to
@@ -15,9 +21,9 @@
   FL_FindLocale( &locale, FL_MESSAGES );
   if(locale->lang) {
     if (locale->country) {
-      set_language(get_language_def(std::string(locale->lang)+"_"+std::string(locale->country)));
+      dictionary_manager->set_language(get_language_def(std::string(locale->lang)+"_"+std::string(locale->country)));
     } else {
-      set_language(get_language_def(locale->lang));
+      dictionary_manager->set_language(get_language_def(locale->lang));
     }
   }
   FL_FreeLocale( &locale );

@@ -80,45 +80,86 @@ LanguageDef lang_sr("sr", "Serbian",           2, plural2_2); // "nplurals=2; pl
 LanguageDef lang_zh_TW("zh_TW", "Chinese (traditional)",  1, plural1); // "nplurals=1; plural=0;"
 //*}
 
-Language
-get_language_def(const std::string& name)
+LanguageDef*
+get_language_def(const std::string& language, const std::string& country)
 {
-  if (name == "hu")      return &lang_hu;
-  else if (name == "ja") return &lang_ja;
-  else if (name == "ko") return &lang_ko;
-  else if (name == "tr") return &lang_tr;
-  else if (name == "da") return &lang_da;
-  else if (name == "nl") return &lang_nl;
-  else if (name == "en") return &lang_en;
-  else if (name == "fo") return &lang_fo;
-  else if (name == "de") return &lang_de;
-  else if (name == "nb") return &lang_nb;
-  else if (name == "no") return &lang_no;
-  else if (name == "nn") return &lang_nn;
-  else if (name == "sv") return &lang_sv;
-  else if (name == "et") return &lang_et;
-  else if (name == "fi") return &lang_fi;
-  else if (name == "el") return &lang_el;
-  else if (name == "he") return &lang_he;
-  else if (name == "it") return &lang_it;
-  else if (name == "pt") return &lang_pt;
-  else if (name == "es") return &lang_es;
-  else if (name == "eo") return &lang_eo;
-  else if (name == "fr") return &lang_fr;
-  else if (name == "pt_BR") return &lang_pt_BR;
-  else if (name == "lv") return &lang_lv;
-  else if (name == "ga") return &lang_ga;
-  else if (name == "lt") return &lang_lt;
-  else if (name == "hr") return &lang_hr;
-  else if (name == "cs") return &lang_cs;
-  else if (name == "ru") return &lang_ru;
-  else if (name == "uk") return &lang_uk;
-  else if (name == "sk") return &lang_sk;
-  else if (name == "pl") return &lang_pl;
-  else if (name == "sl") return &lang_sl;
-  else if (name == "sr") return &lang_sr;
-  else if (name == "zh_TW") return &lang_zh_TW;
+  if      (language == "hu") return &lang_hu;
+  else if (language == "ja") return &lang_ja;
+  else if (language == "ko") return &lang_ko;
+  else if (language == "tr") return &lang_tr;
+  else if (language == "da") return &lang_da;
+  else if (language == "nl") return &lang_nl;
+  else if (language == "en") return &lang_en;
+  else if (language == "fo") return &lang_fo;
+  else if (language == "de") return &lang_de;
+  else if (language == "nb") return &lang_nb;
+  else if (language == "no") return &lang_no;
+  else if (language == "nn") return &lang_nn;
+  else if (language == "sv") return &lang_sv;
+  else if (language == "et") return &lang_et;
+  else if (language == "fi") return &lang_fi;
+  else if (language == "el") return &lang_el;
+  else if (language == "he") return &lang_he;
+  else if (language == "it") return &lang_it;
+  else if (language == "pt") return &lang_pt;
+  else if (language == "es") return &lang_es;
+  else if (language == "eo") return &lang_eo;
+  else if (language == "fr") return &lang_fr;
+  else if (language == "pt_BR") return &lang_pt_BR;
+  else if (language == "lv") return &lang_lv;
+  else if (language == "ga") return &lang_ga;
+  else if (language == "lt") return &lang_lt;
+  else if (language == "hr") return &lang_hr;
+  else if (language == "cs") return &lang_cs;
+  else if (language == "ru") return &lang_ru;
+  else if (language == "uk") return &lang_uk;
+  else if (language == "sk") return &lang_sk;
+  else if (language == "pl") return &lang_pl;
+  else if (language == "sl") return &lang_sl;
+  else if (language == "sr") return &lang_sr;
+  else if (language == "zh_TW") return &lang_zh_TW;
   else return &lang_en;
+}
+
+Language::Language(const std::string& language, const std::string& country)
+{
+  language_def = get_language_def(language, country);
+}
+
+Language::Language(const std::string& str)
+{
+  // FIXME: Do alias mapping and stuff
+  language_def = get_language_def(str, "");
+}
+
+Language::Language()
+  : language_def(&lang_en)
+{
+}
+
+std::string
+Language::get_language() const
+{
+  return language_def->code; // FIXME: Wrong
+}
+
+std::string
+Language::get_country()  const
+{
+  return language_def->code; // FIXME: Wrong
+}
+
+
+std::string
+Language::get_name()  const
+{
+  return language_def->name;
+}
+
+int
+Language::plural(int n) const
+{
+  return language_def->plural(n);
 }
 
 #if 0

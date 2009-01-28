@@ -45,7 +45,6 @@ static bool has_suffix(const std::string& lhs, const std::string rhs)
 
 DictionaryManager::DictionaryManager(const std::string& charset_)
   : charset(charset_),
-    current_language(0),
     current_dict(0)
 {
   dir_op.enumerate_files = unix_enumerate_files;
@@ -95,7 +94,7 @@ DictionaryManager::get_dictionary()
 }
 
 Dictionary&
-DictionaryManager::get_dictionary(Language language)
+DictionaryManager::get_dictionary(const Language& language)
 {
   //log_debug << "Dictionary for language \"" << spec << "\" requested" << std::endl;
   //log_debug << "...normalized as \"" << lang << "\"" << std::endl;
@@ -129,7 +128,7 @@ DictionaryManager::get_dictionary(Language language)
                     { // ignore anything that isn't a .po file
                       
                       // 
-                      if (has_prefix(*filename, language->code))
+                      if (has_prefix(*filename, language.get_language()))
                         {
                           //log_debug << "Loading dictionary for language \"" << lang << "\" from \"" << filename << "\"" << std::endl;
                           std::string pofile = *p + "/" + *filename;
@@ -182,7 +181,7 @@ DictionaryManager::get_languages()
 }
 
 void
-DictionaryManager::set_language(Language language)
+DictionaryManager::set_language(const Language& language)
 {
   if (current_language != language)
     {

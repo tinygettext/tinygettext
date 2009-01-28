@@ -33,7 +33,10 @@ struct LanguageDef {
   /** Language name: "German", "English", "French", ... */
   const char* name;
 
+  // FIXME: Not actually used by tinygettext, I guess only used by po
+  // edit tools to check if all translations are in place
   int         nplural;
+
   PluralFunc  plural;
 
   LanguageDef(const char* code_, const char* name_,  int nplural_, PluralFunc plural_)
@@ -41,13 +44,24 @@ struct LanguageDef {
   {}
 };
 
-typedef LanguageDef* Language;
+/** Wrapper class around LanguageDef */
+class Language
+{
+private:
+  LanguageDef* language_def;
 
-Language get_language_def(const std::string& name);
+public:
+  Language(const std::string& language, const std::string& country);
+  Language(const std::string& str);
+  Language();
 
-// Englishe Language defaults
-extern LanguageDef lang_en;
-int plural2_1(int n);
+  operator bool() const { return language_def; }
+
+  std::string get_language() const;
+  std::string get_country()  const;
+  std::string get_name()     const;
+  int plural(int n) const;
+};
 
 } // namespace tinygettext
 

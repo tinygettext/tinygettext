@@ -62,10 +62,10 @@ public:
   Dictionary& get_dictionary();
 
   /** Get dictionary for language */
-  Dictionary& get_dictionary(Language language);
+  Dictionary& get_dictionary(const Language& language);
 
   /** Set a language based on a four? letter country code */
-  void set_language(Language language);
+  void set_language(const Language& language);
 
   /** returns the (normalized) country code of the currently used language */
   Language get_language() const;

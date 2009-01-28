@@ -43,7 +43,7 @@ private:
 
 public:
   /** */
-  Dictionary(Language language = &lang_en, const std::string& charset = "utf-8");
+  Dictionary(const Language& language = Language(), const std::string& charset = "utf-8");
 
   /** Return the charset used for this dictionary */
   std::string get_charset() const;
