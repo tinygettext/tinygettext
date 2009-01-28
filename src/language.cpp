@@ -21,7 +21,7 @@
 #include "language.hpp"
 
 namespace tinygettext {
-
+
 typedef int (*PluralFunc)(int n);
 
 struct LanguageSpec {
@@ -206,13 +206,16 @@ resolve_language_alias(std::string& name)
       language_aliases["thai"]             = "th_TH.TIS-620";
       language_aliases["turkish"]          = "tr_TR.ISO-8859-9";
     }
-  else
+
+  std::string name_lowercase;
+  name_lowercase.resize(name.size());
+  for(std::string::size_type i = 0; i < name.size(); ++i)
+    name_lowercase[i] = tolower(name[i]);
+
+  Aliases::iterator i = language_aliases.find(name_lowercase);
+  if (i != language_aliases.end()) 
     {
-      Aliases::iterator i = language_aliases.find(name);
-      if (i != language_aliases.end()) 
-        {
-          name = i->second;
-        }
+      name = i->second;
     }
 }
 
@@ -226,7 +229,7 @@ Language::Language(const std::string& spec_str_)
   std::string spec_str = spec_str_;
 
   resolve_language_alias(spec_str);
-
+  
   { // Remove encoding from the language variable (i.e. "da_DK.ISO-8859-1")
     std::string::size_type s = spec_str.find(".");
     if (s != std::string::npos) 
@@ -239,7 +242,7 @@ Language::Language(const std::string& spec_str_)
   std::string country;
 
   { // Bring language into a form of de_DE
-    std::string::size_type s = language.find("_");
+    std::string::size_type s = spec_str.find("_");
     if (s != std::string::npos) 
       {
         language = spec_str.substr(0, s);
@@ -251,7 +254,6 @@ Language::Language(const std::string& spec_str_)
       }
   }
 
-  // FIXME: Do alias mapping and stuff
   language_spec = get_language_spec(language, country);
 }
 
