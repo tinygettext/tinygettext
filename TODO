@@ -1,18 +1,7 @@
-* rework Language somehow or accept
-  set_language(char[3] language, char[3] code)
-  calls or something like this
+SuperTux specific stuff:
+========================
 
 * make a release and let SuperTux link to the tags/tinygettext-0.1.0 instead of trunk/
-
-* add a way to toggle if fuzzy messages should be included or not
-
-* Limit parser to only accept valid .po files, currently it seems to
-  accept way to much. Making it line oriented should make things quite easy
-
-  % info gettext PO
-
-* DictionaryManager: Does it need to have current_dict? Or should that
-  be handled at application level?
 
 * move this into SuperTux:
 
@@ -28,24 +17,51 @@
   }
   FL_FreeLocale( &locale );
 
+* SUPERTUX_LANG needs to be handled in SuperTux
+
+tinygettext specific stuff:
+===========================
 
-* implent for LanguageDef
+* a recomment procedure do handle words with multiple meanings should
+  be documented:
 
-  /** Language code: de, en, ... (always two letters lowercase) */
-  std::string get_language_code() {}
+  Exit -> Ausgang
+  Exit -> Beenden
 
-  /** Country code: US, BR, AT, DE, ... (always two letters uppercase) */
-  std::string get_country_code()  {}
+  See:
+
+  % info gettext contexts
+
+  pgettext (const char *msgctxt, const char *msgid);
+  npgettext (const char *msgctxt, const char *msgid, const char *msgplural, int n);
+
+  #define GETTEXT_CONTEXT_GLUE "\004"
+
+* add more languages (i.e. all that are common in free software, list
+  currently seems rather lacking)
+
+* rename POFileReader, since it reads from streams, not files
+  (POReader, POParser, ... ?)
+
+* add a way to toggle if fuzzy messages should be included or not
+  (requires changes to POFileReader)
+
+* Limit parser to only accept valid .po files, currently it seems to
+  accept way to much. Making it line oriented should make things quite easy
+
+  % info gettext PO
+
+* comments should be parsed, since they contain meta information such
+  as fuzzy markers
 
 * std::set<std::string> DictionaryManager::get_languages() should return std::set<Language>
 
 * enumerating files should fallback to more generic languages, i.e.:
 
-  de_AT should load de.po (somewhat already the case, but different mechanic then supertux
+  de_AT should load de.po (somewhat already the case, but different mechanic then supertux)
 
-* SUPERTUX_LANG needs to be handled in SuperTux
-
-* Customizability:
+* Customizability could use grouping or other means to make it more
+  abvious:
 
   - enumerate_files (list files in directory)
   - free_list (cleanup, of the above)
@@ -53,10 +69,17 @@
   - iconv (???)
   - logging (log_callback(std::string))
 
+* iconv handling needs cleanup, since some systems don't provide
+  iconv, but SDL does and is used by many games, currently HAVE_SDL
+  macro seems to weak a fix
+
 * translate() char* vs string needs cleanup
 
-* document how to use tinygettext and make it work like gettext
+* figure out how up-to-date other tinygettext implementations in the
+  wild are (LinCity):
 
+Pingus: 
+-------
 dictionary.hpp (synced with Pingus)
 dictionary_manager.hpp (PhysFS vs opendir())
 language_def.hpp (synced with Pingus)
@@ -65,32 +88,13 @@ tinygettext.hpp (iconv vs convert)
 
 * get rid of TRANSLATION_DEBUG, turn it into a specific log level
 
-* DictionaryManager::DictionaryManager() is highly unportable, seems
-  best to kick it out and let the application deal with the problem.
-  This also means kicking out findlocale.cpp and findlocale.hpp
-
-* DictionaryManager manager parses /usr/share/locale/locale.alias,
-  which doesn't sound like a good idea and would likely be better if
-  it would just be a buildin list, also there is /etc/locale.alias
-  which isn't handled at all.
-
-  see DictionaryManager::parseLocaleAliases()
-
-* tinygettext has gained a lot of external dependecies in SuperTux:
-  SDL, physfs, log.h, config.h, ... these have to be trimmed down or
-  #ifdef'ed with HAVE_LIBSDL, HAVE_PHYSFS
-
-* comments should be parsed, since they contain meta information such
-  as fuzzy markers
-
 * a hashmap instead of std::map might be a good idea
 
 * support for .gmo files would be cool
+
+tinygettext Documentation:
+==========================
 
-* a recomment procedure do handle words with multiple meanings should
-  be documented:
-
-  Exit -> Ausgang
-  Exit -> Beenden
-
+* document how to use tinygettext and make it work like gettext
+
 # EOF #
