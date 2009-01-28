@@ -45,7 +45,8 @@ static bool has_suffix(const std::string& lhs, const std::string rhs)
 
 DictionaryManager::DictionaryManager(const std::string& charset_)
   : charset(charset_),
-    current_dict(&empty_dict)    
+    current_language(0),
+    current_dict(0)
 {
   dir_op.enumerate_files = unix_enumerate_files;
   dir_op.free_list       = unix_free_list;
@@ -68,13 +69,35 @@ DictionaryManager::clear_cache()
       delete i->second;
     }
   dictionaries.clear();
+
+  current_dict = 0;
+}
+
+Dictionary&
+DictionaryManager::get_dictionary()
+{
+  if (current_dict)
+    {
+      return *current_dict; 
+    }
+  else
+    {
+      if (current_language)
+        {
+          current_dict = &get_dictionary(current_language);
+          return *current_dict;
+        }
+      else
+        {
+          return empty_dict;
+        }
+    }
 }
 
 Dictionary&
 DictionaryManager::get_dictionary(Language language)
 {
   //log_debug << "Dictionary for language \"" << spec << "\" requested" << std::endl;
-
   //log_debug << "...normalized as \"" << lang << "\"" << std::endl;
 
   Dictionaries::iterator i = dictionaries.find(language); 
@@ -161,33 +184,31 @@ DictionaryManager::get_languages()
 void
 DictionaryManager::set_language(Language language)
 {
-  //log_debug << "set_language \"" << lang << "\"" << std::endl;
-  //log_debug << "==> \"" << language << "\"" << std::endl;
-  current_dict = &(get_dictionary(language));
+  if (current_language != language)
+    {
+      current_language = language;
+      current_dict     = 0;
+    }
 }
 
 Language
 DictionaryManager::get_language() const
 {
-  return current_dict->get_language();
+  return current_language;
 }
 
 void
 DictionaryManager::set_charset(const std::string& charset_)
 {
-  Language current_language = current_dict->get_language();
   clear_cache(); // changing charset invalidates cache
   charset = charset_;
-  set_language(current_language);
 }
 
 void
 DictionaryManager::add_directory(const std::string& pathname)
 {
-  Language current_language = current_dict->get_language();
   clear_cache(); // adding directories invalidates cache
   search_path.push_back(pathname);
-  set_language(current_language); // FIXME: Seems very stupid, since it triggers a re-read of the .po files
 }
 
 void

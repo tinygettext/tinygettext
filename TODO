@@ -1,10 +1,9 @@
-* void
-DictionaryManager::add_directory(const std::string& pathname)
-{
-...
-  set_language(current_language); // FIXME: Seems very stupid, since it triggers a re-read of the .po files
-...
-}
+* add a way to toggle if fuzzy messages should be included or not
+
+* Limit parser to only accept valid .po files, currently it seems to
+  accept way to much. Making it line oriented should make things quite easy
+
+  % info gettext PO
 
 * DictionaryManager: Does it need to have current_dict? Or should that
   be handled at application level?

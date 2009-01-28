@@ -43,8 +43,10 @@ private:
   SearchPath search_path;
 
   std::string charset;
-
+  
+  Language    current_language;
   Dictionary* current_dict;
+
   Dictionary  empty_dict;
 
   DirOp dir_op;
@@ -57,8 +59,7 @@ public:
 
   /** Return the currently active dictionary, if none is set, an empty
       dictionary is returned. */
-  Dictionary& get_dictionary()
-  { return *current_dict; }
+  Dictionary& get_dictionary();
 
   /** Get dictionary for language */
   Dictionary& get_dictionary(Language language);
