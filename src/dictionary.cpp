@@ -19,6 +19,8 @@
 
 #include "dictionary.hpp"
 
+#define GETTEXT_CONTEXT_GLUE "\004"
+
 namespace tinygettext {
 
 Dictionary::Dictionary(const Language& language_, const std::string& charset_)
@@ -32,8 +34,14 @@ Dictionary::get_charset() const
   return charset;
 }
 
+const char*
+Dictionary::translate_plural(const char* msgid, const char* msgidplural, int num)
+{
+  return translate_plural(std::string(msgid), std::string(msgidplural), num).c_str();
+}
+
 std::string
-Dictionary::translate(const std::string& msgid, const std::string& msgid2, int num)
+Dictionary::translate_plural(const std::string& msgid, const std::string& msgid2, int num)
 {
   PluralEntries::iterator i = plural_entries.find(msgid);
   std::map<int, std::string>& msgstrs = i->second;
@@ -71,18 +79,7 @@ Dictionary::translate(const std::string& msgid, const std::string& msgid2, int n
 const char*
 Dictionary::translate(const char* msgid)
 {
-  Entries::iterator i = entries.find(msgid);
-  if (i != entries.end() && !i->second.empty())
-    {
-      return i->second.c_str();
-    }
-  else
-    {
-#ifdef TRANSLATION_DEBUG
-      log_warning << "Couldn't translate: " << msgid << std::endl;
-#endif
-      return msgid;
-    }
+  return translate(std::string(msgid)).c_str();
 }
 
 std::string
@@ -100,6 +97,32 @@ Dictionary::translate(const std::string& msgid)
 #endif
       return msgid;
     }
+}
+
+std::string
+Dictionary::translate_ctx(const std::string& msgctx, const std::string& msgid)
+{
+  // FIXME: Incorrect: leave glue in if no translation is available
+  return translate(msgctx + GETTEXT_CONTEXT_GLUE + msgid);
+}
+
+const char* 
+Dictionary::translate_ctx(const char* msgctx, const char* msgid)
+{
+  return translate_ctx(std::string(msgctx), std::string(msgid)).c_str();
+}
+
+std::string
+Dictionary::translate_ctx_plural(const std::string& msgctx, const std::string& msgid, const std::string& msgidplural, int num)
+{
+  // FIXME: Incorrect: leave glue in if no translation is available
+  return translate_plural(msgctx + GETTEXT_CONTEXT_GLUE + msgid, msgidplural, num);
+}
+
+const char*
+Dictionary::translate_ctx_plural(const char* msgctx, const char* msgid, const char* msgidplural, int num)
+{
+  return translate_ctx_plural(std::string(msgctx), std::string(msgid), std::string(msgidplural), num).c_str();
 }
 
 void

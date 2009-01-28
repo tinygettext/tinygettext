@@ -51,15 +51,22 @@ public:
   /** Return the language used for this dictionary */
   Language get_language() const;
 
+  /** Translate the string \a msgid. */
+  std::string translate(const std::string& msgid);
+  const char* translate(const char* msgid);
+
   /** Translate the string \a msgid to its correct plural form, based
       on the number of items given by \a num. \a msgid2 is \a msgid in
       plural form. */
-  std::string translate(const std::string& msgid, const std::string& msgid2, int num);
+  std::string translate_plural(const std::string& msgid, const std::string& msgidplural, int num);
+  const char* translate_plural(const char* msgid, const char* msgidplural, int num);
 
-  /** Translate the string \a msgid. */
-  std::string translate(const std::string& msgid);
-  /** Translate the string \a msgid. */
-  const char* translate(const char* msgid);
+  /** Translate the string \a msgid that is in context \a msgctx. */
+  std::string translate_ctx(const std::string& msgctx, const std::string& msgid);
+  const char* translate_ctx(const char* msgctx, const char* msgid);
+
+  std::string translate_ctx_plural(const std::string& msgctx, const std::string& msgid, const std::string& msgidplural, int num);
+  const char* translate_ctx_plural(const char* msgctx, const char* msgid, const char* msgidplural, int num);
 
   /** Add a translation from \a msgid to \a msgstr to the dictionary,
       where \a msgid is the singular form of the message, msgid2 the

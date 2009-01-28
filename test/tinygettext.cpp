@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 
           Dictionary dict;
           read_dictionary(filename, dict);
-          std::cout << dict.translate(message_singular, message_plural, num) << std::endl;
+          std::cout << dict.translate_plural(message_singular, message_plural, num) << std::endl;
         }
       else if ((argc == 4 || argc == 5) && strcmp(argv[1], "directory") == 0)
         {

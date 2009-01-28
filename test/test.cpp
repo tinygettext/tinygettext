@@ -24,7 +24,7 @@
 
 #define _(String) gettext(String)
 #define gettext(String) dict.translate(String)
-#define ngettext(msgid, msgid2, num) dict.translate(msgid, msgid2, num).c_str()
+#define ngettext(msgid, msgid2, num) dict.translate_plural(msgid, msgid2, num)
 
 int main(int argc, char** argv)
 {
