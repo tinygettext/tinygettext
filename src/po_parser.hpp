@@ -30,6 +30,7 @@ class Dictionary;
 class POParser
 {
 private:
+  std::string filename;
   std::istream& in;
   Dictionary& dict;
   IConv conv;
@@ -40,22 +41,26 @@ private:
 
   int line_number;
   std::string current_line;
-
-  POParser(std::istream& in_, Dictionary& dict_);
+  
+  POParser(const std::string& filename, std::istream& in_, Dictionary& dict_);
   ~POParser();
 
   void parse_header(const std::string& header);
   void parse();
   void next_line();
   std::string get_string(int skip);
-  void get_string(std::ostringstream& str, int skip);
+  void get_string_line(std::ostringstream& str, int skip);
   bool is_empty_line();
   bool prefix(const char* );
   void error(const std::string& msg);
   void warning(const std::string& msg);
 
 public:
-  static void parse(std::istream& in, Dictionary& dict);
+  /** @param filename name of the istream, only used in error messages
+      @param in stream from which the PO file is read.
+      @param dict dictionary to which the strings are written
+  */
+  static void parse(const std::string& filename, std::istream& in, Dictionary& dict);
 
 private:
   POParser (const POParser&);

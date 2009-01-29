@@ -33,16 +33,16 @@
 namespace tinygettext {
 
 void
-POParser::parse(std::istream& in, Dictionary& dict)
+POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
 {
-  POParser parser(in, dict);
+  POParser parser(filename, in, dict);
   parser.parse();
 }
 
 class POParserError {};
 
-POParser::POParser(std::istream& in_, Dictionary& dict_)
-  : in(in_), dict(dict_),
+POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_)
+  : filename(filename_), in(in_), dict(dict_),
     running(false), eof(false), big5(false),
     line_number(0)
 {
@@ -55,14 +55,14 @@ POParser::~POParser()
 void
 POParser::warning(const std::string& msg)
 {
-  log_warning << line_number << ": " << msg << ": " << current_line << std::endl;
+  log_warning << filename << ":" << line_number << ": warning: " << msg << ": " << current_line << std::endl;
   //log_warning << "Line: " << current_line << std::endl;
 }
 
 void
 POParser::error(const std::string& msg)
 {
-  log_warning << line_number << ": " << msg  << ": " << current_line << std::endl;
+  log_warning << filename << ":" << line_number << ": error: " << msg  << ": " << current_line << std::endl;
 
   // Try to recover from an error by searching for start of another entry
   do
@@ -81,11 +81,14 @@ POParser::next_line()
 }
 
 void
-POParser::get_string(std::ostringstream& out, int skip)
+POParser::get_string_line(std::ostringstream& out, int skip)
 {
-  if (skip < (int)current_line.size() && current_line[skip] != '"')
-    error("expected start of string '\"'");
+  if (skip+1 >= (int)current_line.size())
+    error("unexpected end of line5");
 
+  if (current_line[skip] != '"')
+    error("expected start of string '\"'");
+  
   std::string::size_type i;
   for(i = skip+1; current_line[i] != '\"'; ++i)
     {
@@ -140,7 +143,8 @@ POParser::get_string(std::ostringstream& out, int skip)
   for(i = i+1; i < current_line.size(); ++i)
     if (!isspace(current_line[i]))
       {
-        error("unexpected garbage after string: ");
+        warning("unexpected garbage after string ignoren");
+        break;
       }
 }
 
@@ -148,14 +152,56 @@ std::string
 POParser::get_string(int skip)
 {
   std::ostringstream out;
-  get_string(out, skip);
+
+  if (skip+1 >= (int)current_line.size())
+    error("unexpected end of line+");
+
+  if (current_line[skip] == ' ' && current_line[skip+1] == '"')
+    {
+      get_string_line(out, skip+1);
+    }
+  else
+    {
+      warning("keyword and string must be seperated by a single space");
+
+      for(;;)
+        {
+          if (skip >= (int)current_line.size())
+            error("unexpected end of line");
+          else if (current_line[skip] == '\"')
+            {
+              get_string_line(out, skip);
+              break;
+            }
+          else if (!isspace(current_line[skip]))
+            error("unexpected character");
+          else
+            ; // skip space
+
+          skip += 1;
+        }
+    }
   
  next:
   next_line();
-  if (current_line.size() >= 1 && current_line[0] == '"')
+  for(std::string::size_type i = 0; i < current_line.size(); ++i)
     {
-      get_string(out, 0);
-      goto next;
+      if (current_line[i] == '"')
+        {
+          if (i == 1)
+            warning("leading whitespace before string");
+
+          get_string_line(out, i);
+          goto next;
+        }
+      else if (isspace(current_line[i]))
+        {
+          // skip
+        }
+      else
+        {
+          break;
+        }
     }
 
   return out.str();
@@ -269,20 +315,20 @@ POParser::parse()
 
           if (!is_empty_line())
             {
-              if (prefix("msgctxt "))
+              if (prefix("msgctxt"))
                 {
                   has_msgctxt = true;
-                  msgctxt = get_string(8);
+                  msgctxt = get_string(7);
                 }
 
-              if (prefix("msgid "))
-                msgid = get_string(6);
+              if (prefix("msgid"))
+                msgid = get_string(5);
               else
                 error("expected 'msgid'");
 
-              if (prefix("msgid_plural "))
+              if (prefix("msgid_plural"))
                 {
-                  std::string msgid_plural = get_string(13);
+                  std::string msgid_plural = get_string(12);
                   std::map<int, std::string> msgstr_num;
 
                 next:
@@ -294,9 +340,9 @@ POParser::parse()
                   else if (prefix("msgstr[") &&
                            current_line.size() > 8 && 
                            isdigit(current_line[7]) && current_line[8] == ']')
-                    {                 
+                    {
                       int number = current_line[7] - '0';
-                      msgstr_num[number] = get_string(10);
+                      msgstr_num[number] = get_string(9);
                       goto next;
                     }
                   else 
@@ -313,9 +359,9 @@ POParser::parse()
                     std::cout << "msgstr[" << i->first << "] \"" << conv.convert(i->second) << "\"" << std::endl;
                   std::cout << std::endl;
                 }
-              else if (prefix("msgstr "))
+              else if (prefix("msgstr"))
                 {
-                  std::string msgstr = get_string(7);
+                  std::string msgstr = get_string(6);
 
                   if (msgid.empty())
                     {

@@ -22,8 +22,10 @@ SuperTux specific stuff:
 tinygettext specific stuff:
 ===========================
 
-* POParser can handle Big5, but needs testing, weird stuff with '\\' (i.e. some seem to espace it while others don't)
-* POParser can't handle tin.po
+* get rid of goto
+
+* POParser can handle Big5, but needs testing, weird stuff with '\\'
+  (i.e. some seem to espace it while others don't)
 
 * _()  -> getext() (gettext default)
   N_(id) -> gettext_noop(id) (gettext default)
@@ -82,20 +84,19 @@ tinygettext specific stuff:
   macro seems to weak a fix. We could copy SDL's iconv handling into
   tinygettext.
 
-* translate() char* vs string needs cleanup
-
 * figure out how up-to-date other tinygettext implementations in the
   wild are (LinCity):
 
-Pingus: 
--------
-dictionary.hpp (synced with Pingus)
-dictionary_manager.hpp (PhysFS vs opendir())
-language_def.hpp (synced with Pingus)
-po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
-tinygettext.hpp (iconv vs convert)
+  Pingus: 
+  -------
+  dictionary.hpp (synced with Pingus)
+  dictionary_manager.hpp (PhysFS vs opendir())
+  language_def.hpp (synced with Pingus)
+  po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
+  tinygettext.hpp (iconv vs convert)
 
-* get rid of TRANSLATION_DEBUG, turn it into a specific log level
+* get rid of TRANSLATION_DEBUG, turn it into a specific log level:
+  log_warning, log_info, log_error
 
 * a hashmap instead of std::map might be a good idea
 

@@ -23,11 +23,9 @@
 #include "tinygettext/tinygettext.hpp"
 #include "tinygettext/log.hpp"
 
-std::string current_file;
-
 void my_log_callback(const std::string& err)
 {
-  std::cerr << current_file << ":" << err;
+  std::cerr << err;
 }
 
 int main(int argc, char** argv)
@@ -49,10 +47,8 @@ int main(int argc, char** argv)
             }
           else
             {
-              //std::cout << "Parsing: " << argv[i] << std::endl;
-              current_file = argv[i];
               tinygettext::Dictionary dict;
-              tinygettext::POParser::parse(in, dict);
+              tinygettext::POParser::parse(argv[i], in, dict);
             }
         }
     }  
