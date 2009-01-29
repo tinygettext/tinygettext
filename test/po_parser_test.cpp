@@ -21,6 +21,14 @@
 #include <string.h>
 #include <iostream>
 #include "tinygettext/tinygettext.hpp"
+#include "tinygettext/log.hpp"
+
+std::string current_file;
+
+void my_log_callback(const std::string& err)
+{
+  std::cerr << current_file << ":" << err;
+}
 
 int main(int argc, char** argv)
 {
@@ -30,6 +38,8 @@ int main(int argc, char** argv)
     }
   else
     {
+      tinygettext::log_callback = my_log_callback;
+
       for(int i = 1; i < argc; ++i)
         {
           std::ifstream in(argv[i]);
@@ -39,7 +49,8 @@ int main(int argc, char** argv)
             }
           else
             {
-              std::cout << "Parsing: " << argv[i] << std::endl;
+              //std::cout << "Parsing: " << argv[i] << std::endl;
+              current_file = argv[i];
               tinygettext::Dictionary dict;
               tinygettext::POParser::parse(in, dict);
             }
