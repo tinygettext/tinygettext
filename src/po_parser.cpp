@@ -357,7 +357,10 @@ POParser::parse()
                   if (!is_empty_line())
                     error("expected 'msgstr[N]' or empty line");
                   
-                  dict.add_translation(msgid, msgid_plural, msgstr_num);
+                  if (has_msgctxt)
+                    dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
+                  else
+                    dict.add_translation(msgid, msgid_plural, msgstr_num);
 
                   if (0)
                     {
@@ -378,7 +381,10 @@ POParser::parse()
                     }
                   else
                     {
-                      dict.add_translation(msgid, msgstr);
+                      if (has_msgctxt)
+                        dict.add_translation(msgctxt, msgid, msgstr);
+                      else
+                        dict.add_translation(msgid, msgstr);
 
                       if (0)
                         {

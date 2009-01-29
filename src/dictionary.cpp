@@ -100,29 +100,29 @@ Dictionary::translate(const std::string& msgid)
 }
 
 std::string
-Dictionary::translate_ctx(const std::string& msgctx, const std::string& msgid)
+Dictionary::translate_ctxt(const std::string& msgctx, const std::string& msgid)
 {
   // FIXME: Incorrect: leave glue in if no translation is available
   return translate(msgctx + GETTEXT_CONTEXT_GLUE + msgid);
 }
 
 const char* 
-Dictionary::translate_ctx(const char* msgctx, const char* msgid)
+Dictionary::translate_ctxt(const char* msgctx, const char* msgid)
 {
-  return translate_ctx(std::string(msgctx), std::string(msgid)).c_str();
+  return translate_ctxt(std::string(msgctx), std::string(msgid)).c_str();
 }
 
 std::string
-Dictionary::translate_ctx_plural(const std::string& msgctx, const std::string& msgid, const std::string& msgidplural, int num)
+Dictionary::translate_ctxt_plural(const std::string& msgctxt, const std::string& msgid, const std::string& msgidplural, int num)
 {
   // FIXME: Incorrect: leave glue in if no translation is available
-  return translate_plural(msgctx + GETTEXT_CONTEXT_GLUE + msgid, msgidplural, num);
+  return translate_plural(msgctxt + GETTEXT_CONTEXT_GLUE + msgid, msgidplural, num);
 }
 
 const char*
-Dictionary::translate_ctx_plural(const char* msgctx, const char* msgid, const char* msgidplural, int num)
+Dictionary::translate_ctxt_plural(const char* msgctxt, const char* msgid, const char* msgidplural, int num)
 {
-  return translate_ctx_plural(std::string(msgctx), std::string(msgid), std::string(msgidplural), num).c_str();
+  return translate_ctxt_plural(std::string(msgctxt), std::string(msgid), std::string(msgidplural), num).c_str();
 }
 
 void
@@ -137,6 +137,22 @@ Dictionary::add_translation(const std::string& msgid, const std::string& ,
 void
 Dictionary::add_translation(const std::string& msgid, const std::string& msgstr)
 {
+  entries[msgid] = msgstr;
+}
+
+void
+Dictionary::add_translation(const std::string& msgctxt, 
+                            const std::string& msgid, const std::string& msgid2,
+                            const std::map<int, std::string>& msgstrs)
+{
+  // FIXME: msgctxt is ignored
+  plural_entries[msgid] = msgstrs;
+}
+
+void
+Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid, const std::string& msgstr)
+{
+  // FIXME: msgctxt is ignored
   entries[msgid] = msgstr;
 }
 

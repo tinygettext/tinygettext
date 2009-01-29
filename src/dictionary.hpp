@@ -66,11 +66,11 @@ public:
       letters, but different meaning. For example "exit" might mean to
       quit doing something or it might refer to a door that leads
       outside (i.e. 'Ausgang' vs 'Beenden' in german) */
-  std::string translate_ctx(const std::string& msgctx, const std::string& msgid);
-  const char* translate_ctx(const char* msgctx, const char* msgid);
+  std::string translate_ctxt(const std::string& msgctxt, const std::string& msgid);
+  const char* translate_ctxt(const char* msgctxt, const char* msgid);
 
-  std::string translate_ctx_plural(const std::string& msgctx, const std::string& msgid, const std::string& msgidplural, int num);
-  const char* translate_ctx_plural(const char* msgctx, const char* msgid, const char* msgidplural, int num);
+  std::string translate_ctxt_plural(const std::string& msgctxt, const std::string& msgid, const std::string& msgidplural, int num);
+  const char* translate_ctxt_plural(const char* msgctxt, const char* msgid, const char* msgidplural, int num);
 
   /** Add a translation from \a msgid to \a msgstr to the dictionary,
       where \a msgid is the singular form of the message, msgid2 the
@@ -79,10 +79,14 @@ public:
       translate(). */
   void add_translation(const std::string& msgid, const std::string& msgid2,
                        const std::map<int, std::string>& msgstrs);
+  void add_translation(const std::string& msgctxt, 
+                       const std::string& msgid, const std::string& msgid2,
+                       const std::map<int, std::string>& msgstrs);
 
   /** Add a translation from \a msgid to \a msgstr to the
       dictionary */
   void add_translation(const std::string& msgid, const std::string& msgstr);
+  void add_translation(const std::string& msgctxt, const std::string& msgid, const std::string& msgstr);
 };
 
 } // namespace tinygettext
