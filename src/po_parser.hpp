@@ -33,7 +33,8 @@ private:
   Dictionary& dict;
 
   bool running;
-  bool eof;  
+  bool eof;
+  bool big5;
 
   int line_number;
   std::string current_line;

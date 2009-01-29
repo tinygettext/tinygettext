@@ -37,7 +37,7 @@ POParser::parse(std::istream& in, Dictionary& dict)
 }
 
 POParser::POParser(std::istream& in_, Dictionary& dict_)
-  : in(in_), dict(dict_), running(false), eof(false),
+  : in(in_), dict(dict_), running(false), eof(false), big5(false),
     line_number(0)
 {
 }
@@ -53,12 +53,14 @@ void
 POParser::error(const std::string& msg)
 {
   log_warning << line_number << ": " << msg << std::endl;
-  log_warning << " \\ " << current_line << std::endl;
+  log_warning << " line content: '" << current_line << "'" << std::endl;
 
-  exit(1);
-  while(!is_empty_line())
+  // Try to recover from an error by searching for start of another entry
+  do
     next_line();
+  while(!eof && is_empty_line());
 
+  // FIXME: throw exception
 }
 
 void
@@ -73,25 +75,37 @@ void
 POParser::get_string(std::ostringstream& out, int skip)
 {
   if (skip < (int)current_line.size() && current_line[skip] != '"')
-    error("Expected start of string '\"'");
+    error("expected start of string '\"'");
 
   std::string::size_type i;
   for(i = skip+1; current_line[i] != '\"'; ++i)
     {
-      if (i >= current_line.size())
+      if (big5 && (unsigned char)current_line[i] >= 0x81 && (unsigned char)current_line[i] <= 0xfe)
         {
-          error("Unexpected end of string");
+          out << current_line[i];
+
+          i += 1;
+          
+          if (i >= current_line.size())
+            error("invalid big5 encoding");
+          
+          out << current_line[i];
+        }
+      else if (i >= current_line.size())
+        {
+          error("unexpected end of string");
         }
       else if (current_line[i] == '\\')
         {
           i += 1;
 
           if (i >= current_line.size())
-            error("Unexpected end of string in handling '\\'");
+            error("unexpected end of string in handling '\\'");
 
           switch (current_line[i])
             {
               case 'a':  out << '\a'; break;
+              case 'b':  out << '\b'; break;
               case 'v':  out << '\v'; break;
               case 'n':  out << '\n'; break;
               case 't':  out << '\t'; break;
@@ -147,28 +161,50 @@ POParser::parse_header(const std::string& header)
           if (line.compare(0, len, "Content-Type: text/plain; charset=") == 0)
             {
               from_charset = line.substr(len);
+              break;
             }
 
           start = i+1;
         }
     }
 
-  if (from_charset.empty() || from_charset == "CHARSET")
+  for(std::string::iterator i = from_charset.begin(); i != from_charset.end(); ++i)
+    *i = tolower(*i);
+
+  if (from_charset.empty() || from_charset == "charset")
     {
       log_warning << "Error: Charset not specified for .po, fallback to UTF-8" << std::endl;
       from_charset = "utf-8";
     }
+  else if (from_charset == "big5")
+    {
+      big5 = true;
+    }
 
-  std::cout << "From Charset: " << from_charset << std::endl;
+  std::cout << "From Charset: '" << from_charset << "'" << std::endl;
 }
 
 bool
 POParser::is_empty_line()
 {
-  for(std::string::iterator i = current_line.begin(); i != current_line.end(); ++i)
+  if (current_line.empty())
     {
-      if (!isspace(*i))
+      return true;
+    }
+  else if (current_line[0] == '#')
+    { // handle comments as empty lines
+      if (current_line.size() == 1 || (current_line.size() >= 2 && isspace(current_line[1])))
+          return true;
+      else
         return false;
+    }
+  else
+    {
+      for(std::string::iterator i = current_line.begin(); i != current_line.end(); ++i)
+        {
+          if (!isspace(*i))
+            return false;
+        }
     }
   return true;
 }
@@ -225,7 +261,7 @@ POParser::parse()
           if (prefix("msgid "))
             msgid = get_string(6);
           else
-            error("Expected msgid");
+            error("expected 'msgid'");
 
           if (prefix("msgid_plural "))
             {
@@ -236,7 +272,7 @@ POParser::parse()
               if (is_empty_line())
                 {
                   if (msgstr_num.empty())
-                    error("Expected msgstr[N]");
+                    error("expected 'msgstr[N]'");
                 }
               else if (prefix("msgstr[") &&
                        current_line.size() > 8 && 
@@ -248,11 +284,11 @@ POParser::parse()
                 }
               else 
                 {
-                  error("Expected msgstr[N]");
+                  error("expected 'msgstr[N]'");
                 }
 
               if (!is_empty_line())
-                error("Expected msgstr[N] or empty line");
+                error("expected 'msgstr[N]' or empty line");
 
               std::cout << "msgid \"" << msgid << "\"" << std::endl;
               std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
@@ -277,12 +313,12 @@ POParser::parse()
             }
           else
             {
-              error("Expected msgstr or msgid_plural");
+              error("expected 'msgstr' or 'msgid_plural'");
             }
         }
       
       if (!is_empty_line())
-        error("Expected empty line");
+        error("expected empty line");
 
       next_line();
     }
