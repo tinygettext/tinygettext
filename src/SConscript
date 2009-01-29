@@ -10,6 +10,7 @@ env.StaticLibrary('tinygettext',
                    'dictionary_manager.cpp',
                    'directory.cpp',
                    'po_parser.cpp',
+                   'iconv.cpp',
                    'log.cpp'])
 
 

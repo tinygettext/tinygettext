@@ -25,12 +25,14 @@
 namespace tinygettext {
 
 class Dictionary;
+class IConv;
 
 class POParser
 {
 private:
   std::istream& in;
   Dictionary& dict;
+  IConv* conv;
 
   bool running;
   bool eof;
@@ -40,6 +42,8 @@ private:
   std::string current_line;
 
   POParser(std::istream& in_, Dictionary& dict_);
+  ~POParser();
+
   void parse_header(const std::string& header);
   void parse();
   void next_line();

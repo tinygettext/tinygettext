@@ -26,6 +26,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "tinygettext.hpp"
 #include "iconv.hpp"
 #include "log.hpp"
 
@@ -36,12 +37,13 @@ namespace tinygettext {
 #endif
 
 IConv::IConv() 
-  : m_conv(0)
+  : cd(0)
 {}
  
 IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
   : to_charset(to_charset_),
-    from_charset(from_charset_)
+    from_charset(from_charset_),
+    cd(0)
 {
   for(std::string::iterator i = to_charset.begin(); i != to_charset.end(); ++i)
     *i = tolower(*i);
@@ -51,12 +53,12 @@ IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
 
   if (to_charset == from_charset)
     {
-      m_conv = 0;
+      cd = 0;
     }
   else
     {
-      m_conv = iconv_open(to_charset.c_str(), from_charset.c_str());
-      if (m_conv == (iconv_t)-1)
+      cd = iconv_open(to_charset.c_str(), from_charset.c_str());
+      if (cd == (iconv_t)-1)
         {
           if(errno == EINVAL)
             {
@@ -77,15 +79,15 @@ IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
  
 IConv::~IConv()
 {
-  if (m_conv)
-    iconv_close(m_conv);
+  if (cd)
+    iconv_close(cd);
 }
  
 /// Convert a string from encoding to another.
 std::string
 IConv::convert(const std::string& text)
 {
-  if (!m_conv)
+  if (!cd)
     {
       return text;
     }
@@ -96,18 +98,17 @@ IConv::convert(const std::string& text)
 
       // We try to avoid to much copying around, so we write directly into
       // a std::string
-      ICONV_CONST char* inbuf = const_cast<char*>(text.c_str());
-
+      ICONV_CONST char* inbuf = const_cast<char*>(&text[0]);
       std::string result(outbytesleft, 'X');
-      char* outbuf = &result[0];
- 
+      char* outbuf = &result[0]; 
+  
       // Try to convert the text.
-      size_t ret = iconv(m_conv, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+      size_t ret = iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
       if (ret == (size_t)-1)
         {
           if (errno == EILSEQ || errno == EINVAL)
             { // invalid multibyte sequence
-              iconv(m_conv, NULL, NULL, NULL, NULL); // reset state
+              iconv(cd, NULL, NULL, NULL, NULL); // reset state
 
               // FIXME: Could try to skip the invalid byte and continue
               log_warning << "tinygettext:iconv: invalid multibyte sequence in:  \"" << text << "\"" << std::endl;
@@ -126,7 +127,7 @@ IConv::convert(const std::string& text)
             }
         }
 
-      result.resize(text.size() - outbytesleft);
+      result.resize(4*text.size() - outbytesleft);
 
       return result;
     }

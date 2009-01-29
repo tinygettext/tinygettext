@@ -29,7 +29,7 @@ class IConv
 private:
   std::string to_charset;
   std::string from_charset;
-  iconv_t m_conv;
+  iconv_t cd;
 
 public:
   IConv();
@@ -37,6 +37,10 @@ public:
   ~IConv();
 
   std::string convert(const std::string& text);
+
+private:
+  IConv (const IConv&);
+  IConv& operator= (const IConv&);
 };
 
 } // namespace tinygettext
