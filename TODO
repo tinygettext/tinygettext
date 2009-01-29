@@ -24,8 +24,11 @@ tinygettext specific stuff:
 
 * get rid of goto
 
-* POParser can handle Big5, but needs testing, weird stuff with '\\'
-  (i.e. some seem to espace it while others don't)
+* POParser can handle Big5, but needs testing.
+  Big5 is one byte for ASCII letters and two bytes for chinese ones,
+  this means some two byte characters collide with '\', some .po files
+  seem to escape the \ properly so that the string can be read as
+  usual, while others don't.
 
 * _()  -> getext() (gettext default)
   N_(id) -> gettext_noop(id) (gettext default)
@@ -50,16 +53,8 @@ tinygettext specific stuff:
 * add more languages (i.e. all that are common in free software, list
   currently seems rather lacking)
 
-* rename POFileReader, since it reads from streams, not files
-  (POReader, POParser, ... ?)
-
 * add a way to toggle if fuzzy messages should be included or not
   (requires changes to POFileReader)
-
-* Limit parser to only accept valid .po files, currently it seems to
-  accept way to much. Making it line oriented should make things quite easy
-
-  % info gettext PO
 
 * comments should be parsed, since they contain meta information such
   as fuzzy markers
@@ -69,15 +64,6 @@ tinygettext specific stuff:
 * enumerating files should fallback to more generic languages, i.e.:
 
   de_AT should load de.po (somewhat already the case, but different mechanic then supertux)
-
-* Customizability could use grouping or other means to make it more
-  abvious:
-
-  - enumerate_files (list files in directory)
-  - free_list (cleanup, of the above)
-  - open file (return std::istream)
-  - iconv (???)
-  - logging (log_callback(std::string))
 
 * iconv handling needs cleanup, since some systems don't provide
   iconv, but SDL does and is used by many games, currently HAVE_SDL
@@ -97,6 +83,9 @@ tinygettext specific stuff:
 
 * get rid of TRANSLATION_DEBUG, turn it into a specific log level:
   log_warning, log_info, log_error
+
+Random Unimportant Stuff
+========================
 
 * a hashmap instead of std::map might be a good idea
 
@@ -106,5 +95,16 @@ tinygettext Documentation:
 ==========================
 
 * document how to use tinygettext and make it work like gettext
+
+* Customizability could use grouping and documentation or other means
+  to make it more obvious:
+
+  - POParser::pedantic
+  - enumerate_files (list files in directory)
+  - free_list (cleanup, of the above)
+  - open file (return std::istream)
+  - iconv (???)
+  - logging (log_callback(std::string))
+
 
 # EOF #
