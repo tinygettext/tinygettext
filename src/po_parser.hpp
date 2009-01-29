@@ -21,18 +21,18 @@
 #define HEADER_PO_PARSER_HPP
 
 #include <iosfwd>
+#include "iconv.hpp"
 
 namespace tinygettext {
 
 class Dictionary;
-class IConv;
 
 class POParser
 {
 private:
   std::istream& in;
   Dictionary& dict;
-  IConv* conv;
+  IConv conv;
 
   bool running;
   bool eof;

@@ -42,7 +42,7 @@ POParser::parse(std::istream& in, Dictionary& dict)
 class POParserError {};
 
 POParser::POParser(std::istream& in_, Dictionary& dict_)
-  : in(in_), dict(dict_), conv(0),
+  : in(in_), dict(dict_),
     running(false), eof(false), big5(false),
     line_number(0)
 {
@@ -50,7 +50,6 @@ POParser::POParser(std::istream& in_, Dictionary& dict_)
 
 POParser::~POParser()
 {
-  delete conv;
 }
 
 void
@@ -197,8 +196,7 @@ POParser::parse_header(const std::string& header)
     }
 
   std::cout << "From Charset: '" << from_charset << "'" << std::endl;
-  delete conv;
-  conv = new IConv(from_charset, dict.get_charset());
+  conv.set_charsets(from_charset, dict.get_charset());
 }
 
 bool
@@ -312,7 +310,7 @@ POParser::parse()
                   std::cout << "msgid \"" << msgid << "\"" << std::endl;
                   std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
                   for(std::map<int, std::string>::iterator i = msgstr_num.begin(); i != msgstr_num.end(); ++i)
-                    std::cout << "msgstr[" << i->first << "] \"" << conv->convert(i->second) << "\"" << std::endl;
+                    std::cout << "msgstr[" << i->first << "] \"" << conv.convert(i->second) << "\"" << std::endl;
                   std::cout << std::endl;
                 }
               else if (prefix("msgstr "))
@@ -326,7 +324,7 @@ POParser::parse()
                   else
                     {
                       std::cout << "msgid \"" << msgid << "\"" << std::endl;
-                      std::cout << "msgstr \"" << conv->convert(msgstr) << "\"" << std::endl;
+                      std::cout << "msgstr \"" << conv.convert(msgstr) << "\"" << std::endl;
                       std::cout << std::endl;
                     }
                 }

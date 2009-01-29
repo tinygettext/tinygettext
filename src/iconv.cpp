@@ -41,10 +41,26 @@ IConv::IConv()
 {}
  
 IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
-  : to_charset(to_charset_),
-    from_charset(from_charset_),
-    cd(0)
+ : cd(0)
 {
+  set_charsets(from_charset_, to_charset_);
+}
+ 
+IConv::~IConv()
+{
+  if (cd)
+    iconv_close(cd);
+}
+ 
+void
+IConv::set_charsets(const std::string& from_charset_, const std::string& to_charset_)
+{
+  if (cd)
+    iconv_close(cd);
+
+  from_charset = from_charset_;
+  to_charset   = to_charset_;
+
   for(std::string::iterator i = to_charset.begin(); i != to_charset.end(); ++i)
     *i = tolower(*i);
 
@@ -76,13 +92,7 @@ IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
         }
     }
 }
- 
-IConv::~IConv()
-{
-  if (cd)
-    iconv_close(cd);
-}
- 
+
 /// Convert a string from encoding to another.
 std::string
 IConv::convert(const std::string& text)

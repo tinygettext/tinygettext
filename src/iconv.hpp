@@ -36,6 +36,7 @@ public:
   IConv(const std::string& fromcode, const std::string& tocode);
   ~IConv();
 
+  void set_charsets(const std::string& fromcode, const std::string& tocode);
   std::string convert(const std::string& text);
 
 private:
