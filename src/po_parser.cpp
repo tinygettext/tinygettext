@@ -233,14 +233,14 @@ POParser::parse_header(const std::string& header)
     }
 
   for(std::string::iterator i = from_charset.begin(); i != from_charset.end(); ++i)
-    *i = tolower(*i);
+    *i = toupper(*i);
 
-  if (from_charset.empty() || from_charset == "charset")
+  if (from_charset.empty() || from_charset == "CHARSET")
     {
       warning("charset not specified for .po, fallback to utf-8");
-      from_charset = "utf-8";
+      from_charset = "UTF-8";
     }
-  else if (from_charset == "big5")
+  else if (from_charset == "BIG5")
     {
       big5 = true;
     }

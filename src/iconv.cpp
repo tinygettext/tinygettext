@@ -62,10 +62,10 @@ IConv::set_charsets(const std::string& from_charset_, const std::string& to_char
   to_charset   = to_charset_;
 
   for(std::string::iterator i = to_charset.begin(); i != to_charset.end(); ++i)
-    *i = tolower(*i);
+    *i = toupper(*i);
 
   for(std::string::iterator i = from_charset.begin(); i != from_charset.end(); ++i)
-    *i = tolower(*i);
+    *i = toupper(*i);
 
   if (to_charset == from_charset)
     {
