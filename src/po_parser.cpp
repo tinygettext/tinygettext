@@ -38,14 +38,15 @@ POParser::parse(std::istream& in, Dictionary& dict)
 
 POParser::POParser(std::istream& in_, Dictionary& dict_)
   : in(in_), dict(dict_), running(false), eof(false),
-    line_number(1)
+    line_number(0)
 {
 }
 
 void
 POParser::warning(const std::string& msg)
 {
-  log_warning << msg << std::endl;
+  log_warning << "at line " << line_number << ": " << msg << std::endl;
+  log_warning << "Line: " << current_line << std::endl;
 }
 
 void
@@ -96,7 +97,12 @@ POParser::get_string(std::ostringstream& out, int skip)
               case '"':  out << '"'; break;
               case '\\': out << '\\'; break;
               default: 
-                warning("Unhandled escape in string");
+                if (0)
+                  {
+                    std::ostringstream err;
+                    err << "Unhandled escape in string: '" << current_line[i] << "'";
+                    warning(err.str());
+                  }
                 out << current_line[i-1] << current_line[i];
                 break;
             }
@@ -127,6 +133,35 @@ POParser::get_string(int skip)
   return out.str();
 }
 
+void
+POParser::parse_header(const std::string& header)
+{
+  std::string from_charset;
+  std::string::size_type start = 0;
+  for(std::string::size_type i = 0; i < header.length(); ++i)
+    {
+      if (header[i] == '\n')
+        {
+          std::string line = header.substr(start, i - start);
+          int len = strlen("Content-Type: text/plain; charset=");
+          if (line.compare(0, len, "Content-Type: text/plain; charset=") == 0)
+            {
+              from_charset = line.substr(len);
+            }
+
+          start = i+1;
+        }
+    }
+
+  if (from_charset.empty() || from_charset == "CHARSET")
+    {
+      log_warning << "Error: Charset not specified for .po, fallback to UTF-8" << std::endl;
+      from_charset = "utf-8";
+    }
+
+  std::cout << "From Charset: " << from_charset << std::endl;
+}
+
 bool
 POParser::is_empty_line()
 {
@@ -147,6 +182,18 @@ POParser::prefix(const char* prefix)
 void
 POParser::parse()
 {
+  next_line();
+
+  // skip UTF-8 intro that some text editors produce
+  // see http://en.wikipedia.org/wiki/Byte-order_mark
+  if (current_line.size() >= 3 &&
+      current_line[0] == 0xef &&
+      current_line[1] == 0xbb &&
+      current_line[2] == 0xbf)
+    {
+      current_line = current_line.substr(3);
+    }
+
   // Parser structure
   while(!eof)
     {
@@ -192,8 +239,8 @@ POParser::parse()
                     error("Expected msgstr[N]");
                 }
               else if (prefix("msgstr[") &&
-                  current_line.size() > 8 && 
-                  isdigit(current_line[7]) && current_line[8] == ']')
+                       current_line.size() > 8 && 
+                       isdigit(current_line[7]) && current_line[8] == ']')
                 {                 
                   int number = current_line[7] - '0';
                   msgstr_num[number] = get_string(10);
@@ -217,9 +264,16 @@ POParser::parse()
             {
               std::string msgstr = get_string(7);
 
-              std::cout << "msgid \"" << msgid << "\"" << std::endl;
-              std::cout << "msgstr \"" << msgstr << "\"" << std::endl;
-              std::cout << std::endl;
+              if (msgid.empty())
+                {
+                  parse_header(msgstr);
+                }
+              else
+                {
+                  std::cout << "msgid \"" << msgid << "\"" << std::endl;
+                  std::cout << "msgstr \"" << msgstr << "\"" << std::endl;
+                  std::cout << std::endl;
+                }
             }
           else
             {

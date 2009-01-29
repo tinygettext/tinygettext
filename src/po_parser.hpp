@@ -39,6 +39,7 @@ private:
   std::string current_line;
 
   POParser(std::istream& in_, Dictionary& dict_);
+  void parse_header(const std::string& header);
   void parse();
   void next_line();
   std::string get_string(int skip);
