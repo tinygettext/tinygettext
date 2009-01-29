@@ -36,6 +36,8 @@ POParser::parse(std::istream& in, Dictionary& dict)
   parser.parse();
 }
 
+class POParserError {};
+
 POParser::POParser(std::istream& in_, Dictionary& dict_)
   : in(in_), dict(dict_), running(false), eof(false), big5(false),
     line_number(0)
@@ -45,22 +47,21 @@ POParser::POParser(std::istream& in_, Dictionary& dict_)
 void
 POParser::warning(const std::string& msg)
 {
-  log_warning << line_number << ": " << msg << std::endl;
+  log_warning << line_number << ": " << msg << ": " << current_line << std::endl;
   //log_warning << "Line: " << current_line << std::endl;
 }
 
 void
 POParser::error(const std::string& msg)
 {
-  log_warning << line_number << ": " << msg << std::endl;
-  log_warning << " line content: '" << current_line << "'" << std::endl;
+  log_warning << line_number << ": " << msg  << ": " << current_line << std::endl;
 
   // Try to recover from an error by searching for start of another entry
   do
     next_line();
   while(!eof && is_empty_line());
 
-  // FIXME: throw exception
+  throw POParserError();
 }
 
 void
@@ -127,7 +128,12 @@ POParser::get_string(std::ostringstream& out, int skip)
         }
     }
 
-  // process trailing garbage in line
+  // process trailing garbage in line and warn if there is any
+  for(i = i+1; i < current_line.size(); ++i)
+    if (!isspace(current_line[i]))
+      {
+        error("unexpected garbage after string: ");
+      }
 }
 
 std::string
@@ -194,7 +200,7 @@ POParser::is_empty_line()
   else if (current_line[0] == '#')
     { // handle comments as empty lines
       if (current_line.size() == 1 || (current_line.size() >= 2 && isspace(current_line[1])))
-          return true;
+        return true;
       else
         return false;
     }
@@ -233,94 +239,100 @@ POParser::parse()
   // Parser structure
   while(!eof)
     {
-      uint32_t flags = 0;
-      bool has_msgctxt = false;
-      std::string msgctxt;
-      std::string msgid;
-
-      while(prefix("#"))
+      try 
         {
-          if (current_line.size() >= 2 && current_line[1] == ',')
+          uint32_t flags = 0;
+          bool has_msgctxt = false;
+          std::string msgctxt;
+          std::string msgid;
+
+          while(prefix("#"))
             {
-              flags = 0;
-              std::cout << "flags: " << current_line << std::endl;
-            }
-          //parse_comments(&flags);
-
-          next_line();
-        }
-
-      if (!is_empty_line())
-        {
-          if (prefix("msgctxt "))
-            {
-              has_msgctxt = true;
-              msgctxt = get_string(8);
-            }
-
-          if (prefix("msgid "))
-            msgid = get_string(6);
-          else
-            error("expected 'msgid'");
-
-          if (prefix("msgid_plural "))
-            {
-              std::string msgid_plural = get_string(13);
-              std::map<int, std::string> msgstr_num;
-
-            next:
-              if (is_empty_line())
+              if (current_line.size() >= 2 && current_line[1] == ',')
                 {
-                  if (msgstr_num.empty())
-                    error("expected 'msgstr[N]'");
+                  flags = 0;
+                  std::cout << "flags: " << current_line << std::endl;
                 }
-              else if (prefix("msgstr[") &&
-                       current_line.size() > 8 && 
-                       isdigit(current_line[7]) && current_line[8] == ']')
-                {                 
-                  int number = current_line[7] - '0';
-                  msgstr_num[number] = get_string(10);
-                  goto next;
-                }
-              else 
+              //parse_comments(&flags);
+
+              next_line();
+            }
+
+          if (!is_empty_line())
+            {
+              if (prefix("msgctxt "))
                 {
-                  error("expected 'msgstr[N]'");
+                  has_msgctxt = true;
+                  msgctxt = get_string(8);
                 }
 
-              if (!is_empty_line())
-                error("expected 'msgstr[N]' or empty line");
+              if (prefix("msgid "))
+                msgid = get_string(6);
+              else
+                error("expected 'msgid'");
 
-              std::cout << "msgid \"" << msgid << "\"" << std::endl;
-              std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
-              for(std::map<int, std::string>::iterator i = msgstr_num.begin(); i != msgstr_num.end(); ++i)
-                std::cout << "msgstr[" << i->first << "] \"" << i->second << "\"" << std::endl;
-              std::cout << std::endl;
-            }
-          else if (prefix("msgstr "))
-            {
-              std::string msgstr = get_string(7);
-
-              if (msgid.empty())
+              if (prefix("msgid_plural "))
                 {
-                  parse_header(msgstr);
+                  std::string msgid_plural = get_string(13);
+                  std::map<int, std::string> msgstr_num;
+
+                next:
+                  if (is_empty_line())
+                    {
+                      if (msgstr_num.empty())
+                        error("expected 'msgstr[N]'");
+                    }
+                  else if (prefix("msgstr[") &&
+                           current_line.size() > 8 && 
+                           isdigit(current_line[7]) && current_line[8] == ']')
+                    {                 
+                      int number = current_line[7] - '0';
+                      msgstr_num[number] = get_string(10);
+                      goto next;
+                    }
+                  else 
+                    {
+                      error("expected 'msgstr[N]'");
+                    }
+
+                  if (!is_empty_line())
+                    error("expected 'msgstr[N]' or empty line");
+
+                  std::cout << "msgid \"" << msgid << "\"" << std::endl;
+                  std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
+                  for(std::map<int, std::string>::iterator i = msgstr_num.begin(); i != msgstr_num.end(); ++i)
+                    std::cout << "msgstr[" << i->first << "] \"" << i->second << "\"" << std::endl;
+                  std::cout << std::endl;
+                }
+              else if (prefix("msgstr "))
+                {
+                  std::string msgstr = get_string(7);
+
+                  if (msgid.empty())
+                    {
+                      parse_header(msgstr);
+                    }
+                  else
+                    {
+                      std::cout << "msgid \"" << msgid << "\"" << std::endl;
+                      std::cout << "msgstr \"" << msgstr << "\"" << std::endl;
+                      std::cout << std::endl;
+                    }
                 }
               else
                 {
-                  std::cout << "msgid \"" << msgid << "\"" << std::endl;
-                  std::cout << "msgstr \"" << msgstr << "\"" << std::endl;
-                  std::cout << std::endl;
+                  error("expected 'msgstr' or 'msgid_plural'");
                 }
             }
-          else
-            {
-              error("expected 'msgstr' or 'msgid_plural'");
-            }
-        }
       
-      if (!is_empty_line())
-        error("expected empty line");
+          if (!is_empty_line())
+            error("expected empty line");
 
-      next_line();
+          next_line();
+        }
+      catch(POParserError&)
+        {          
+        }
     }
 }
 

@@ -22,6 +22,9 @@ SuperTux specific stuff:
 tinygettext specific stuff:
 ===========================
 
+* POParser can handle Big5, but needs testing, weird stuff with '\\' (i.e. some seem to espace it while others don't)
+* POParser can't handle tin.po
+
 * _()  -> getext() (gettext default)
   N_(id) -> gettext_noop(id) (gettext default)
   C_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
