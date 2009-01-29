@@ -32,7 +32,7 @@
 
 namespace tinygettext {
 
-bool POParser::pedantic = false;
+bool POParser::pedantic = true;
 
 void
 POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
@@ -356,6 +356,8 @@ POParser::parse()
 
                   if (!is_empty_line())
                     error("expected 'msgstr[N]' or empty line");
+                  
+                  dict.add_translation(msgid, msgid_plural, msgstr_num);
 
                   if (0)
                     {
@@ -376,6 +378,8 @@ POParser::parse()
                     }
                   else
                     {
+                      dict.add_translation(msgid, msgstr);
+
                       if (0)
                         {
                           std::cout << "msgid \"" << msgid << "\"" << std::endl;
