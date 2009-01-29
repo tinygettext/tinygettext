@@ -1,7 +1,7 @@
 //  $Id$
 //
 //  tinygettext - A gettext replacement that works directly on .po files
-//  Copyright (C) 2006 Ingo Ruhnke <grumbel@gmx.de>
+//  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -17,27 +17,34 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_TINYGETTEXT_H
-#define HEADER_TINYGETTEXT_H
+#include <errno.h>
+#include <string.h>
+#include <iostream>
+#include "tinygettext/tinygettext.hpp"
 
-#include <fstream>
-#include "po_parser.hpp"
-#include "po_file_reader.hpp"
-#include "dictionary.hpp"
-#include "directory.hpp"
-#include "language.hpp"
-#include "tinygettext.hpp"
-#include "dictionary_manager.hpp"
-
-namespace tinygettext {
-
-/** Convert \a which is in \a from_charset to \a to_charset and return it */
-std::string iconv_convert(const std::string& text,
-                          const std::string& from_charset,
-                          const std::string& to_charset);
-
-} // namespace tinygettext
-
-#endif
+int main(int argc, char** argv)
+{
+  if (argc < 2)
+    {
+      std::cout << argv[0] << " FILENAME..." << std::endl;
+    }
+  else
+    {
+      for(int i = 1; i < argc; ++i)
+        {
+          std::ifstream in(argv[i]);
+          if (!in)
+            {
+              std::cerr << argv[0] << ": cannot access " << argv[i] << ": " << strerror(errno) << std::endl;
+            }
+          else
+            {
+              std::cout << "Parsing: " << argv[i] << std::endl;
+              tinygettext::Dictionary dict;
+              tinygettext::POParser::parse(in, dict);
+            }
+        }
+    }  
+}
 
 /* EOF */

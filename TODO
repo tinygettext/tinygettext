@@ -22,6 +22,11 @@ SuperTux specific stuff:
 tinygettext specific stuff:
 ===========================
 
+* _()  -> getext() (gettext default)
+  N_(id) -> gettext_noop(id) (gettext default)
+  C_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
+  NC_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
+
 * a recomment procedure do handle words with multiple meanings should
   be documented:
 

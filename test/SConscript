@@ -3,5 +3,6 @@
 env = Environment(CXXFLAGS=['-g', '-O0', '-ansi', '-pedantic', '-Wall', '-Werror'], CPPPATH=['../src'])
 env.Program('tinygettext-test', ['test.cpp', '../src/libtinygettext.a'])
 env.Program('tinygettext', ['tinygettext.cpp', '../src/libtinygettext.a'])
+env.Program('po_parser_test', ['po_parser_test.cpp', '../src/libtinygettext.a'])
 
 # EOF #

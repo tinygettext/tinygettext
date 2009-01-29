@@ -1,7 +1,7 @@
 //  $Id$
 //
 //  tinygettext - A gettext replacement that works directly on .po files
-//  Copyright (C) 2006 Ingo Ruhnke <grumbel@gmx.de>
+//  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -17,24 +17,44 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_TINYGETTEXT_H
-#define HEADER_TINYGETTEXT_H
+#ifndef HEADER_PO_PARSER_HPP
+#define HEADER_PO_PARSER_HPP
 
-#include <fstream>
-#include "po_parser.hpp"
-#include "po_file_reader.hpp"
-#include "dictionary.hpp"
-#include "directory.hpp"
-#include "language.hpp"
-#include "tinygettext.hpp"
-#include "dictionary_manager.hpp"
+#include <iosfwd>
 
 namespace tinygettext {
 
-/** Convert \a which is in \a from_charset to \a to_charset and return it */
-std::string iconv_convert(const std::string& text,
-                          const std::string& from_charset,
-                          const std::string& to_charset);
+class Dictionary;
+
+class POParser
+{
+private:
+  std::istream& in;
+  Dictionary& dict;
+
+  bool running;
+  bool eof;  
+
+  int line_number;
+  std::string current_line;
+
+  POParser(std::istream& in_, Dictionary& dict_);
+  void parse();
+  void next_line();
+  std::string get_string(int skip);
+  void get_string(std::ostringstream& str, int skip);
+  bool is_empty_line();
+  bool prefix(const char* );
+  void error(const std::string& msg);
+  void warning(const std::string& msg);
+
+public:
+  static void parse(std::istream& in, Dictionary& dict);
+
+private:
+  POParser (const POParser&);
+  POParser& operator= (const POParser&);
+};
 
 } // namespace tinygettext
 
