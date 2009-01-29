@@ -31,6 +31,8 @@
 #include "po_parser.hpp"
 
 namespace tinygettext {
+
+bool POParser::pedantic = false;
 
 void
 POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
@@ -162,7 +164,8 @@ POParser::get_string(int skip)
     }
   else
     {
-      warning("keyword and string must be seperated by a single space");
+      if (pedantic)
+        warning("keyword and string must be seperated by a single space");
 
       for(;;)
         {
@@ -189,7 +192,8 @@ POParser::get_string(int skip)
       if (current_line[i] == '"')
         {
           if (i == 1)
-            warning("leading whitespace before string");
+            if (pedantic)
+              warning("leading whitespace before string");
 
           get_string_line(out, i);
           goto next;
@@ -233,7 +237,7 @@ POParser::parse_header(const std::string& header)
 
   if (from_charset.empty() || from_charset == "charset")
     {
-      log_warning << "Error: Charset not specified for .po, fallback to UTF-8" << std::endl;
+      warning("charset not specified for .po, fallback to utf-8");
       from_charset = "utf-8";
     }
   else if (from_charset == "big5")
@@ -241,7 +245,6 @@ POParser::parse_header(const std::string& header)
       big5 = true;
     }
 
-  std::cout << "From Charset: '" << from_charset << "'" << std::endl;
   conv.set_charsets(from_charset, dict.get_charset());
 }
 
@@ -306,7 +309,8 @@ POParser::parse()
               if (current_line.size() >= 2 && current_line[1] == ',')
                 {
                   flags = 0;
-                  std::cout << "flags: " << current_line << std::endl;
+                  if (0)
+                    std::cout << "flags: " << current_line << std::endl;
                 }
               //parse_comments(&flags);
 
@@ -353,11 +357,14 @@ POParser::parse()
                   if (!is_empty_line())
                     error("expected 'msgstr[N]' or empty line");
 
-                  std::cout << "msgid \"" << msgid << "\"" << std::endl;
-                  std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
-                  for(std::map<int, std::string>::iterator i = msgstr_num.begin(); i != msgstr_num.end(); ++i)
-                    std::cout << "msgstr[" << i->first << "] \"" << conv.convert(i->second) << "\"" << std::endl;
-                  std::cout << std::endl;
+                  if (0)
+                    {
+                      std::cout << "msgid \"" << msgid << "\"" << std::endl;
+                      std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
+                      for(std::map<int, std::string>::iterator i = msgstr_num.begin(); i != msgstr_num.end(); ++i)
+                        std::cout << "msgstr[" << i->first << "] \"" << conv.convert(i->second) << "\"" << std::endl;
+                      std::cout << std::endl;
+                    }
                 }
               else if (prefix("msgstr"))
                 {
@@ -369,9 +376,12 @@ POParser::parse()
                     }
                   else
                     {
-                      std::cout << "msgid \"" << msgid << "\"" << std::endl;
-                      std::cout << "msgstr \"" << conv.convert(msgstr) << "\"" << std::endl;
-                      std::cout << std::endl;
+                      if (0)
+                        {
+                          std::cout << "msgid \"" << msgid << "\"" << std::endl;
+                          std::cout << "msgstr \"" << conv.convert(msgstr) << "\"" << std::endl;
+                          std::cout << std::endl;
+                        }
                     }
                 }
               else

@@ -61,6 +61,7 @@ public:
       @param dict dictionary to which the strings are written
   */
   static void parse(const std::string& filename, std::istream& in, Dictionary& dict);
+  static bool pedantic;
 
 private:
   POParser (const POParser&);
