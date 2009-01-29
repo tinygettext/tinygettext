@@ -135,7 +135,7 @@ DictionaryManager::get_dictionary(const Language& language)
                           try 
                             {
                               std::istream* in = dir_op.open_file(pofile.c_str());
-                              POFileReader::read(*in, *dict);
+                              POParser::parse(pofile, *in, *dict);
                               delete in;
                             } 
                           catch(std::exception& e) 
