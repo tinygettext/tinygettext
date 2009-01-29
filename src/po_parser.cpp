@@ -45,15 +45,15 @@ POParser::POParser(std::istream& in_, Dictionary& dict_)
 void
 POParser::warning(const std::string& msg)
 {
-  log_warning << "at line " << line_number << ": " << msg << std::endl;
-  log_warning << "Line: " << current_line << std::endl;
+  log_warning << line_number << ": " << msg << std::endl;
+  //log_warning << "Line: " << current_line << std::endl;
 }
 
 void
 POParser::error(const std::string& msg)
 {
-  log_warning << "/ Error at line " << line_number << ": " << msg << std::endl;
-  log_warning << "\\ " << current_line << std::endl;
+  log_warning << line_number << ": " << msg << std::endl;
+  log_warning << " \\ " << current_line << std::endl;
 
   exit(1);
   while(!is_empty_line())
@@ -91,18 +91,18 @@ POParser::get_string(std::ostringstream& out, int skip)
 
           switch (current_line[i])
             {
+              case 'a':  out << '\a'; break;
+              case 'v':  out << '\v'; break;
               case 'n':  out << '\n'; break;
               case 't':  out << '\t'; break;
               case 'r':  out << '\r'; break;
               case '"':  out << '"'; break;
               case '\\': out << '\\'; break;
               default: 
-                if (0)
-                  {
-                    std::ostringstream err;
-                    err << "Unhandled escape in string: '" << current_line[i] << "'";
-                    warning(err.str());
-                  }
+                std::ostringstream err;
+                err << "unhandled escape '\\" << current_line[i] << "'";
+                warning(err.str());
+
                 out << current_line[i-1] << current_line[i];
                 break;
             }
