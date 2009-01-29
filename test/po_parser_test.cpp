@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <string.h>
 #include <iostream>
+#include <stdexcept>
 #include "tinygettext/tinygettext.hpp"
 #include "tinygettext/log.hpp"
 
@@ -47,8 +48,15 @@ int main(int argc, char** argv)
             }
           else
             {
-              tinygettext::Dictionary dict;
-              tinygettext::POParser::parse(argv[i], in, dict);
+              try 
+                {
+                  tinygettext::Dictionary dict;
+                  tinygettext::POParser::parse(argv[i], in, dict);
+                }
+              catch(std::runtime_error& err)
+                {
+                  std::cout << argv[i] << ": exception: " << err.what() << std::endl;
+                }
             }
         }
     }  
