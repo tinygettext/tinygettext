@@ -22,7 +22,6 @@
 
 #include <vector>
 #include <string.h>
-#include "tinygettext.hpp"
 
 namespace tinygettext {
 

@@ -20,7 +20,6 @@
 #ifndef HEADER_TINYGETTEXT_H
 #define HEADER_TINYGETTEXT_H
 
-#include <fstream>
 #include "po_parser.hpp"
 #include "po_file_reader.hpp"
 #include "dictionary.hpp"
@@ -30,11 +29,6 @@
 #include "dictionary_manager.hpp"
 
 namespace tinygettext {
-
-/** Convert \a which is in \a from_charset to \a to_charset and return it */
-std::string iconv_convert(const std::string& text,
-                          const std::string& from_charset,
-                          const std::string& to_charset);
 
 } // namespace tinygettext
 

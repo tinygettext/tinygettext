@@ -21,7 +21,7 @@
 #include <fstream>
 #include <algorithm>
 
-#include "tinygettext.hpp"
+#include "po_parser.hpp"
 #include "dictionary_manager.hpp"
 #include "log.hpp"
 

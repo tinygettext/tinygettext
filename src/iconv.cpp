@@ -26,7 +26,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "tinygettext.hpp"
 #include "iconv.hpp"
 #include "log.hpp"
 

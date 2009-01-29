@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <string.h>
 #include <iostream>
+#include <fstream>
 #include <stdexcept>
 #include "tinygettext/tinygettext.hpp"
 #include "tinygettext/log.hpp"
@@ -50,8 +51,11 @@ int main(int argc, char** argv)
             {
               try 
                 {
-                  tinygettext::Dictionary dict;
-                  tinygettext::POParser::parse(argv[i], in, dict);
+                  tinygettext::Dictionary dict1;
+                  tinygettext::POParser::parse(argv[i], in, dict1);
+
+                  //tinygettext::Dictionary dict2;
+                  //tinygettext::POFileReader::read(in, dict2);
                 }
               catch(std::runtime_error& err)
                 {
