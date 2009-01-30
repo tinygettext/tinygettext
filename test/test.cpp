@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 */
   else
     {
-      tinygettext::Dictionary dict(tinygettext::Language("de"));
+      tinygettext::Dictionary dict(tinygettext::Language::from_spec("de"));
 
       for (int i = 1; i < argc; ++i)
         {

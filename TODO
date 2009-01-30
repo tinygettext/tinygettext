@@ -79,6 +79,8 @@ Random Unimportant Stuff
 tinygettext Documentation:
 ==========================
 
+* recomment a way to handle translation of speech and other data files
+
 * document how to use tinygettext and make it work like gettext
 
 * Customizability could use grouping and documentation or other means

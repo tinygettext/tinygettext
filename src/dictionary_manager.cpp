@@ -46,7 +46,7 @@ static bool has_suffix(const std::string& lhs, const std::string rhs)
 DictionaryManager::DictionaryManager(const std::string& charset_)
   : charset(charset_),
     current_dict(0),
-    empty_dict(Language("en"))
+    empty_dict(Language::from_spec("en"))
 {
   dir_op.enumerate_files = unix_enumerate_files;
   dir_op.free_list       = unix_free_list;

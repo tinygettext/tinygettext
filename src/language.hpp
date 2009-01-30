@@ -32,15 +32,17 @@ class Language
 private:
   LanguageSpec* language_spec;
 
+  Language(LanguageSpec* language_spec);
+
 public:
   /** Create a language from language and country code:
       Example: Languge("de", "DE"); */
-  Language(const std::string& language, const std::string& country);
+  static Language from_spec(const std::string& language, const std::string& country = std::string(), const std::string& modifier = std::string());
 
   /** Create a language from language and country code:
       Example: Languge("deutsch"); 
       Example: Languge("de_DE"); */
-  Language(const std::string& str);
+  static Language from_name(const std::string& str);
 
   /** Create an undefined Language object */
   Language();

@@ -51,7 +51,7 @@ int main(int argc, char** argv)
             {
               try 
                 {
-                  tinygettext::Dictionary dict1(tinygettext::Language("de"));
+                  tinygettext::Dictionary dict1(tinygettext::Language::from_spec("de"));
                   tinygettext::POParser::parse(argv[i], in, dict1);
 
                   //tinygettext::Dictionary dict2;
