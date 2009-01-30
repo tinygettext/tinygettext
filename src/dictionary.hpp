@@ -21,6 +21,7 @@
 #define HEADER_DICTIONARY_HPP
 
 #include <map>
+#include <vector>
 #include <string>
 #include "language.hpp"
 
@@ -32,26 +33,20 @@ namespace tinygettext {
 class Dictionary
 {
 private:
-  typedef std::map<std::string, std::string> Entries;
+  typedef std::map<std::string, std::vector<std::string> > Entries;
   Entries entries;
-
-  typedef std::map<std::string, std::map<int, std::string> > PluralEntries;
-  PluralEntries plural_entries;
 
   typedef std::map<std::string, Entries> CtxtEntries;
   CtxtEntries ctxt_entries;
-
-  typedef std::map<std::string, PluralEntries> CtxtPluralEntries;
-  CtxtPluralEntries ctxt_plural_entries;
 
   Language language;
   std::string charset;
 
   std::string translate(const Entries& dict, const std::string& msgid);
-  std::string translate_plural(const PluralEntries& dict, const std::string& msgid, const std::string& msgidplural, int num);
+  std::string translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgidplural, int num);
 public:
   /** */
-  Dictionary(const Language& language = Language(), const std::string& charset = "UTF-8");
+  Dictionary(const Language& language, const std::string& charset = "UTF-8");
 
   /** Return the charset used for this dictionary */
   std::string get_charset() const;
@@ -86,10 +81,10 @@ public:
       translation will be calculated based on the \a num argument to
       translate(). */
   void add_translation(const std::string& msgid, const std::string& msgid_plural,
-                       const std::map<int, std::string>& msgstrs);
+                       const std::vector<std::string>& msgstrs);
   void add_translation(const std::string& msgctxt, 
                        const std::string& msgid, const std::string& msgid_plural,
-                       const std::map<int, std::string>& msgstrs);
+                       const std::vector<std::string>& msgstrs);
 
   /** Add a translation from \a msgid to \a msgstr to the
       dictionary */

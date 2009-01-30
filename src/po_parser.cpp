@@ -333,7 +333,7 @@ POParser::parse()
               if (prefix("msgid_plural"))
                 {
                   std::string msgid_plural = get_string(12);
-                  std::map<int, std::string> msgstr_num;
+                  std::vector<std::string> msgstr_num;
 
                 next:
                   if (is_empty_line())
@@ -345,7 +345,11 @@ POParser::parse()
                            current_line.size() > 8 && 
                            isdigit(current_line[7]) && current_line[8] == ']')
                     {
-                      int number = current_line[7] - '0';
+                      unsigned int number = current_line[7] - '0';
+
+                      if (number >= msgstr_num.size())
+                        msgstr_num.resize(number+1);
+
                       msgstr_num[number] = get_string(9);
                       goto next;
                     }
@@ -366,8 +370,8 @@ POParser::parse()
                     {
                       std::cout << "msgid \"" << msgid << "\"" << std::endl;
                       std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
-                      for(std::map<int, std::string>::iterator i = msgstr_num.begin(); i != msgstr_num.end(); ++i)
-                        std::cout << "msgstr[" << i->first << "] \"" << conv.convert(i->second) << "\"" << std::endl;
+                      for(std::vector<std::string>::size_type i = 0; i < msgstr_num.size(); ++i)
+                        std::cout << "msgstr[" << i << "] \"" << conv.convert(msgstr_num[i]) << "\"" << std::endl;
                       std::cout << std::endl;
                     }
                 }

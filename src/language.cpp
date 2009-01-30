@@ -22,7 +22,7 @@
 
 namespace tinygettext {
 
-typedef int (*PluralFunc)(int n);
+typedef unsigned int (*PluralFunc)(int n);
 
 struct LanguageSpec {
   /** Language code: "de", "en", ... */
@@ -34,8 +34,6 @@ struct LanguageSpec {
   /** Language name: "German", "English", "French", ... */
   const char* name;
 
-  // FIXME: Not actually used by tinygettext, I guess only used by po
-  // edit tools to check if all translations are in place
   int         nplural;
 
   PluralFunc  plural;
@@ -58,16 +56,16 @@ struct LanguageSpec {
  *   msgstr[1] = "You got %d errors";        
  *          ^-- return value of plural function 
  */
-int plural1(int )     { return 0; }
-int plural2_1(int n)  { return (n != 1); }
-int plural2_2(int n)  { return (n > 1); }
-int plural3_lv(int n) { return (n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2); }
-int plural3_ga(int n) { return n==1 ? 0 : n==2 ? 1 : 2; }
-int plural3_lt(int n) { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2); }
-int plural3_1(int n)  { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
-int plural3_sk(int n) { return (n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2; }
-int plural3_pl(int n) { return (n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
-int plural3_sl(int n) { return (n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3); }
+unsigned int plural1(int )     { return 0; }
+unsigned int plural2_1(int n)  { return (n != 1); }
+unsigned int plural2_2(int n)  { return (n > 1); }
+unsigned int plural3_lv(int n) { return (n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2); }
+unsigned int plural3_ga(int n) { return n==1 ? 0 : n==2 ? 1 : 2; }
+unsigned int plural3_lt(int n) { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2); }
+unsigned int plural3_1(int n)  { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
+unsigned int plural3_sk(int n) { return (n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2; }
+unsigned int plural3_pl(int n) { return (n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
+unsigned int plural3_sl(int n) { return (n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3); }
 
 /** Language Definitions */
 //*{
@@ -290,11 +288,20 @@ Language::get_name()  const
     return "";
 }
 
-int
+unsigned int
 Language::plural(int n) const
 {
   if (language_spec)
     return language_spec->plural(n);
+  else
+    return 0;
+}
+
+int
+Language::plural_count() const
+{
+  if (language_spec)
+    return language_spec->nplural;
   else
     return 0;
 }

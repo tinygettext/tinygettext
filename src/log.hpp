@@ -41,7 +41,7 @@ public:
 };
 
 #define log_warning if (!log_callback); else Log().get()
-#define log_info    if (!log_callback); else if(0) Log().get()
+#define log_info    if (!log_callback); else Log().get()
 
 } // namespace tinygettext
 

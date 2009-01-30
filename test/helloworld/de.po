@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-30 08:01+0100\n"
-"PO-Revision-Date: 2009-01-30 08:06+0100\n"
+"PO-Revision-Date: 2009-01-30 08:39+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,12 +35,11 @@ msgstr[0] "Hallo Welt (singular) mit leerem Kontext"
 msgstr[1] "Hallo Welt (plural) mit leerem Kontext"
 
 #: helloworld.cpp:11 helloworld.cpp:17
-#, fuzzy
 msgctxt "console"
 msgid "Hello World"
 msgid_plural "Hello Worlds"
-msgstr[0] "Hallo Welt in der Console"
-msgstr[1] "Hallo Welt in der Console"
+msgstr[0] "Hallo Welt (singular) in der Console"
+msgstr[1] "Hallo Welt (plural) in der Console"
 
 #: helloworld.cpp:13
 msgid "gui"

@@ -6,6 +6,7 @@ int main()
 {
   std::cout << _("Short Hello World") << std::endl;
   std::cout << gettext("Hello World") << std::endl;
+  std::cout << gettext("Hello Worlds") << std::endl;
 
   std::cout << pgettext("", "Hello World") << std::endl;
   std::cout << pgettext("console", "Hello World") << std::endl;

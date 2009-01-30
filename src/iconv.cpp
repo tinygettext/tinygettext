@@ -19,7 +19,6 @@
 
 #include <ctype.h>
 #include <assert.h>
-#include <iostream>
 #include <sstream>
 #include <errno.h>
 #include <stdexcept>

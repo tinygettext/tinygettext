@@ -221,7 +221,7 @@ POFileReader::tokenize_po()
           if(!expectToken("msgid_plural content", TOKEN_CONTENT)) break;
           std::string current_msgid_plural = tokenContent;
 
-          std::map<int, std::string> msgstr_plural;
+          std::vector<std::string> msgstr_plural;
           while((token = nextToken()) == TOKEN_KEYWORD && has_prefix(tokenContent, "msgstr["))
             {
               int num;
@@ -232,6 +232,10 @@ POFileReader::tokenize_po()
 
               token = nextToken();
               if(!expectToken("msgstr[x] content", TOKEN_CONTENT)) break;
+
+              if (num >= (int)msgstr_plural.size())
+                msgstr_plural.resize(num+1);
+
               msgstr_plural[num] = iconv_convert(tokenContent, from_charset, dict.get_charset());
             }
           dict.add_translation(current_msgid, current_msgid_plural, msgstr_plural);

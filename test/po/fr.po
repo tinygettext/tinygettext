@@ -15,5 +15,6 @@ msgstr ""
 
 #: src/actions/bridger.cxx:48 src/actions/bridger.cxx:232
 #: src/pingu_enums.cxx:40
-msgid "invalid" msgstr "ungütig"
+msgid "invalid"
+msgstr "ungütig"
 
