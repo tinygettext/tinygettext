@@ -44,7 +44,7 @@ void read_dictionary(const std::string& filename, Dictionary& dict)
     }
   else
     {
-      POFileReader::read(in, dict);
+      POParser::parse(filename, in, dict);
       in.close();
     }
 }
@@ -62,6 +62,16 @@ int main(int argc, char** argv)
           read_dictionary(filename, dict);
           std::cout << dict.translate(message) << std::endl;
         }
+      else if (argc == 5 && strcmp(argv[1], "translate") == 0)
+        {
+          const char* filename = argv[2];
+          const char* context  = argv[3];
+          const char* message  = argv[4];
+
+          Dictionary dict;
+          read_dictionary(filename, dict);
+          std::cout << dict.translate_ctxt(context, message) << std::endl;
+        }
       else if (argc == 6 && strcmp(argv[1], "translate") == 0)
         {
           const char* filename = argv[2];
@@ -72,6 +82,18 @@ int main(int argc, char** argv)
           Dictionary dict;
           read_dictionary(filename, dict);
           std::cout << dict.translate_plural(message_singular, message_plural, num) << std::endl;
+        }
+      else if (argc == 7 && strcmp(argv[1], "translate") == 0)
+        {
+          const char* filename = argv[2];
+          const char* context  = argv[3];
+          const char* message_singular = argv[4];
+          const char* message_plural   = argv[5];
+          int num = atoi(argv[6]);
+
+          Dictionary dict;
+          read_dictionary(filename, dict);
+          std::cout << dict.translate_ctxt_plural(context, message_singular, message_plural, num) << std::endl;
         }
       else if ((argc == 4 || argc == 5) && strcmp(argv[1], "directory") == 0)
         {
@@ -105,7 +127,7 @@ int main(int argc, char** argv)
         {
           print_usage(argc, argv);
         }
-    } 
+    }
   catch(std::exception& err) 
     {
       std::cout << "Exception: " << err.what() << std::endl;

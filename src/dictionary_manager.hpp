@@ -73,7 +73,8 @@ public:
   /** Set a charset that will be set on the returned dictionaries */
   void set_charset(const std::string& charset);
 
-  /** Add a directory to the search path for dictionaries */
+  /** Add a directory to the search path for dictionaries, earlier
+      added directories have higher priority then later added ones */
   void add_directory(const std::string& pathname);
 
   /** Return a set of the available languages in their country code */

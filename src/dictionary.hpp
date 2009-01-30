@@ -38,9 +38,17 @@ private:
   typedef std::map<std::string, std::map<int, std::string> > PluralEntries;
   PluralEntries plural_entries;
 
+  typedef std::map<std::string, Entries> CtxtEntries;
+  CtxtEntries ctxt_entries;
+
+  typedef std::map<std::string, PluralEntries> CtxtPluralEntries;
+  CtxtPluralEntries ctxt_plural_entries;
+
   Language language;
   std::string charset;
 
+  std::string translate(const Entries& dict, const std::string& msgid);
+  std::string translate_plural(const PluralEntries& dict, const std::string& msgid, const std::string& msgidplural, int num);
 public:
   /** */
   Dictionary(const Language& language = Language(), const std::string& charset = "UTF-8");
@@ -56,7 +64,7 @@ public:
   const char* translate(const char* msgid);
 
   /** Translate the string \a msgid to its correct plural form, based
-      on the number of items given by \a num. \a msgid2 is \a msgid in
+      on the number of items given by \a num. \a msgid_plural is \a msgid in
       plural form. */
   std::string translate_plural(const std::string& msgid, const std::string& msgidplural, int num);
   const char* translate_plural(const char* msgid, const char* msgidplural, int num);
@@ -73,14 +81,14 @@ public:
   const char* translate_ctxt_plural(const char* msgctxt, const char* msgid, const char* msgidplural, int num);
 
   /** Add a translation from \a msgid to \a msgstr to the dictionary,
-      where \a msgid is the singular form of the message, msgid2 the
+      where \a msgid is the singular form of the message, msgid_plural the
       plural form and msgstrs a table of translations. The right
       translation will be calculated based on the \a num argument to
       translate(). */
-  void add_translation(const std::string& msgid, const std::string& msgid2,
+  void add_translation(const std::string& msgid, const std::string& msgid_plural,
                        const std::map<int, std::string>& msgstrs);
   void add_translation(const std::string& msgctxt, 
-                       const std::string& msgid, const std::string& msgid2,
+                       const std::string& msgid, const std::string& msgid_plural,
                        const std::map<int, std::string>& msgstrs);
 
   /** Add a translation from \a msgid to \a msgstr to the
