@@ -96,8 +96,8 @@ LanguageSpec lang_bn_IN("bn", "IN", "Bengali (India)",               2, plural2_
 LanguageSpec lang_bo   ("bo", 0,    "Tibetan",                       2, plural2_1);    // unknown
 LanguageSpec lang_br   ("br", 0,    "Breton",                        2, plural2_1);    // unknown
 LanguageSpec lang_bs   ("bs", 0,    "Bosnian",                       3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
-LanguageSpec lang_bs_BA("bs_BA", 0, "Bosnian (Bosnia/Herzegovina)",  3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
-LanguageSpec lang_bs_BS("bs_BS", 0, "Bosnian (Bahamas)",             3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_bs_BA("bs", "BA", "Bosnian (Bosnia/Herzegovina)",  3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_bs_BS("bs", "BS", "Bosnian (Bahamas)",             3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_ca   ("ca", 0,    "Catalan",                       2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 //LanguageSpec lang_ca@valencia("ca@valencia", 0, "Unknown language")
 LanguageSpec lang_ca_ES("ca", "ES", "Catalan (Spain)",               2, plural2_1);    // "nplurals=2; plural=(n != 1);"
@@ -153,8 +153,8 @@ LanguageSpec lang_et_ET("et", "ET", "Estonian (Ethiopia)",           2, plural2_
 LanguageSpec lang_eu   ("eu", 0,    "Basque",                        2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_eu_ES("eu", "ES", "Basque (Spain)",                2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_fa   ("fa", 0,    "Persian",                       1, plural1);      // "nplurals=1; plural=0;"
-LanguageSpec lang_fa_AF("fa_AF", 0, "Persian (Afghanistan)",         1, plural1);      // "nplurals=1; plural=0;"
-LanguageSpec lang_fa_IR("fa_IR", 0, "Persian (Iran)",                1, plural1);      // "nplurals=1; plural=0;"
+LanguageSpec lang_fa_AF("fa", "AF", "Persian (Afghanistan)",         1, plural1);      // "nplurals=1; plural=0;"
+LanguageSpec lang_fa_IR("fa", "IR", "Persian (Iran)",                1, plural1);      // "nplurals=1; plural=0;"
 LanguageSpec lang_fi   ("fi", 0,    "Finnish",                       2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_fi_FI("fi", "FI", "Finnish (Finland)",             2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_fo   ("fo", 0,    "Faroese",                       2, plural2_1);    // "nplurals=2; plural=(n != 1);"
@@ -228,7 +228,7 @@ LanguageSpec lang_nl   ("nl", 0,    "Dutch",                         2, plural2_
 LanguageSpec lang_nl_BE("nl", "BE", "Dutch (Belgium)",               2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_nl_NL("nl", "NL", "Dutch (Netherlands)",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_nn   ("nn", 0,    "Norwegian Nynorsk",             2, plural2_1);    // "nplurals=2; plural=(n != 1);"
-LanguageSpec lang_nn_NO("nn_NO", 0, "Norwegian Nynorsk (Norway)",    2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_nn_NO("nn", "NO", "Norwegian Nynorsk (Norway)",    2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_no   ("no", 0,    "Norwegian",                     2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_no_NO("no", "NO", "Norwegian (Norway)",            2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_no_NY("no", "NY", "Norwegian (NY)",                2, plural2_1);    // "nplurals=2; plural=(n != 1);"
@@ -294,7 +294,7 @@ LanguageSpec lang_ug   ("ug", 0,    "Uighur",                        2, plural2_
 LanguageSpec lang_uk   ("uk", 0,    "Ukrainian",                     3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_uk_UA("uk", "UA", "Ukrainian (Ukraine)",           3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_ur   ("ur", 0,    "Urdu",                          2, plural2_1);    // unknown
-LanguageSpec lang_ur_PK("ur_PK", 0, "Urdu (Pakistan)",               2, plural2_1);    // unknown
+LanguageSpec lang_ur_PK("ur", "PK", "Urdu (Pakistan)",               2, plural2_1);    // unknown
 LanguageSpec lang_uz   ("uz", 0,    "Uzbek",                         2, plural2_1);    // unknown
 //LanguageSpec lang_uz@cyrillic("uz@cyrillic", 0, "Unknown language")
 LanguageSpec lang_vi   ("vi", 0,    "Vietnamese",                    1, plural1);      // "nplurals=1; plural=0;"
