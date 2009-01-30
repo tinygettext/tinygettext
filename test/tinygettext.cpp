@@ -120,7 +120,12 @@ int main(int argc, char** argv)
 
           std::cout << "Directory:   '" << directory << "'"  << std::endl;
           std::cout << "Message:     '" << message << "'" << std::endl;
-          std::cout << "Language:    '" << manager.get_language().get_name() << "'" << std::endl;
+          std::cout << "Language:    (name: '" 
+                    << manager.get_language().get_name() << "', language: '"
+                    << manager.get_language().get_language() << "', country: '"
+                    << manager.get_language().get_country() << "', modifier: '"
+                    << manager.get_language().get_modifier() << "')"
+                    << std::endl;
           std::cout << "Translation: '" << manager.get_dictionary().translate(message) << "'" << std::endl;
         }
       else
