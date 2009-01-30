@@ -69,7 +69,7 @@ POParser::error(const std::string& msg)
   // Try to recover from an error by searching for start of another entry
   do
     next_line();
-  while(!eof && is_empty_line());
+  while(!eof && !is_empty_line());
 
   throw POParserError();
 }
@@ -177,7 +177,7 @@ POParser::get_string(int skip)
               break;
             }
           else if (!isspace(current_line[skip]))
-            error("unexpected character");
+            error("string must start with '\"'");
           else
             ; // skip space
 
@@ -339,7 +339,7 @@ POParser::parse()
                   if (is_empty_line())
                     {
                       if (msgstr_num.empty())
-                        error("expected 'msgstr[N]'");
+                        error("expected 'msgstr[N] (0 <= N <= 9)'");
                     }
                   else if (prefix("msgstr[") &&
                            current_line.size() > 8 && 
