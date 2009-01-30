@@ -103,7 +103,7 @@ int main(int argc, char** argv)
           
           DictionaryManager manager;
           manager.add_directory(directory);
-
+          
           if (language)
             {
               Language lang = Language::from_name(language);
@@ -115,12 +115,12 @@ int main(int argc, char** argv)
                 {
                   std::cout << "Unknown language: " << language << std::endl;
                   exit(EXIT_FAILURE);
-                }              
+                }
             }
 
           std::cout << "Directory:   '" << directory << "'"  << std::endl;
           std::cout << "Message:     '" << message << "'" << std::endl;
-          std::cout << "Language:    '" << (language ? language : "(null)") << "'" << std::endl;
+          std::cout << "Language:    '" << manager.get_language().get_name() << "'" << std::endl;
           std::cout << "Translation: '" << manager.get_dictionary().translate(message) << "'" << std::endl;
         }
       else
