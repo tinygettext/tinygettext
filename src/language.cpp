@@ -309,8 +309,8 @@ LanguageSpec languages[] = {
 };
 //*}
 
-void
-resolve_language_alias(std::string& name)
+std::string
+resolve_language_alias(const std::string& name)
 {
   typedef std::map<std::string, std::string> Aliases;
   static Aliases language_aliases;
@@ -376,7 +376,11 @@ resolve_language_alias(std::string& name)
   Aliases::iterator i = language_aliases.find(name_lowercase);
   if (i != language_aliases.end()) 
     {
-      name = i->second;
+      return i->second;
+    }
+  else
+    {
+      return name;
     }
 }
 
@@ -404,25 +408,18 @@ Language::from_spec(const std::string& language, const std::string& country, con
 }
 
 Language
-Language::from_name(const std::string& spec_str_)
+Language::from_name(const std::string& spec_str)
 {
-  std::string spec_str = spec_str_;
-  /*
-  resolve_language_alias(spec_str);
-  
-  { // Remove encoding from the language variable (i.e. "da_DK.ISO-8859-1")
-    std::string::size_type s = spec_str.find(".");
-    if (s != std::string::npos) 
-      {
-        spec_str = std::string(spec_str, 0, s);
-      }
-  }
-  */
+  return from_env(resolve_language_alias(spec_str));
+}
 
+Language
+Language::from_env(const std::string& env)
+{
   // Split LANGUAGE_COUNTRY.CODESET@MODIFIER into parts
-  std::string::size_type ln = spec_str.find('_');
-  std::string::size_type dt = spec_str.find('.');
-  std::string::size_type at = spec_str.find('@');
+  std::string::size_type ln = env.find('_');
+  std::string::size_type dt = env.find('.');
+  std::string::size_type at = env.find('@');
 
   std::string language;
   std::string country;
@@ -431,21 +428,21 @@ Language::from_name(const std::string& spec_str_)
 
   //std::cout << ln << " " << dt << " " << at << std::endl;
 
-  language = spec_str.substr(0, std::min(std::min(ln, dt), at));
+  language = env.substr(0, std::min(std::min(ln, dt), at));
 
-  if (ln != std::string::npos && ln+1 < spec_str.size()) // _
+  if (ln != std::string::npos && ln+1 < env.size()) // _
     {
-      country = spec_str.substr(ln+1, (std::min(dt, at) == std::string::npos) ? std::string::npos : std::min(dt, at) - (ln+1));
+      country = env.substr(ln+1, (std::min(dt, at) == std::string::npos) ? std::string::npos : std::min(dt, at) - (ln+1));
     }
 
-  if (dt != std::string::npos && dt+1 < spec_str.size()) // .
+  if (dt != std::string::npos && dt+1 < env.size()) // .
     {
-      codeset = spec_str.substr(dt+1, (at == std::string::npos) ? std::string::npos : (at - (dt+1)));
+      codeset = env.substr(dt+1, (at == std::string::npos) ? std::string::npos : (at - (dt+1)));
     }
 
-  if (at != std::string::npos && at+1 < spec_str.size()) // @
+  if (at != std::string::npos && at+1 < env.size()) // @
     {
-      modifier = spec_str.substr(at+1);
+      modifier = env.substr(at+1);
     }
 
   //std::cout << "Language: '" << language << "'"  << std::endl;

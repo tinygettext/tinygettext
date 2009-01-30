@@ -44,6 +44,9 @@ public:
       Example: Languge("de_DE"); */
   static Language from_name(const std::string& str);
 
+  /** Create a language from an environment variable style string (e.g de_DE.UTF-8@modifier) */
+  static Language from_env(const std::string& env);
+
   /** Create an undefined Language object */
   Language();
 
