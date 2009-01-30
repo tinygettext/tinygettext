@@ -51,6 +51,7 @@ public:
 
   std::string get_language() const;
   std::string get_country()  const;
+  std::string get_modifier()  const;
   std::string get_name()     const;
   unsigned int plural(int n) const;
   int plural_count() const;

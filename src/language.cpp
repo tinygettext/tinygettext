@@ -407,7 +407,7 @@ Language
 Language::from_name(const std::string& spec_str_)
 {
   std::string spec_str = spec_str_;
-
+  /*
   resolve_language_alias(spec_str);
   
   { // Remove encoding from the language variable (i.e. "da_DK.ISO-8859-1")
@@ -417,24 +417,43 @@ Language::from_name(const std::string& spec_str_)
         spec_str = std::string(spec_str, 0, s);
       }
   }
+  */
+
+  // Split LANGUAGE_COUNTRY.CODESET@MODIFIER into parts
+  std::string::size_type ln = spec_str.find('_');
+  std::string::size_type dt = spec_str.find('.');
+  std::string::size_type at = spec_str.find('@');
 
   std::string language;
   std::string country;
+  std::string codeset;
+  std::string modifier;
 
-  { // Bring language into a form of de_DE
-    std::string::size_type s = spec_str.find("_");
-    if (s != std::string::npos) 
-      {
-        language = spec_str.substr(0, s);
-        country  = spec_str.substr(s+1);
-      }
-    else
-      {
-        language = spec_str;
-      }
-  }
+  //std::cout << ln << " " << dt << " " << at << std::endl;
 
-  return from_spec(language, country);
+  language = spec_str.substr(0, std::min(std::min(ln, dt), at));
+
+  if (ln != std::string::npos && ln+1 < spec_str.size()) // _
+    {
+      country = spec_str.substr(ln+1, (std::min(dt, at) == std::string::npos) ? std::string::npos : std::min(dt, at) - (ln+1));
+    }
+
+  if (dt != std::string::npos && dt+1 < spec_str.size()) // .
+    {
+      codeset = spec_str.substr(dt+1, (at == std::string::npos) ? std::string::npos : (at - (dt+1)));
+    }
+
+  if (at != std::string::npos && at+1 < spec_str.size()) // @
+    {
+      modifier = spec_str.substr(at+1);
+    }
+
+  //std::cout << "Language: '" << language << "'"  << std::endl;
+  //std::cout << "Country:  '" << country << "'"  << std::endl;
+  //std::cout << "Codeset:  '" << codeset << "'"  << std::endl;
+  //std::cout << "Modifier: '" << modifier << "'" << std::endl;
+
+  return from_spec(language, country, modifier);
 }
 
 Language::Language(LanguageSpec* language_spec_)
@@ -465,6 +484,14 @@ Language::get_country()  const
     return "";
 }
 
+std::string
+Language::get_modifier() const
+{
+  if (language_spec && language_spec->modifier)
+    return language_spec->modifier;
+  else
+    return "";
+}
 
 std::string
 Language::get_name()  const
