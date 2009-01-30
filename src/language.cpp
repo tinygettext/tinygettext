@@ -18,6 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <map>
+#include <vector>
 #include "language.hpp"
 
 namespace tinygettext {
@@ -382,14 +383,24 @@ resolve_language_alias(std::string& name)
 Language
 Language::from_spec(const std::string& language, const std::string& country, const std::string& modifier)
 {
-  // FIXME: Not handling country and modifier here
-  for(int i = 0; languages[i].language != NULL; ++i)
-    {
-      if (languages[i].language == language)
-        return Language(&languages[i]);
-    }
+  static std::map<std::string, std::vector<LanguageSpec*> > language_map;
 
-  return Language();
+  if (language_map.empty())
+    { // Init language_map
+      for(int i = 0; languages[i].language != NULL; ++i)
+        language_map[languages[i].language].push_back(&languages[i]);
+    }
+  
+  std::map<std::string, std::vector<LanguageSpec*> >::iterator i = language_map.find(language);
+  if (i != language_map.end())
+    {
+      // FIXME: Not handling country and modifier here
+      return Language(i->second[0]);
+    }
+  else
+    {
+      return Language();
+    }
 }
 
 Language
@@ -426,7 +437,8 @@ Language::from_name(const std::string& spec_str_)
   return from_spec(language, country);
 }
 
-Language::Language(LanguageSpec* language_spec)
+Language::Language(LanguageSpec* language_spec_)
+  : language_spec(language_spec_)
 {
 }
 
