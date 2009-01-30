@@ -59,6 +59,7 @@ struct LanguageSpec {
 unsigned int plural1(int )     { return 0; }
 unsigned int plural2_1(int n)  { return (n != 1); }
 unsigned int plural2_2(int n)  { return (n > 1); }
+unsigned int plural2_mk(int n) { return n==1 || n%10==1 ? 0 : 1; }
 unsigned int plural3_lv(int n) { return (n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2); }
 unsigned int plural3_ga(int n) { return n==1 ? 0 : n==2 ? 1 : 2; }
 unsigned int plural3_lt(int n) { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2); }
@@ -66,17 +67,18 @@ unsigned int plural3_1(int n)  { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && n
 unsigned int plural3_sk(int n) { return (n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2; }
 unsigned int plural3_pl(int n) { return (n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
 unsigned int plural3_sl(int n) { return (n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3); }
+unsigned int plural4_ar(int n) { return plural=n==1 ? 0 : n==2 ? 1 : n>=3 && n<=10 ? 2 : 3; }
 
 /** Language Definitions */
 //*{
 LanguageSpec lang_af   ("af", 0,    "Afrikaans",         2, plural2_1); // "nplurals=2; plural=(n != 1);"
 // LanguageSpec lang_am   ("am", 0,    "Amharic",           );
-// LanguageSpec lang_ar   ("ar", 0,    "Arabic",            ); 
-// LanguageSpec lang_ast  ("ast",0,    "Asturian"  );
-// LanguageSpec lang_az   ("az", 0,    "Azerbaijani");
+LanguageSpec lang_ar   ("ar", 0,    "Arabic",            4, plural4_ar);   // "nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : n>=3 && n<=10 ? 2 : 3"
+// LanguageSpec lang_ast  ("ast",0,    "Asturian"  ); 
+LanguageSpec lang_az   ("az", 0,    "Azerbaijani",       1, plural1);      // "nplurals=1; plural=0;"
 // LanguageSpec lang_be   ("be", 0,    "Belarusian");
-LanguageSpec lang_bg   ("bg", 0,    "Bulgarian",         2, plural2_1); // "nplurals=2; plural=(n != 1);"
-LanguageSpec lang_bs   ("bs", 0,    "Bosnian",           3, plural3_1); // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+LanguageSpec lang_bg   ("bg", 0,    "Bulgarian",         2, plural2_1);    // "nplurals=2; plural=(n != 1);"
+LanguageSpec lang_bs   ("bs", 0,    "Bosnian",           3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_ca   ("ca", 0,    "Catalan",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_cs   ("cs", 0,    "Czech",             3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_da   ("da", 0,    "Danish",            2, plural2_1);    // "nplurals=2; plural=(n != 1);"
@@ -88,7 +90,7 @@ LanguageSpec lang_eo   ("eo", 0,    "Esperanto",         2, plural2_1);    // "n
 LanguageSpec lang_es   ("es", 0,    "Spanish",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_et   ("et", 0,    "Estonian",          2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_eu   ("eu", 0,    "Basque",            2, plural2_1);    // "nplurals=2; plural=(n != 1);"
-// LanguageSpec lang_fa   ("fa", 0,    "Persian");
+LanguageSpec lang_fa   ("fa", 0,    "Persian",           1, plural1);      // "nplurals=1; plural=0;"
 LanguageSpec lang_fi   ("fi", 0,    "Finnish",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_fo   ("fo", 0,    "Faroese",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_fr   ("fr", 0,    "French",            2, plural2_2);    // "nplurals=2; plural=(n > 1);"
@@ -96,12 +98,12 @@ LanguageSpec lang_ga   ("ga", 0,    "Irish",             3, plural3_ga);   // "n
 LanguageSpec lang_gl   ("gl", 0,    "Galician",          2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_gu   ("gu", 0,    "Gujarati",          2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_he   ("he", 0,    "Hebrew",            2, plural2_1);    // "nplurals=2; plural=(n != 1);"
-// LanguageSpec lang_hi   ("hi", 0,    "Hindi");
+LanguageSpec lang_hi   ("hi", 0,    "Hindi",             2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_hr   ("hr", 0,    "Croatian",          3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_hu   ("hu", 0,    "Hungarian",         1, plural1);      // "nplurals=1; plural=0;"
-// LanguageSpec lang_hy   ("hy", 0,    "Armenian");
-LanguageSpec lang_id   ("id", 0,    "Indonesian",        1, plural1); // "nplurals=1; plural=0;"
-// LanguageSpec lang_is   ("is", 0,    "Icelandic");
+LanguageSpec lang_hy   ("hy", 0,    "Armenian",          2, plural2_2);    // "nplurals=2; plural=n > 1;"
+LanguageSpec lang_id   ("id", 0,    "Indonesian",        1, plural1);      // "nplurals=1; plural=0;"
+LanguageSpec lang_is   ("is", 0,    "Icelandic",         2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_it   ("it", 0,    "Italian",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_ja   ("ja", 0,    "Japanese",          1, plural1);      // "nplurals=1; plural=0;"
 LanguageSpec lang_ka   ("ka", 0,    "Georgian",          1, plural1);      // "nplurals=1; plural=0;"
@@ -111,9 +113,9 @@ LanguageSpec lang_ku   ("ku", 0,    "Kurdish",           2, plural2_1);    // "n
 LanguageSpec lang_ky   ("ky", 0,    "Kirghiz",           1, plural1);      // "nplurals=1; plural=0;"
 LanguageSpec lang_lt   ("lt", 0,    "Lithuanian",        3, plural3_lt);   // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_lv   ("lv", 0,    "Latvian",           3, plural3_lv);   // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
-// LanguageSpec lang_mk   ("mk", 0,    "Macedonian");
+LanguageSpec lang_mk   ("mk", 0,    "Macedonian",        2, plural2_mk);   // plural= n==1 || n%10==1 ? 0 : 1
 // LanguageSpec lang_ml   ("ml", 0,    "Malayalam" );
-// LanguageSpec lang_mn   ("mn", 0,    "Mongolian");
+LanguageSpec lang_mn   ("mn", 0,    "Mongolian",         2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_ms   ("ms", 0,    "Malay",             1, plural1);      // "nplurals=1; plural=0;"
 LanguageSpec lang_mt   ("mt", 0,    "Maltese",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 LanguageSpec lang_nb   ("nb", 0,    "Norwegian Bokmal",  2, plural2_1);    // "nplurals=2; plural=(n != 1);"
@@ -135,7 +137,7 @@ LanguageSpec lang_sq   ("sq", 0,    "Albanian",          2, plural2_1);    // "n
 LanguageSpec lang_sr   ("sr", 0,    "Serbian",           2, plural2_2);    // "nplurals=2; plural=n>1;"
 LanguageSpec lang_sv   ("sv", 0,    "Swedish",           2, plural2_1);    // "nplurals=2; plural=(n != 1);"
 // LanguageSpec lang_tg   ("tg", 0,    "Tajik");
-// LanguageSpec lang_th   ("th", 0,    "Thai");
+LanguageSpec lang_th   ("th", 0,    "Thai",              1, plural1);      // "nplurals=1; plural=0;"
 LanguageSpec lang_tr   ("tr", 0,    "Turkish",           1, plural1);      // "nplurals=1; plural=0;"
 LanguageSpec lang_uk   ("uk", 0,    "Ukrainian",         3, plural3_1);    // "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
 LanguageSpec lang_vi   ("vi", 0,    "Vietnamese",        1, plural1);      // "nplurals=1; plural=0;"
