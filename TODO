@@ -22,13 +22,6 @@ SuperTux specific stuff:
 tinygettext specific stuff:
 ===========================
 
-* xgettext merges plural and singular forms:
-
-  gettext("One");
-  gettext("One", "Two", num);
-
-  tinygettext doesn't
-
 * get rid of goto
 
 * POParser can handle Big5, but needs testing.
@@ -42,26 +35,11 @@ tinygettext specific stuff:
   C_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
   NC_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
 
-* a recomment procedure do handle words with multiple meanings should
-  be documented (Exit -> Ausgang, Exit -> Beenden)
-
-  % info gettext contexts
-
-  pgettext (const char *msgctxt, const char *msgid);
-  npgettext (const char *msgctxt, const char *msgid, const char *msgplural, int n);
-
-  #define GETTEXT_CONTEXT_GLUE "\004"
-
-  gettext() handles contexts by storing (msgctxt + "\004" + msgid),
-  this leads to the fact that gettext(id) is something different then
-  pgettext("", id). Should we handle that difference too or make empty
-  context equal no context?
-
 * add more languages (i.e. all that are common in free software, list
   currently seems rather lacking)
 
 * add a way to toggle if fuzzy messages should be included or not
-  (requires changes to POFileReader)
+  (requires changes to POParser)
 
 * comments should be parsed, since they contain meta information such
   as fuzzy markers
