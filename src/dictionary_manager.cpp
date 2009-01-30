@@ -111,7 +111,7 @@ DictionaryManager::get_dictionary(const Language& language)
 
       dictionaries[language] = dict;
 
-      for (SearchPath::iterator p = search_path.begin(); p != search_path.end(); ++p)
+      for (SearchPath::reverse_iterator p = search_path.rbegin(); p != search_path.rend(); ++p)
         {
           char** files = dir_op.enumerate_files(p->c_str());
           if(!files)
