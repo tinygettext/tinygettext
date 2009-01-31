@@ -1,7 +1,7 @@
-TinyGetText
+tinygettext
 ===========
 
-TinyGetText is a minimal gettext() replacement written in C++. It can
+tinygettext is a minimal gettext() replacement written in C++. It can
 read .po files directly and doesn't need .mo files generated from .po.
 It also can read the .po files from arbitary locations, so its much
 better suited for non-Unix systems and situations in which one wants
