@@ -28,14 +28,6 @@
 
 namespace tinygettext {
 
-static bool has_prefix(const std::string& lhs, const std::string rhs)
-{
-  if (lhs.length() < rhs.length())
-    return false;
-  else
-    return lhs.compare(0, rhs.length(), rhs) == 0;
-}
-
 static bool has_suffix(const std::string& lhs, const std::string rhs)
 {
   if (lhs.length() < rhs.length())
@@ -48,7 +40,7 @@ DictionaryManager::DictionaryManager(const std::string& charset_)
   : charset(charset_),
     use_fuzzy(true),
     current_dict(0),
-    empty_dict(Language::from_spec("en"))
+    empty_dict()
 {
   dir_op.enumerate_files = unix_enumerate_files;
   dir_op.free_list       = unix_free_list;
@@ -110,7 +102,7 @@ DictionaryManager::get_dictionary(const Language& language)
   else // Dictionary for languages lang isn't loaded, so we load it
     {
       //log_debug << "get_dictionary: " << lang << std::endl;
-      Dictionary* dict = new Dictionary(language, charset);
+      Dictionary* dict = new Dictionary(charset);
 
       dictionaries[language] = dict;
 
@@ -123,15 +115,15 @@ DictionaryManager::get_dictionary(const Language& language)
             }
           else
             {
-              for(const char* const* filename = files;
-                  *filename != 0; filename++) 
+              for(const char* const* filename = files; *filename != 0; filename++) 
                 {
                   // check if filename matches requested language
                   if (has_suffix(*filename, ".po"))
                     { // ignore anything that isn't a .po file
+                      Language po_language = Language::from_env(std::string(*filename, strlen(*filename)-3));
                       
-                      // 
-                      if (has_prefix(*filename, language.get_language()))
+                      // FIXME: Should compare all things and find the best match
+                      if (language.get_language() == po_language.get_language())
                         {
                           //log_debug << "Loading dictionary for language \"" << lang << "\" from \"" << filename << "\"" << std::endl;
                           std::string pofile = *p + "/" + *filename;

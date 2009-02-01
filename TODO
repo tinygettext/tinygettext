@@ -24,6 +24,9 @@ SuperTux specific stuff:
 tinygettext API related stuff:
 ==============================
 
+* translate, translate_ctxt, translate_ctxt_plural, ... could be
+  unified via overloading, not sure if that is a good idea
+
 * enumerating files should fallback to more generic languages, i.e.:
 
   de_AT should load de.po (somewhat already the case, but different mechanic then supertux)
@@ -46,30 +49,6 @@ tinygettext API related stuff:
 
 tinygettext implementation details:
 ===================================
-
-* the transformation from POFile -> Dictionary shouldn't need a
-  Language object, only PluralForms are needed and those are in the
-  POFile itself. Not much a practical issue, since that is handled by
-  DictionaryManager anyway, but still a little ugly. Maybe have a
-  simple string parser that maps PluralForms string to plurar_*
-  functions? Could be useful for the tinygettext command line test
-  tool, which currently just defaults to german.
- 
-  Problem: Reading .po from different files into a single Dictionary
-  would be somewhat troublesome, since PluralForms could differ from
-  .po to .po (in theory only, in practice they would have to be the
-  same to make sense).
-
-* Charset matching in the PO header doesn't accept whitespace before
-  it, this works:
-
-   Content-Type: text/plain; charset=ISO-8859-1
- 
-   this doesn't:
- 
-   Content-Type:  text/plain; charset=ISO-8859-1
-
-   Should probally warn here, since its currently silently ignored.
 
 * get rid of goto
 

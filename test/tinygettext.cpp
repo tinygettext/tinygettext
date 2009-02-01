@@ -58,7 +58,7 @@ int main(int argc, char** argv)
           const char* filename = argv[2];
           const char* message  = argv[3];
 
-          Dictionary dict(Language::from_spec("de"));
+          Dictionary dict;
           read_dictionary(filename, dict);
           std::cout << dict.translate(message) << std::endl;
         }
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
           const char* context  = argv[3];
           const char* message  = argv[4];
 
-          Dictionary dict(Language::from_spec("de"));
+          Dictionary dict;
           read_dictionary(filename, dict);
           std::cout << dict.translate_ctxt(context, message) << std::endl;
         }
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
           const char* message_plural   = argv[4];
           int num = atoi(argv[5]);
 
-          Dictionary dict(Language::from_spec("de"));
+          Dictionary dict;
           read_dictionary(filename, dict);
           std::cout << dict.translate_plural(message_singular, message_plural, num) << std::endl;
         }
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
           const char* message_plural   = argv[5];
           int num = atoi(argv[6]);
 
-          Dictionary dict(Language::from_spec("de"));
+          Dictionary dict;
           read_dictionary(filename, dict);
           std::cout << dict.translate_ctxt_plural(context, message_singular, message_plural, num) << std::endl;
         }

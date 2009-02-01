@@ -23,8 +23,8 @@
 
 namespace tinygettext {
 
-Dictionary::Dictionary(const Language& language_, const std::string& charset_)
-  : language(language_), charset(charset_)
+Dictionary::Dictionary(const std::string& charset_)
+  : charset(charset_), plural_forms(PluralForms::create(0,0))
 {
 }
 
@@ -32,6 +32,18 @@ std::string
 Dictionary::get_charset() const
 {
   return charset;
+}
+
+void
+Dictionary::set_plural_forms(const PluralForms& plural_forms_)
+{
+  plural_forms = plural_forms_;
+}
+
+PluralForms
+Dictionary::get_plural_forms() const
+{
+  return plural_forms;
 }
 
 const char*
@@ -54,7 +66,11 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
 
   if (i != dict.end())
     {
-      unsigned int n = language.plural(count);
+      unsigned int n = 0;
+      if (plural_forms.plural)
+        n = plural_forms.plural(count);
+      else // FIXME: Should give that warning when parsing the po, not at runtime
+        log_warning << "warning: Plural-Forms missing" << std::endl;
 
       assert(n >= 0 && n < msgstrs.size());
 
@@ -172,7 +188,8 @@ Dictionary::add_translation(const std::string& msgid, const std::string& msgstr)
     }
   else
     {
-      log_warning << "collision in add_translation(\"" << msgid << "\", \"" << msgstr << "\")" << std::endl;
+      log_warning << "collision in add_translation: '" 
+                  << msgid << "' -> '" << msgstr << "' vs '" << vec[0] << "'" << std::endl;
       vec[0] = msgstr;
     }
 }
@@ -207,12 +224,6 @@ Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid
       log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\")" << std::endl;
       vec[0] = msgstr;
     }
-}
-
-Language
-Dictionary::get_language() const
-{
-  return language;
 }
 
 } // namespace tinygettext

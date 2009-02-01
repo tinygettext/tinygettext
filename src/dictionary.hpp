@@ -39,21 +39,21 @@ private:
   typedef std::map<std::string, Entries> CtxtEntries;
   CtxtEntries ctxt_entries;
 
-  Language language;
   std::string charset;
+  PluralForms plural_forms;
 
   std::string translate(const Entries& dict, const std::string& msgid);
   std::string translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgidplural, int num);
 
 public:
   /** */
-  Dictionary(const Language& language, const std::string& charset = "UTF-8");
+  Dictionary(const std::string& charset = "UTF-8");
 
   /** Return the charset used for this dictionary */
   std::string get_charset() const;
 
-  /** Return the language used for this dictionary */
-  Language get_language() const;
+  void set_plural_forms(const PluralForms&);
+  PluralForms get_plural_forms() const;
 
   /** Translate the string \a msgid. */
   std::string translate(const std::string& msgid);

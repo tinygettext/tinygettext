@@ -7,13 +7,16 @@ msgstr ""
 "Project-Id-Version: Pingus 0.6.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-04-09 18:37+0000\n"
-"PO-Revision-Date: 2009-02-01 13:33+0100\n"
+"PO-Revision-Date: 2009-02-01 17:44+0100\n"
 "Last-Translator: David Philippi <david@torangan.de>\n"
 "Language-Team: David Philippi <david@torangan.de>, Ingo Ruhnke <grumbel@gmx.de>, Giray Devlet <giray@devlet.cc>\n"
 "MIME-Version: 1.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "umlaut"
+msgstr "ÄÖÜäöüß"
 
 #: src/actions/bridger.cxx:48 src/actions/bridger.cxx:232
 #: src/pingu_enums.cxx:40

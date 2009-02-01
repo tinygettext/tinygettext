@@ -119,7 +119,7 @@ IConv::convert(const std::string& text)
               iconv(cd, NULL, NULL, NULL, NULL); // reset state
 
               // FIXME: Could try to skip the invalid byte and continue
-              log_warning << "tinygettext:iconv: invalid multibyte sequence in:  \"" << text << "\"" << std::endl;
+              log_error << "error: tinygettext:iconv: invalid multibyte sequence in:  \"" << text << "\"" << std::endl;
             }
           else if (errno == E2BIG)
             { // output buffer to small

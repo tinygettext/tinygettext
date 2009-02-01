@@ -244,15 +244,32 @@ POParser::parse_header(const std::string& header)
                 }
               else
                 {
-                  error("malformed Content-Type header");
+                  warning("malformed Content-Type header");
                 }
             }
           else if (has_prefix(line, "Plural-Forms:"))
             {
-              // FIXME: Do something with this
-              PluralForms::from_string(line);
+              PluralForms plural_forms = PluralForms::from_string(line);
+              if (plural_forms.nplural == 0 || plural_forms.plural == 0)
+                {
+                  warning("unknown Plural-Forms given");
+                }
+              else
+                {
+                  if (dict.get_plural_forms().nplural == 0 && dict.get_plural_forms().plural == 0)
+                    {
+                      dict.set_plural_forms(plural_forms);
+                    }
+                  else
+                    {
+                      if (dict.get_plural_forms().nplural != plural_forms.nplural ||
+                          dict.get_plural_forms().plural != plural_forms.plural)
+                        {
+                          warning("Plural-Forms missmatch");
+                        }
+                    }
+                }
             }
-
           start = i+1;
         }
     }
@@ -392,6 +409,7 @@ POParser::parse()
 
                   if (0)
                     {
+                      std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
                       std::cout << "msgid \"" << msgid << "\"" << std::endl;
                       std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
                       for(std::vector<std::string>::size_type i = 0; i < msgstr_num.size(); ++i)
@@ -419,6 +437,7 @@ POParser::parse()
 
                       if (0)
                         {
+                          std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
                           std::cout << "msgid \"" << msgid << "\"" << std::endl;
                           std::cout << "msgstr \"" << conv.convert(msgstr) << "\"" << std::endl;
                           std::cout << std::endl;

@@ -349,7 +349,10 @@ resolve_language_alias(const std::string& name)
   if (language_aliases.empty())
     {
       // FIXME: Many of those are not useful for us, since we leave
-      // encoding to the app, not to the language
+      // encoding to the app, not to the language, we could/should
+      // also match against all language names, not just aliases from
+      // locale.alias
+
       // Aliases taken from /etc/locale.alias
       language_aliases["bokmal"]           = "nb_NO.ISO-8859-1";
       language_aliases["bokmål"]           = "nb_NO.ISO-8859-1";
