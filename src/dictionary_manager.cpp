@@ -18,6 +18,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <stdlib.h>
+#include <string.h>
 #include <fstream>
 #include <algorithm>
 
@@ -155,10 +156,10 @@ DictionaryManager::get_dictionary(const Language& language)
     }
 }
 
-std::set<std::string>
+std::set<Language>
 DictionaryManager::get_languages()
 {
-  std::set<std::string> languages;
+  std::set<Language> languages;
 
   for (SearchPath::iterator p = search_path.begin(); p != search_path.end(); ++p)
     {
@@ -169,12 +170,13 @@ DictionaryManager::get_languages()
         }
       else
         {
-          for(const char* const* file = files; *file != 0; file++) {
-            if(has_suffix(*file, ".po")) {
-              std::string filename = *file;
-              languages.insert(filename.substr(0, filename.length()-3));
+          for(const char* const* file = files; *file != 0; file++) 
+            {
+              if(has_suffix(*file, ".po")) 
+                {
+                  languages.insert(Language::from_env(std::string(*file, strlen(*file)-3)));
+                }
             }
-          }
           dir_op.free_list(files);
         }
     }

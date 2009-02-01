@@ -44,6 +44,7 @@ private:
 
   std::string translate(const Entries& dict, const std::string& msgid);
   std::string translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgidplural, int num);
+
 public:
   /** */
   Dictionary(const Language& language, const std::string& charset = "UTF-8");

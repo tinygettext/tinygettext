@@ -21,8 +21,37 @@ SuperTux specific stuff:
     FL_FreeLocale(&locale);
   }
 
-tinygettext specific stuff:
-===========================
+tinygettext API related stuff:
+==============================
+
+* add a way to toggle if fuzzy messages should be included or not
+  (requires changes to POParser)
+
+* comments should be parsed, since they contain meta information such
+  as fuzzy markers
+
+* enumerating files should fallback to more generic languages, i.e.:
+
+  de_AT should load de.po (somewhat already the case, but different mechanic then supertux)
+
+* iconv handling needs cleanup, since some systems don't provide
+  iconv, but SDL does and is used by many games, currently HAVE_SDL
+  macro seems to weak a fix. We could copy SDL's iconv handling into
+  tinygettext.
+
+* Customizability could use grouping and documentation or other means
+  to make it more obvious:
+
+  - POParser::pedantic
+  - enumerate_files (list files in directory)
+  - free_list (cleanup, of the above)
+  - open file (return std::istream)
+  - iconv (???)
+  - logging (log_callback(std::string))
+
+
+tinygettext implementation details:
+===================================
 
 * the transformation from POFile -> Dictionary shouldn't need a
   Language object, only PluralForms are needed and those are in the
@@ -63,23 +92,6 @@ tinygettext specific stuff:
 
 * add proper plural forms for languages marked 'unknown'
 
-* add a way to toggle if fuzzy messages should be included or not
-  (requires changes to POParser)
-
-* comments should be parsed, since they contain meta information such
-  as fuzzy markers
-
-* std::set<std::string> DictionaryManager::get_languages() should return std::set<Language>
-
-* enumerating files should fallback to more generic languages, i.e.:
-
-  de_AT should load de.po (somewhat already the case, but different mechanic then supertux)
-
-* iconv handling needs cleanup, since some systems don't provide
-  iconv, but SDL does and is used by many games, currently HAVE_SDL
-  macro seems to weak a fix. We could copy SDL's iconv handling into
-  tinygettext.
-
 * figure out how up-to-date other tinygettext implementations in the
   wild are (LinCity):
 
@@ -107,16 +119,5 @@ tinygettext Documentation:
 * recomment a way to handle translation of speech and other data files
 
 * document how to use tinygettext and make it work like gettext
-
-* Customizability could use grouping and documentation or other means
-  to make it more obvious:
-
-  - POParser::pedantic
-  - enumerate_files (list files in directory)
-  - free_list (cleanup, of the above)
-  - open file (return std::istream)
-  - iconv (???)
-  - logging (log_callback(std::string))
-
 
 # EOF #

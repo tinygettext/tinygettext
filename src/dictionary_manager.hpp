@@ -78,7 +78,7 @@ public:
   void add_directory(const std::string& pathname);
 
   /** Return a set of the available languages in their country code */
-  std::set<std::string> get_languages();
+  std::set<Language> get_languages();
 
   void set_dir_op(const DirOp& dir_op);
 };
