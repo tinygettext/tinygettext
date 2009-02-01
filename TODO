@@ -31,10 +31,8 @@ tinygettext API related stuff:
   same reason add_translation() could be de-overloaded, to
   add_translation_ctxt, ...
 
-* iconv handling needs cleanup, since some systems don't provide
-  iconv, but SDL does and is used by many games, currently HAVE_SDL
-  macro seems to weak a fix. We could copy SDL's iconv handling into
-  tinygettext.
+* iconv handling needs cleanup and more flexibility, since some
+  systems don't provide iconv or only through SDL
 
 * Customizability could use grouping and documentation or other means
   to make it more obvious:
@@ -66,8 +64,6 @@ tinygettext implementation details:
   C_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
   NC_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
 
-* add proper plural forms for languages marked 'unknown'
-
 * figure out how up-to-date other tinygettext implementations in the
   wild are (LinCity):
 
@@ -79,8 +75,6 @@ tinygettext implementation details:
   po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
   tinygettext.hpp (iconv vs convert)
 
-* get rid of TRANSLATION_DEBUG, turn it into a specific log level:
-  log_warning, log_info, log_error
 
 Random Unimportant Stuff
 ========================
