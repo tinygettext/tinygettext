@@ -21,7 +21,6 @@
 #define HEADER_TINYGETTEXT_H
 
 #include "po_parser.hpp"
-#include "po_file_reader.hpp"
 #include "dictionary.hpp"
 #include "directory.hpp"
 #include "language.hpp"
