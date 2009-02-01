@@ -24,24 +24,36 @@
 
 namespace tinygettext {
 
-extern void (*log_callback)(const std::string&);
-
 class Log
 {
+public:
+  typedef void (*log_callback_t)(const std::string&);
+
+  static log_callback_t log_info_callback;
+  static log_callback_t log_warning_callback;
+  static log_callback_t log_error_callback;
+
+
+  static void default_log_callback(const std::string& str);
+
+  static void set_log_info_callback(log_callback_t callback);
+  static void set_log_warning_callback(log_callback_t callback);
+  static void set_log_error_callback(log_callback_t callback);
+
 private:
+  log_callback_t callback;
   std::ostringstream out;
 
 public:
-  Log() {}
-  ~Log() {
-    log_callback(out.str());
-  }
+  Log(log_callback_t callback);
+  ~Log();
   
-  std::ostream& get() { return out; }
+  std::ostream& get();
 };
 
-#define log_warning if (!log_callback); else Log().get()
-#define log_info    if (!log_callback); else Log().get()
+#define log_error   if (!Log::log_error_callback);   else Log(Log::log_error_callback).get()
+#define log_warning if (!Log::log_warning_callback); else Log(Log::log_warning_callback).get()
+#define log_info    if (!Log::log_info_callback);    else Log(Log::log_warning_callback).get()
 
 } // namespace tinygettext
 

@@ -21,14 +21,51 @@
 #include "log.hpp"
 
 namespace tinygettext {
-
-void default_log_callback(const std::string& str)
+
+Log::log_callback_t Log::log_info_callback    = &Log::default_log_callback;
+Log::log_callback_t Log::log_warning_callback = &Log::default_log_callback;
+Log::log_callback_t Log::log_error_callback   = &Log::default_log_callback;
+
+void
+Log::default_log_callback(const std::string& str)
 {
   std::cerr << str;
 }
 
-void (*log_callback)(const std::string&) = &default_log_callback;
+void
+Log::set_log_info_callback(log_callback_t callback)
+{
+  log_info_callback = callback;
+}
 
+void
+Log::set_log_warning_callback(log_callback_t callback)
+{
+  log_warning_callback = callback;
+}
+
+void
+Log::set_log_error_callback(log_callback_t callback)
+{
+  log_error_callback = callback;
+}
+
+Log::Log(log_callback_t callback_)
+  : callback(callback_)
+{
+}
+
+Log::~Log() 
+{
+  callback(out.str());
+}
+
+std::ostream&
+Log::get() 
+{
+  return out; 
+}
+
 } // namespace tinygettext
 
 /* EOF */
