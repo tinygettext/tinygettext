@@ -43,6 +43,7 @@ private:
   SearchPath search_path;
 
   std::string charset;
+  bool        use_fuzzy;
   
   Language    current_language;
   Dictionary* current_dict;
@@ -69,6 +70,9 @@ public:
 
   /** returns the (normalized) country code of the currently used language */
   Language get_language() const;
+
+  void set_use_fuzzy(bool t);
+  bool get_use_fuzzy(bool t) const;
 
   /** Set a charset that will be set on the returned dictionaries */
   void set_charset(const std::string& charset);

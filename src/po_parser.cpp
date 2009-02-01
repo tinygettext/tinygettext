@@ -44,8 +44,8 @@ POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
 
 class POParserError {};
 
-POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_)
-  : filename(filename_), in(in_), dict(dict_),
+POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_, bool use_fuzzy_)
+  : filename(filename_), in(in_), dict(dict_), use_fuzzy(use_fuzzy_),
     running(false), eof(false), big5(false),
     line_number(0)
 {
@@ -321,7 +321,7 @@ POParser::parse()
     {
       try 
         {
-          uint32_t flags = 0;
+          bool fuzzy =  false;
           bool has_msgctxt = false;
           std::string msgctxt;
           std::string msgid;
@@ -330,11 +330,10 @@ POParser::parse()
             {
               if (current_line.size() >= 2 && current_line[1] == ',')
                 {
-                  flags = 0;
-                  if (0)
-                    std::cout << "flags: " << current_line << std::endl;
+                  // FIXME: Rather simplistic hunt for fuzzy flag
+                  if (current_line.find("fuzzy", 2) != std::string::npos)
+                    fuzzy = true;
                 }
-              //parse_comments(&flags);
 
               next_line();
             }
@@ -383,10 +382,13 @@ POParser::parse()
                   if (!is_empty_line())
                     error("expected 'msgstr[N]' or empty line");
                   
-                  if (has_msgctxt)
-                    dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
-                  else
-                    dict.add_translation(msgid, msgid_plural, msgstr_num);
+                  if (use_fuzzy || !fuzzy)
+                    {
+                      if (has_msgctxt)
+                        dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
+                      else
+                        dict.add_translation(msgid, msgid_plural, msgstr_num);
+                    }
 
                   if (0)
                     {
@@ -407,10 +409,13 @@ POParser::parse()
                     }
                   else
                     {
-                      if (has_msgctxt)
-                        dict.add_translation(msgctxt, msgid, msgstr);
-                      else
-                        dict.add_translation(msgid, msgstr);
+                      if (use_fuzzy || !fuzzy)
+                        {
+                          if (has_msgctxt)
+                            dict.add_translation(msgctxt, msgid, msgstr);
+                          else
+                            dict.add_translation(msgid, msgstr);
+                        }
 
                       if (0)
                         {

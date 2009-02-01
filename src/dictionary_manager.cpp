@@ -46,6 +46,7 @@ static bool has_suffix(const std::string& lhs, const std::string rhs)
 
 DictionaryManager::DictionaryManager(const std::string& charset_)
   : charset(charset_),
+    use_fuzzy(true),
     current_dict(0),
     empty_dict(Language::from_spec("en"))
 {
@@ -204,6 +205,19 @@ DictionaryManager::set_charset(const std::string& charset_)
 {
   clear_cache(); // changing charset invalidates cache
   charset = charset_;
+}
+
+void
+DictionaryManager::set_use_fuzzy(bool t)
+{
+  clear_cache();
+  use_fuzzy = t;
+}
+
+bool
+DictionaryManager::get_use_fuzzy(bool t) const
+{
+  return use_fuzzy;
 }
 
 void

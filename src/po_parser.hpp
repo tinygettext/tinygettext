@@ -33,6 +33,7 @@ private:
   std::string filename;
   std::istream& in;
   Dictionary& dict;
+  bool  use_fuzzy;
   IConv conv;
 
   bool running;
@@ -42,7 +43,7 @@ private:
   int line_number;
   std::string current_line;
   
-  POParser(const std::string& filename, std::istream& in_, Dictionary& dict_);
+  POParser(const std::string& filename, std::istream& in_, Dictionary& dict_, bool use_fuzzy = true);
   ~POParser();
 
   void parse_header(const std::string& header);

@@ -24,12 +24,6 @@ SuperTux specific stuff:
 tinygettext API related stuff:
 ==============================
 
-* add a way to toggle if fuzzy messages should be included or not
-  (requires changes to POParser)
-
-* comments should be parsed, since they contain meta information such
-  as fuzzy markers
-
 * enumerating files should fallback to more generic languages, i.e.:
 
   de_AT should load de.po (somewhat already the case, but different mechanic then supertux)
