@@ -24,12 +24,12 @@ SuperTux specific stuff:
 tinygettext API related stuff:
 ==============================
 
+* Language matching needs a little review/cleanup
+
 * translate, translate_ctxt, translate_ctxt_plural, ... could be
-  unified via overloading, not sure if that is a good idea
-
-* enumerating files should fallback to more generic languages, i.e.:
-
-  de_AT should load de.po (somewhat already the case, but different mechanic then supertux)
+  unified via overloading, not sure if that is a good idea. For the
+  same reason add_translation() could be de-overloaded, to
+  add_translation_ctxt, ...
 
 * iconv handling needs cleanup, since some systems don't provide
   iconv, but SDL does and is used by many games, currently HAVE_SDL
@@ -49,6 +49,9 @@ tinygettext API related stuff:
 
 tinygettext implementation details:
 ===================================
+
+* with PluralForms moved into Dictionary a lot of the Langugae stuff
+  is pointless
 
 * get rid of goto
 

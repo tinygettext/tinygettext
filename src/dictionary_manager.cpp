@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
@@ -93,6 +94,7 @@ DictionaryManager::get_dictionary(const Language& language)
 {
   //log_debug << "Dictionary for language \"" << spec << "\" requested" << std::endl;
   //log_debug << "...normalized as \"" << lang << "\"" << std::endl;
+  assert(language);
 
   Dictionaries::iterator i = dictionaries.find(language); 
   if (i != dictionaries.end())
@@ -115,30 +117,65 @@ DictionaryManager::get_dictionary(const Language& language)
             }
           else
             {
+              const char* best_filename = 0;
+              int best_score = -1;
               for(const char* const* filename = files; *filename != 0; filename++) 
                 {
                   // check if filename matches requested language
                   if (has_suffix(*filename, ".po"))
                     { // ignore anything that isn't a .po file
                       Language po_language = Language::from_env(std::string(*filename, strlen(*filename)-3));
-                      
-                      // FIXME: Should compare all things and find the best match
-                      if (language.get_language() == po_language.get_language())
+
+                      if (!po_language)
                         {
-                          //log_debug << "Loading dictionary for language \"" << lang << "\" from \"" << filename << "\"" << std::endl;
-                          std::string pofile = *p + "/" + *filename;
-                          try 
+                          log_warning << *filename << ": warning: ignoring, unknown language" << std::endl;
+                        }
+                      else
+                        {
+                          if (language.get_language() == po_language.get_language())
                             {
-                              std::istream* in = dir_op.open_file(pofile.c_str());
-                              POParser::parse(pofile, *in, *dict);
-                              delete in;
-                            } 
-                          catch(std::exception& e) 
-                            {
-                              log_error << "error: failure file opening: " << pofile << std::endl;
-                              log_error << e.what() << "" << std::endl;
+                              int score = 0;
+
+                              if (language.get_country().empty() || po_language.get_country().empty())
+                                score += 1;
+
+                              score += 2*(language.get_country() == po_language.get_country());
+                              
+                              if (language.get_modifier().empty() || po_language.get_modifier().empty())
+                                score += 1;
+
+                              score += 1*(language.get_modifier() == po_language.get_modifier());
+
+                              if (score > best_score)
+                                {
+                                  best_score = score;
+                                  best_filename = *filename;                                  
+                                }
                             }
                         }
+                    }
+                }
+              
+              if (best_filename)
+                {
+                  std::string pofile = *p + "/" + best_filename;
+                  try 
+                    {
+                      std::istream* in = dir_op.open_file(pofile.c_str());
+                      if (!*in)
+                        {
+                          log_error << "error: failure opening: " << pofile << std::endl;
+                        }
+                      else
+                        {
+                          POParser::parse(pofile, *in, *dict);
+                        }
+                      delete in;
+                    }
+                  catch(std::exception& e) 
+                    {
+                      log_error << "error: failure parsing: " << pofile << std::endl;
+                      log_error << e.what() << "" << std::endl;
                     }
                 }
               dir_op.free_list(files);

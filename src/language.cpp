@@ -433,8 +433,27 @@ Language::from_spec(const std::string& language, const std::string& country, con
   std::map<std::string, std::vector<LanguageSpec*> >::iterator i = language_map.find(language);
   if (i != language_map.end())
     {
-      // FIXME: Not handling country and modifier here
-      return Language(i->second[0]);
+      std::vector<LanguageSpec*>& lst = i->second;
+
+      LanguageSpec* best_match = i->second[0];
+      int best_match_score = 0;
+      for(std::vector<LanguageSpec*>::iterator j = lst.begin()+1; j != lst.end(); ++j)
+        { // Search for the language that best matches the given spec, value country more then modifier
+          int score = 0;
+          if ((*j)->country)
+            score += 2*(country == (*j)->country);
+          
+          if ((*j)->modifier)
+            score += 1*(modifier == (*j)->modifier);
+
+          if (score > best_match_score)
+            {
+              best_match = *j;
+              best_match_score = score;
+            }
+        }
+
+      return Language(best_match);
     }
   else
     {
