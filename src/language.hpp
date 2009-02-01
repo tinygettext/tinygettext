@@ -26,6 +26,25 @@ namespace tinygettext {
 
 struct LanguageSpec;
 
+typedef unsigned int (*PluralFunc)(int n);
+
+struct PluralForms
+{
+  int         nplural;
+  PluralFunc  plural;
+
+  static PluralForms from_string(const std::string& str);
+
+  static PluralForms create(int         nplural,
+                            PluralFunc  plural)
+  {
+    PluralForms forms;
+    forms.nplural = nplural;
+    forms.plural  = plural;
+    return forms;
+  }
+};
+
 /** Lightweight wrapper around LanguageSpec */
 class Language
 {

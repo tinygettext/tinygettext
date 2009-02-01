@@ -117,7 +117,7 @@ DictionaryManager::get_dictionary(const Language& language)
           char** files = dir_op.enumerate_files(p->c_str());
           if(!files)
             {
-              log_warning << "Error: enumerateFiles() failed on " << *p << std::endl;
+              log_error << *p << ": error: enumerateFiles() failed on " << std::endl;
             }
           else
             {
@@ -141,8 +141,8 @@ DictionaryManager::get_dictionary(const Language& language)
                             } 
                           catch(std::exception& e) 
                             {
-                              log_warning << "Error: Failure file opening: " << pofile << std::endl;
-                              log_warning << e.what() << "" << std::endl;
+                              log_error << "error: failure file opening: " << pofile << std::endl;
+                              log_error << e.what() << "" << std::endl;
                             }
                         }
                     }
@@ -165,7 +165,7 @@ DictionaryManager::get_languages()
       char** files = dir_op.enumerate_files(p->c_str());
       if (!files)
         {
-          log_warning << "Error: opendir() failed on " << *p << std::endl;
+          log_error << "error: opendir() failed on " << *p << std::endl;
         }
       else
         {

@@ -24,6 +24,7 @@
 #include <string.h>
 #include <map>
 #include <stdlib.h>
+#include "language.hpp"
 #include "log.hpp"
 
 #include "iconv.hpp"
@@ -64,7 +65,7 @@ POParser::warning(const std::string& msg)
 void
 POParser::error(const std::string& msg)
 {
-  log_warning << filename << ":" << line_number << ": error: " << msg  << ": " << current_line << std::endl;
+  log_error << filename << ":" << line_number << ": error: " << msg  << ": " << current_line << std::endl;
 
   // Try to recover from an error by searching for start of another entry
   do
@@ -211,6 +212,14 @@ POParser::get_string(int skip)
   return out.str();
 }
 
+static bool has_prefix(const std::string& lhs, const std::string rhs)
+{
+  if (lhs.length() < rhs.length())
+    return false;
+  else
+    return lhs.compare(0, rhs.length(), rhs) == 0;
+}
+
 void
 POParser::parse_header(const std::string& header)
 {
@@ -221,19 +230,32 @@ POParser::parse_header(const std::string& header)
       if (header[i] == '\n')
         {
           std::string line = header.substr(start, i - start);
-          int len = strlen("Content-Type: text/plain; charset=");
-          if (line.compare(0, len, "Content-Type: text/plain; charset=") == 0)
+
+          if (has_prefix(line, "Content-Type:"))
             {
-              from_charset = line.substr(len);
-              break;
+              // from_charset = line.substr(len);
+              int len = strlen("Content-Type: text/plain; charset=");
+              if (line.compare(0, len, "Content-Type: text/plain; charset=") == 0)
+                {
+                  from_charset = line.substr(len);
+
+                  for(std::string::iterator i = from_charset.begin(); i != from_charset.end(); ++i)
+                    *i = toupper(*i);
+                }
+              else
+                {
+                  error("malformed Content-Type header");
+                }
+            }
+          else if (has_prefix(line, "Plural-Forms:"))
+            {
+              // FIXME: Do something with this
+              PluralForms::from_string(line);
             }
 
           start = i+1;
         }
     }
-
-  for(std::string::iterator i = from_charset.begin(); i != from_charset.end(); ++i)
-    *i = toupper(*i);
 
   if (from_charset.empty() || from_charset == "CHARSET")
     {

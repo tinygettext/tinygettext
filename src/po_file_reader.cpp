@@ -75,8 +75,8 @@ static std::string iconv_convert(const std::string& text,
   out_len -= out_len_temp; // see above
   if (retval == (size_t) -1)
     {
-      log_warning << strerror(errno) << std::endl;
-      log_warning << "Error: conversion from '" << from_charset << "' to '" << to_charset << "' went wrong: " << retval << std::endl;
+      log_error << strerror(errno) << std::endl;
+      log_error << "error: conversion from '" << from_charset << "' to '" << to_charset << "' went wrong: " << retval << std::endl;
       return "";
     }
   iconv_close(cd);
@@ -139,7 +139,7 @@ POFileReader::parse_header(const std::string& header)
 
   if (from_charset.empty() || from_charset == "CHARSET")
     {
-      log_warning << "Error: Charset not specified for .po, fallback to ISO-8859-1" << std::endl;
+      log_warning << "warning: charset not specified for .po, fallback to ISO-8859-1" << std::endl;
       from_charset = "ISO-8859-1";
     }
 }

@@ -6,18 +6,20 @@ SuperTux specific stuff:
 * move this into SuperTux:
 
   // use findlocale to setup language
-  FL_Locale *locale;
-  FL_FindLocale( &locale, FL_MESSAGES );
-  if(locale->lang) {
-    if (locale->country) {
-      dictionary_manager->set_language(get_language_def(std::string(locale->lang)+"_"+std::string(locale->country)));
-    } else {
-      dictionary_manager->set_language(get_language_def(locale->lang));
-    }
+  char* env = getenv(SUPERTUX_LANG);
+  if (env)
+  {
+     dictionary_manager->set_language(Language::from_env(env));
   }
-  FL_FreeLocale( &locale );
-
-* SUPERTUX_LANG needs to be handled in SuperTux
+  else
+  {
+    FL_Locale *locale;
+    FL_FindLocale(&locale, FL_MESSAGES);
+    if (locale->lang)
+      dictionary_manager->set_language(Language::from_spec(locale->lang,
+                                                           locale->country?locale->country:""));
+    FL_FreeLocale(&locale);
+  }
 
 tinygettext specific stuff:
 ===========================
@@ -27,7 +29,13 @@ tinygettext specific stuff:
   POFile itself. Not much a practical issue, since that is handled by
   DictionaryManager anyway, but still a little ugly. Maybe have a
   simple string parser that maps PluralForms string to plurar_*
-  functions?
+  functions? Could be useful for the tinygettext command line test
+  tool, which currently just defaults to german.
+ 
+  Problem: Reading .po from different files into a single Dictionary
+  would be somewhat troublesome, since PluralForms could differ from
+  .po to .po (in theory only, in practice they would have to be the
+  same to make sense).
 
 * Charset matching in the PO header doesn't accept whitespace before
   it, this works:
@@ -53,8 +61,7 @@ tinygettext specific stuff:
   C_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
   NC_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
 
-* add more languages (i.e. all that are common in free software, list
-  currently seems rather lacking)
+* add proper plural forms for languages marked 'unknown'
 
 * add a way to toggle if fuzzy messages should be included or not
   (requires changes to POParser)

@@ -38,7 +38,9 @@ int main(int argc, char** argv)
     }
   else
     {
-      tinygettext::log_callback = my_log_callback;
+      tinygettext::Log::set_log_info_callback(my_log_callback);
+      tinygettext::Log::set_log_warning_callback(my_log_callback);
+      tinygettext::Log::set_log_error_callback(my_log_callback);
 
       for(int i = 1; i < argc; ++i)
         {
