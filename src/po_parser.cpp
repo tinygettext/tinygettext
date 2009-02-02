@@ -30,6 +30,7 @@
 #include "iconv.hpp"
 #include "dictionary.hpp"
 #include "po_parser.hpp"
+#include "plural_forms.hpp"
 
 namespace tinygettext {
 

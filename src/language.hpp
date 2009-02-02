@@ -17,33 +17,14 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_LANGUAGE_DEF_HPP
-#define HEADER_LANGUAGE_DEF_HPP
+#ifndef HEADER_TINYGETTEXT_LANGUAGE_HPP
+#define HEADER_TINYGETTEXT_LANGUAGE_HPP
 
 #include <string>
 
 namespace tinygettext {
-
+
 struct LanguageSpec;
-
-typedef unsigned int (*PluralFunc)(int n);
-
-struct PluralForms
-{
-  int         nplural;
-  PluralFunc  plural;
-
-  static PluralForms from_string(const std::string& str);
-
-  static PluralForms create(int         nplural,
-                            PluralFunc  plural)
-  {
-    PluralForms forms;
-    forms.nplural = nplural;
-    forms.plural  = plural;
-    return forms;
-  }
-};
 
 /** Lightweight wrapper around LanguageSpec */
 class Language
@@ -75,10 +56,8 @@ public:
   std::string get_country()  const;
   std::string get_modifier()  const;
   std::string get_name()     const;
-  unsigned int plural(int n) const;
-  int plural_count() const;
 };
-
+
 } // namespace tinygettext
 
 #endif

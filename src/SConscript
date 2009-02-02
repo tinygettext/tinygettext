@@ -5,6 +5,7 @@ env.ParseConfig("sdl-config --cflags --libs")
 env.StaticLibrary('tinygettext', 
                   ['tinygettext.cpp',
                    'language.cpp',
+                   'plural_forms.cpp',
                    'dictionary.cpp',
                    'dictionary_manager.cpp',
                    'directory.cpp',
