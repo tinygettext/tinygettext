@@ -20,7 +20,23 @@
 #define HEADER_ICONV_HPP
 
 #include <string>
-#include <iconv.h>
+
+#ifdef HAVE_SDL
+#  include "SDL.h"
+
+#  define ICONV_CONST const
+#  define tinygettext_iconv_t     SDL_iconv_t
+#  define tinygettext_iconv       SDL_iconv
+#  define tinygettext_iconv_open  SDL_iconv_open
+#  define tinygettext_iconv_close SDL_iconv_close 
+#else
+#  include <iconv.h>
+
+#  define tinygettext_iconv_t     iconv_t
+#  define tinygettext_iconv       iconv
+#  define tinygettext_iconv_open  iconv_open
+#  define tinygettext_iconv_close iconv_close 
+#endif
 
 namespace tinygettext {
 
@@ -29,7 +45,7 @@ class IConv
 private:
   std::string to_charset;
   std::string from_charset;
-  iconv_t cd;
+  tinygettext_iconv_t cd;
 
 public:
   IConv();
