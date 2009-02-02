@@ -20,7 +20,6 @@
 #include <map>
 #include <assert.h>
 #include <vector>
-#include "log.hpp"
 #include "language.hpp"
 
 namespace tinygettext {
@@ -388,9 +387,6 @@ Language::from_spec(const std::string& language, const std::string& country, con
       for(std::vector<LanguageSpec*>::iterator j = lst.begin(); j != lst.end(); ++j)
         { // Search for the language that best matches the given spec, value country more then modifier
           int score = Language::match(Language(*j), tmplang);
-          log_warning << score << ": " 
-                      << language << "_" << country << "." << modifier << "  ==  "
-                      << ((*j)->language?(*j)->language:"") << "_" << ((*j)->country?(*j)->country:"") << "." << ((*j)->modifier?(*j)->modifier:"") << std::endl;
 
           if (score > best_match_score)
             {
