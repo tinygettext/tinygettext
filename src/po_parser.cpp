@@ -265,7 +265,7 @@ POParser::parse_header(const std::string& header)
                     {
                       if (dict.get_plural_forms() != plural_forms)
                         {
-                          warning("Plural-Forms missmatch");
+                          warning("Plural-Forms missmatch between .po file and dictionary");
                         }
                     }
                 }
