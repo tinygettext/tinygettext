@@ -56,14 +56,20 @@ public:
 
   /** Create an undefined Language object */
   Language();
-
+  
   operator bool() const { return language_spec; }
 
   std::string get_language() const;
   std::string get_country()  const;
   std::string get_modifier()  const;
   std::string get_name()     const;
+
+  friend bool operator<(const Language& lhs, const Language& rhs);
 };
+
+inline bool operator<(const Language& lhs, const Language& rhs) {
+  return lhs.language_spec < rhs.language_spec;
+}
 
 } // namespace tinygettext
 
