@@ -24,7 +24,7 @@
 namespace tinygettext {
 
 Dictionary::Dictionary(const std::string& charset_)
-  : charset(charset_), plural_forms(PluralForms::create(0,0))
+  : charset(charset_)
 {
 }
 
@@ -67,11 +67,7 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
   if (i != dict.end())
     {
       unsigned int n = 0;
-      if (plural_forms.plural)
-        n = plural_forms.plural(count);
-      else // FIXME: Should give that warning when parsing the po, not at runtime
-        log_warning << "warning: Plural-Forms missing" << std::endl;
-
+      n = plural_forms.get_plural(count);
       assert(n >= 0 && n < msgstrs.size());
 
       if (!msgstrs[n].empty())

@@ -251,20 +251,19 @@ POParser::parse_header(const std::string& header)
           else if (has_prefix(line, "Plural-Forms:"))
             {
               PluralForms plural_forms = PluralForms::from_string(line);
-              if (plural_forms.nplural == 0 || plural_forms.plural == 0)
+              if (!plural_forms)
                 {
                   warning("unknown Plural-Forms given");
                 }
               else
                 {
-                  if (dict.get_plural_forms().nplural == 0 && dict.get_plural_forms().plural == 0)
+                  if (!dict.get_plural_forms())
                     {
                       dict.set_plural_forms(plural_forms);
                     }
                   else
                     {
-                      if (dict.get_plural_forms().nplural != plural_forms.nplural ||
-                          dict.get_plural_forms().plural != plural_forms.plural)
+                      if (dict.get_plural_forms() != plural_forms)
                         {
                           warning("Plural-Forms missmatch");
                         }
@@ -402,6 +401,18 @@ POParser::parse()
                   
                   if (use_fuzzy || !fuzzy)
                     {
+                      if (!dict.get_plural_forms())
+                        {
+                          warning("msgstr[N] seen, but no Plural-Forms given");
+                        }
+                      else
+                        {
+                          if (msgstr_num.size() != dict.get_plural_forms().get_nplural())
+                            {
+                              warning("msgstr[N] count doesn't match Plural-Forms.nplural");
+                            }
+                        }
+
                       if (has_msgctxt)
                         dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
                       else

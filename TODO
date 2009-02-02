@@ -24,8 +24,6 @@ SuperTux specific stuff:
 tinygettext API related stuff:
 ==============================
 
-* warn if po contains a msgid_plural but no PluralForms
-
 * Language matching needs a little review/cleanup
 
 * translate, translate_ctxt, translate_ctxt_plural, ... could be
