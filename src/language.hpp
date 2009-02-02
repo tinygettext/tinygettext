@@ -37,7 +37,9 @@ private:
 public:
   /** Create a language from language and country code:
       Example: Languge("de", "DE"); */
-  static Language from_spec(const std::string& language, const std::string& country = std::string(), const std::string& modifier = std::string());
+  static Language from_spec(const std::string& language, 
+                            const std::string& country = std::string(), 
+                            const std::string& modifier = std::string());
 
   /** Create a language from language and country code:
       Example: Languge("deutsch"); 
@@ -46,6 +48,11 @@ public:
 
   /** Create a language from an environment variable style string (e.g de_DE.UTF-8@modifier) */
   static Language from_env(const std::string& env);
+
+  /** Compares two Languages, returns 0 on missmatch and a score
+      between 1 and 9 on match, the higher the score the better the
+      match */
+  static int match(const Language& lhs, const Language& rhs);
 
   /** Create an undefined Language object */
   Language();

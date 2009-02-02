@@ -118,7 +118,7 @@ DictionaryManager::get_dictionary(const Language& language)
           else
             {
               const char* best_filename = 0;
-              int best_score = -1;
+              int best_score = 0;
               for(const char* const* filename = files; *filename != 0; filename++) 
                 {
                   // check if filename matches requested language
@@ -132,25 +132,12 @@ DictionaryManager::get_dictionary(const Language& language)
                         }
                       else
                         {
-                          if (language.get_language() == po_language.get_language())
+                          int score = Language::match(language, po_language);
+                          
+                          if (score > best_score)
                             {
-                              int score = 0;
-
-                              if (language.get_country().empty() || po_language.get_country().empty())
-                                score += 1;
-
-                              score += 2*(language.get_country() == po_language.get_country());
-                              
-                              if (language.get_modifier().empty() || po_language.get_modifier().empty())
-                                score += 1;
-
-                              score += 1*(language.get_modifier() == po_language.get_modifier());
-
-                              if (score > best_score)
-                                {
-                                  best_score = score;
-                                  best_filename = *filename;                                  
-                                }
+                              best_score = score;
+                              best_filename = *filename;                                  
                             }
                         }
                     }

@@ -86,7 +86,7 @@ LanguageSpec languages[] = {
   { "dk", 0,    0, "Unknown language"            },
   { "dz", 0,    0, "Dzongkha"                    },
   { "el", 0,    0, "Greek"                       },
-  { "el", "GR", "Greek (Greece)"                 },
+  { "el", "GR", 0, "Greek (Greece)"              },
   { "en", 0,    0, "English"                     },
   { "en", "AU", 0, "English (Australia)"         },
   { "en", "CA", 0, "English (Canada)"            },
@@ -238,7 +238,7 @@ LanguageSpec languages[] = {
   { "sr", "YU", 0, "Serbian (Yugoslavia)"        },
   { "sr", 0,"ije", "Serbian"                     },
   { "sr", 0, "latin", "Serbian"                  },
-  { "sr", 0, "Latn""Serbian"                     },
+  { "sr", 0, "Latn",  "Serbian"                  },
   { "ss", 0,    0, "Swati"                       },
   { "st", 0,    0, "Sotho"                       },
   { "sv", 0,    0, "Swedish"                     },
@@ -375,16 +375,17 @@ Language::from_spec(const std::string& language, const std::string& country, con
     {
       std::vector<LanguageSpec*>& lst = i->second;
 
+      LanguageSpec tmpspec;
+      tmpspec.language = language.c_str();
+      tmpspec.country  = country.c_str();
+      tmpspec.modifier = modifier.c_str();
+      Language tmplang(&tmpspec);
+      
       LanguageSpec* best_match = i->second[0];
       int best_match_score = 0;
       for(std::vector<LanguageSpec*>::iterator j = lst.begin()+1; j != lst.end(); ++j)
         { // Search for the language that best matches the given spec, value country more then modifier
-          int score = 0;
-          if ((*j)->country)
-            score += 2*(country == (*j)->country);
-          
-          if ((*j)->modifier)
-            score += 1*(modifier == (*j)->modifier);
+          int score = Language::match(Language(*j), tmplang);
 
           if (score > best_match_score)
             {
@@ -439,14 +440,9 @@ Language::from_env(const std::string& env)
       modifier = env.substr(at+1);
     }
 
-  //std::cout << "Language: '" << language << "'"  << std::endl;
-  //std::cout << "Country:  '" << country << "'"  << std::endl;
-  //std::cout << "Codeset:  '" << codeset << "'"  << std::endl;
-  //std::cout << "Modifier: '" << modifier << "'" << std::endl;
-
   return from_spec(language, country, modifier);
 }
-
+
 Language::Language(LanguageSpec* language_spec_)
   : language_spec(language_spec_)
 {
@@ -455,6 +451,42 @@ Language::Language(LanguageSpec* language_spec_)
 Language::Language()
   : language_spec(0)
 {
+}
+
+int
+Language::match(const Language& lhs, const Language& rhs)
+{
+  if (lhs.get_language() != rhs.get_language())
+    {
+      return -1;
+    }
+  else
+    {
+      static int match_tbl[3][3] = {
+        // modifier match, wildchard, miss
+        { 9, 8, 5 }, // country match
+        { 7, 6, 3 }, // country wildcard
+        { 4, 2, 1 }, // country miss
+      };
+  
+      int c;
+      if (lhs.get_country() == rhs.get_country())
+        c = 0;
+      else if (lhs.get_country().empty() || rhs.get_country().empty())
+        c = 1;
+      else
+        c = 2;
+  
+      int m;
+      if (lhs.get_modifier() == rhs.get_modifier())
+        m = 0;
+      else if (lhs.get_modifier().empty() || rhs.get_modifier().empty())
+        m = 1;
+      else
+        m = 2;
+  
+      return match_tbl[c][m];
+    }
 }
 
 std::string
@@ -492,7 +524,6 @@ Language::get_name()  const
   else
     return "";
 }
-
 
 } // namespace tinygettext
 
