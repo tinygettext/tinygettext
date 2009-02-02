@@ -24,8 +24,6 @@ SuperTux specific stuff:
 tinygettext API related stuff:
 ==============================
 
-* Language matching needs a little review/cleanup
-
 * translate, translate_ctxt, translate_ctxt_plural, ... could be
   unified via overloading, not sure if that is a good idea. For the
   same reason add_translation() could be de-overloaded, to

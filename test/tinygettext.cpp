@@ -32,6 +32,7 @@ void print_usage(int argc, char** argv)
   std::cout << "Usage: " << argv[0] << " translate FILE MESSAGE" << std::endl;
   std::cout << "       " << argv[0] << " translate FILE MESSAGE_S MESSAGE_P NUM" << std::endl;
   std::cout << "       " << argv[0] << " directory DIRECTORY MESSAGE [LANG]" << std::endl;
+  std::cout << "       " << argv[0] << " language LANGUAGE" << std::endl;
 }
 
 void read_dictionary(const std::string& filename, Dictionary& dict)
@@ -53,7 +54,19 @@ int main(int argc, char** argv)
 {
   try 
     {
-      if (argc == 4 && strcmp(argv[1], "translate") == 0)
+      if (argc == 3 && strcmp(argv[1], "language") == 0)
+        {
+          Language language = Language::from_env(argv[2]);
+
+          if (language)
+            std::cout << "Name:      " << language.get_name()      << std::endl
+                      << "Language:  " << language.get_language()  << std::endl
+                      << "Country:   " << language.get_country()   << std::endl
+                      << "Modifier:  " << language.get_modifier()  << std::endl;
+            else
+              std::cout << "not found" << std::endl;
+        }
+      else if (argc == 4 && strcmp(argv[1], "translate") == 0)
         {
           const char* filename = argv[2];
           const char* message  = argv[3];

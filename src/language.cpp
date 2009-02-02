@@ -18,7 +18,9 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include <map>
+#include <assert.h>
 #include <vector>
+#include "log.hpp"
 #include "language.hpp"
 
 namespace tinygettext {
@@ -381,11 +383,14 @@ Language::from_spec(const std::string& language, const std::string& country, con
       tmpspec.modifier = modifier.c_str();
       Language tmplang(&tmpspec);
       
-      LanguageSpec* best_match = i->second[0];
+      LanguageSpec* best_match = 0;
       int best_match_score = 0;
-      for(std::vector<LanguageSpec*>::iterator j = lst.begin()+1; j != lst.end(); ++j)
+      for(std::vector<LanguageSpec*>::iterator j = lst.begin(); j != lst.end(); ++j)
         { // Search for the language that best matches the given spec, value country more then modifier
           int score = Language::match(Language(*j), tmplang);
+          log_warning << score << ": " 
+                      << language << "_" << country << "." << modifier << "  ==  "
+                      << ((*j)->language?(*j)->language:"") << "_" << ((*j)->country?(*j)->country:"") << "." << ((*j)->modifier?(*j)->modifier:"") << std::endl;
 
           if (score > best_match_score)
             {
@@ -393,7 +398,7 @@ Language::from_spec(const std::string& language, const std::string& country, con
               best_match_score = score;
             }
         }
-
+      assert(best_match);
       return Language(best_match);
     }
   else
@@ -458,7 +463,7 @@ Language::match(const Language& lhs, const Language& rhs)
 {
   if (lhs.get_language() != rhs.get_language())
     {
-      return -1;
+      return 0;
     }
   else
     {
@@ -484,7 +489,7 @@ Language::match(const Language& lhs, const Language& rhs)
         m = 1;
       else
         m = 2;
-  
+
       return match_tbl[c][m];
     }
 }
