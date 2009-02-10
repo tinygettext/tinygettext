@@ -24,7 +24,6 @@
 #include "dictionary.hpp"
 #include "directory.hpp"
 #include "language.hpp"
-#include "tinygettext.hpp"
 #include "dictionary_manager.hpp"
 
 namespace tinygettext {
