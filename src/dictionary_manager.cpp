@@ -17,6 +17,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include <memory>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -148,8 +149,8 @@ DictionaryManager::get_dictionary(const Language& language)
                   std::string pofile = *p + "/" + best_filename;
                   try 
                     {
-                      std::istream* in = dir_op.open_file(pofile.c_str());
-                      if (!*in)
+                      std::auto_ptr<std::istream> in(dir_op.open_file(pofile.c_str()));
+                      if (!in.get())
                         {
                           log_error << "error: failure opening: " << pofile << std::endl;
                         }
@@ -157,7 +158,6 @@ DictionaryManager::get_dictionary(const Language& language)
                         {
                           POParser::parse(pofile, *in, *dict);
                         }
-                      delete in;
                     }
                   catch(std::exception& e) 
                     {
