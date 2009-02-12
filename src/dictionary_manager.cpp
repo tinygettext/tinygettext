@@ -39,10 +39,14 @@ static bool has_suffix(const std::string& lhs, const std::string rhs)
 }
 
 DictionaryManager::DictionaryManager(const std::string& charset_)
-  : charset(charset_),
+  : dictionaries(),
+    search_path(),
+    charset(charset_),
     use_fuzzy(true),
+    current_language(),
     current_dict(0),
-    empty_dict()
+    empty_dict(),
+    dir_op()
 {
   dir_op.enumerate_files = unix_enumerate_files;
   dir_op.free_list       = unix_free_list;

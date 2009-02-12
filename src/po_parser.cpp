@@ -46,9 +46,9 @@ POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
 class POParserError {};
 
 POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_, bool use_fuzzy_)
-  : filename(filename_), in(in_), dict(dict_), use_fuzzy(use_fuzzy_),
+  : filename(filename_), in(in_), dict(dict_), use_fuzzy(use_fuzzy_), conv(),
     running(false), eof(false), big5(false),
-    line_number(0)
+    line_number(0), current_line()
 {
 }
 
@@ -326,9 +326,9 @@ POParser::parse()
   // skip UTF-8 intro that some text editors produce
   // see http://en.wikipedia.org/wiki/Byte-order_mark
   if (current_line.size() >= 3 &&
-      current_line[0] == 0xef &&
-      current_line[1] == 0xbb &&
-      current_line[2] == 0xbf)
+      current_line[0] == static_cast<char>(0xef) &&
+      current_line[1] == static_cast<char>(0xbb) &&
+      current_line[2] == static_cast<char>(0xbf))
     {
       current_line = current_line.substr(3);
     }

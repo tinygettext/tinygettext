@@ -35,11 +35,15 @@ namespace tinygettext {
 #endif
 
 IConv::IConv() 
-  : cd(0)
+  : to_charset(),
+    from_charset(),
+    cd(0)
 {}
  
 IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
- : cd(0)
+  : to_charset(),
+    from_charset(),
+    cd(0)
 {
   set_charsets(from_charset_, to_charset_);
 }

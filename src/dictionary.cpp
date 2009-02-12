@@ -24,7 +24,10 @@
 namespace tinygettext {
 
 Dictionary::Dictionary(const std::string& charset_)
-  : charset(charset_)
+  : entries(),
+    ctxt_entries(),
+    charset(charset_),
+    plural_forms()
 {
 }
 

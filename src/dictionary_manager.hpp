@@ -85,6 +85,10 @@ public:
   std::set<Language> get_languages();
 
   void set_dir_op(const DirOp& dir_op);
+
+private:
+  DictionaryManager (const DictionaryManager&);
+  DictionaryManager& operator= (const DictionaryManager&);
 };
 
 } // namespace tinygettext
