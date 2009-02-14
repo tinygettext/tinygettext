@@ -1,18 +1,98 @@
- * tinygettext has gained a lot of external dependecies in SuperTux:
-   SDL, physfs, log.h, config.h, ... these have to be trimmed down or
-   #ifdef'ed with HAVE_LIBSDL, HAVE_PHYSFS
+SuperTux specific stuff:
+========================
 
- * comments should be parsed, since they contain meta information such
-   as fuzzy markers
+* make a release and let SuperTux link to the tags/tinygettext-0.1.0 instead of trunk/
 
- * a hashmap instead of std::map might be a good idea
+* move this into SuperTux:
 
- * support for .gmo files would be cool
+  // use findlocale to setup language
+  char* env = getenv(SUPERTUX_LANG);
+  if (env)
+  {
+     dictionary_manager->set_language(Language::from_env(env));
+  }
+  else
+  {
+    FL_Locale *locale;
+    FL_FindLocale(&locale, FL_MESSAGES);
+    if (locale->lang)
+      dictionary_manager->set_language(Language::from_spec(locale->lang,
+                                                           locale->country?locale->country:""));
+    FL_FreeLocale(&locale);
+  }
+
+tinygettext API related stuff:
+==============================
 
- * a recomment procedure do handle words with multiple meanings should
-   be documented:
+* make DirOp a single function:
 
-   Exit -> Ausgang
-   Exit -> Beenden
+  std::vector<std::string> open_directory(const std::string& filename);
 
+* translate, translate_ctxt, translate_ctxt_plural, ... could be
+  unified via overloading, not sure if that is a good idea. For the
+  same reason add_translation() could be de-overloaded, to
+  add_translation_ctxt, ...
+
+* iconv handling needs cleanup and more flexibility, since some
+  systems don't provide iconv or only through SDL
+
+* Customizability could use grouping and documentation or other means
+  to make it more obvious:
+
+  - POParser::pedantic
+
+  - enumerate_files (list files in directory)
+  - free_list (cleanup, of the above)
+
+  - open file (return std::istream)
+
+  - iconv (???)
+  - logging (log_callback(std::string))
+
+
+tinygettext implementation details:
+===================================
+
+* with PluralForms moved into Dictionary a lot of the Langugae stuff
+  is pointless
+
+* get rid of goto
+
+* POParser can handle Big5, but needs testing.
+  Big5 is one byte for ASCII letters and two bytes for chinese ones,
+  this means some two byte characters collide with '\', some .po files
+  seem to escape the \ properly so that the string can be read as
+  usual, while others don't.
+
+* _()  -> getext() (gettext default)
+  N_(id) -> gettext_noop(id) (gettext default)
+  C_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
+  NC_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
+
+* figure out how up-to-date other tinygettext implementations in the
+  wild are (LinCity):
+
+  Pingus: 
+  -------
+  dictionary.hpp (synced with Pingus)
+  dictionary_manager.hpp (PhysFS vs opendir())
+  language_def.hpp (synced with Pingus)
+  po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
+  tinygettext.hpp (iconv vs convert)
+
+
+Random Unimportant Stuff
+========================
+
+* a hashmap instead of std::map might be a good idea
+
+* support for .gmo files would be cool
+
+tinygettext Documentation:
+==========================
+
+* recomment a way to handle translation of speech and other data files
+
+* document how to use tinygettext and make it work like gettext
+
 # EOF #

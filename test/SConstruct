@@ -1,5 +1,0 @@
-env = Environment(CXXFLAGS=['-O2', '-Wall', '-Werror'])
-env.StaticLibrary('tinygettext', '../src/tinygettext.cpp')
-
-
-# EOF #
