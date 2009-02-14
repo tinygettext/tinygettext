@@ -541,8 +541,8 @@ Dictionary::add_translation(const std::string& msgid, const std::string& msgstr)
 class POFileReader
 {
 private:
-  Dictionary& dict;
   std::istream& in;
+  Dictionary& dict;
 
   std::string from_charset;
   std::string to_charset;
