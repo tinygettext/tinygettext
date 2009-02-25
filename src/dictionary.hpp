@@ -56,6 +56,7 @@ public:
   void set_plural_forms(const PluralForms&);
   PluralForms get_plural_forms() const;
 
+
   /** Translate the string \a msgid. */
   std::string translate(const std::string& msgid);
   const char* translate(const char* msgid);
@@ -77,6 +78,7 @@ public:
   std::string translate_ctxt_plural(const std::string& msgctxt, const std::string& msgid, const std::string& msgidplural, int num);
   const char* translate_ctxt_plural(const char* msgctxt, const char* msgid, const char* msgidplural, int num);
 
+
   /** Add a translation from \a msgid to \a msgstr to the dictionary,
       where \a msgid is the singular form of the message, msgid_plural the
       plural form and msgstrs a table of translations. The right
@@ -92,6 +94,33 @@ public:
       dictionary */
   void add_translation(const std::string& msgid, const std::string& msgstr);
   void add_translation(const std::string& msgctxt, const std::string& msgid, const std::string& msgstr);
+
+  /** Iterate over all messages, Func is of type:
+      void func(const std::string& msgid, const std::vector<std::string>& msgstrs) */
+  template<class Func>
+  Func foreach(Func func) 
+  {
+    for(Entries::iterator i = entries.begin(); i != entries.end(); ++i)
+      {
+        func(i->first, i->second);
+      }
+    return func;
+  }
+
+  /** Iterate over all messages with a context, Func is of type:
+      void func(const std::string& ctxt, const std::string& msgid, const std::vector<std::string>& msgstrs) */
+  template<class Func>
+  Func foreach_ctxt(Func func) 
+  {
+    for(CtxtEntries::iterator i = ctxt_entries.begin(); i != ctxt_entries.end(); ++i)
+      {
+        for(Entries::iterator j = i->second.begin(); j != i->second.end(); ++j)
+          {
+            func(i->first, j->first, j->second);
+          }
+      }
+    return func;
+  }
 };
 
 } // namespace tinygettext

@@ -27,6 +27,22 @@
 
 using namespace tinygettext;
 
+void print_msg(const std::string& msgid, const std::vector<std::string>& msgstrs)
+{
+  for(std::vector<std::string>::const_iterator i = msgstrs.begin(); i != msgstrs.end(); ++i)
+    {
+      std::cout << *i << std::endl;
+    }
+}
+
+void print_msg_ctxt(const std::string& ctxt, const std::string& msgid, const std::vector<std::string>& msgstrs) 
+{
+  for(std::vector<std::string>::const_iterator i = msgstrs.begin(); i != msgstrs.end(); ++i)
+    {
+      std::cout << *i << std::endl;
+    }
+}
+
 void print_usage(int argc, char** argv)
 {
   std::cout << "Usage: " << argv[0] << " translate FILE MESSAGE" << std::endl;
@@ -34,6 +50,7 @@ void print_usage(int argc, char** argv)
   std::cout << "       " << argv[0] << " directory DIRECTORY MESSAGE [LANG]" << std::endl;
   std::cout << "       " << argv[0] << " language LANGUAGE" << std::endl;
   std::cout << "       " << argv[0] << " language-dir DIR" << std::endl;
+  std::cout << "       " << argv[0] << " list-msgstrs FILE" << std::endl;
 }
 
 void read_dictionary(const std::string& filename, Dictionary& dict)
@@ -157,6 +174,15 @@ int main(int argc, char** argv)
                     << manager.get_language().get_modifier() << "')"
                     << std::endl;
           std::cout << "Translation: '" << manager.get_dictionary().translate(message) << "'" << std::endl;
+        }
+      else if ((argc == 3) && strcmp(argv[1], "list-msgstrs") == 0)
+        {
+          const char* filename = argv[2];
+
+          Dictionary dict;
+          read_dictionary(filename, dict);
+          dict.foreach(print_msg);
+          dict.foreach_ctxt(print_msg_ctxt);
         }
       else
         {
