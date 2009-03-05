@@ -76,6 +76,9 @@ public:
       variable: {language}_{country}@{modifier} */
   std::string str() const;
 
+  bool operator==(const Language& rhs);
+  bool operator!=(const Language& rhs);
+
   friend bool operator<(const Language& lhs, const Language& rhs);
 };
 

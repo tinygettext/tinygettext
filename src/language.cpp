@@ -551,6 +551,18 @@ Language::str() const
       return "";
     }
 }
+
+bool
+Language::operator==(const Language& rhs)
+{
+  return language_spec == rhs.language_spec;
+}
+
+bool
+Language::operator!=(const Language& rhs)
+{
+  return language_spec != rhs.language_spec;
+}
 
 } // namespace tinygettext
 
