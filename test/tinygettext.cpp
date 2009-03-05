@@ -81,7 +81,8 @@ int main(int argc, char** argv)
           for (std::set<Language>::const_iterator i = languages.begin(); i != languages.end(); ++i)
             {
               const Language& language = *i;
-              std::cout << "Name:      " << language.get_name()      << std::endl
+              std::cout << "Env:       " << language.str()           << std::endl
+                        << "Name:      " << language.get_name()      << std::endl
                         << "Language:  " << language.get_language()  << std::endl
                         << "Country:   " << language.get_country()   << std::endl
                         << "Modifier:  " << language.get_modifier()  << std::endl
@@ -93,7 +94,8 @@ int main(int argc, char** argv)
           Language language = Language::from_name(argv[2]);
 
           if (language)
-            std::cout << "Name:      " << language.get_name()      << std::endl
+            std::cout << "Env:       " << language.str()           << std::endl
+                      << "Name:      " << language.get_name()      << std::endl
                       << "Language:  " << language.get_language()  << std::endl
                       << "Country:   " << language.get_country()   << std::endl
                       << "Modifier:  " << language.get_modifier()  << std::endl;
@@ -167,7 +169,7 @@ int main(int argc, char** argv)
 
           std::cout << "Directory:   '" << directory << "'"  << std::endl;
           std::cout << "Message:     '" << message << "'" << std::endl;
-          std::cout << "Language:    (name: '" 
+          std::cout << "Language:    '" << manager.get_language().str() << "' (name: '" 
                     << manager.get_language().get_name() << "', language: '"
                     << manager.get_language().get_language() << "', country: '"
                     << manager.get_language().get_country() << "', modifier: '"
