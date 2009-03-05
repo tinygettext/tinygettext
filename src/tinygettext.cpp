@@ -662,7 +662,8 @@ public:
 
   void tokenize_po()
     {
-      while((token = nextToken()) != TOKEN_EOF)
+      token = nextToken();
+      while(token != TOKEN_EOF)
         {
           if(!expectToken("'msgid' keyword", TOKEN_KEYWORD) || !expectContent("'msgid' keyword", "msgid")) break;
 
@@ -693,6 +694,7 @@ public:
                   msgstr_plural[num] = convert(tokenContent, from_charset, to_charset);
                 }
               dict.add_translation(current_msgid, current_msgid_plural, msgstr_plural);
+              // No nextToken()
             }
           else
             {
@@ -710,6 +712,7 @@ public:
                 {
                   dict.add_translation(current_msgid, convert(tokenContent, from_charset, to_charset));
                 }
+              token = nextToken();
             }
         }
     }
@@ -760,6 +763,7 @@ public:
           }
 
           // Read more strings?
+          nextChar();
           skipSpace();
         } while(c == '"');
         return TOKEN_CONTENT;
