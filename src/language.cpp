@@ -525,6 +525,32 @@ Language::get_name()  const
   else
     return "";
 }
+
+std::string
+Language::str() const
+{
+  if (language_spec)
+    {
+      std::string var;
+      var += language_spec->language;
+      if (language_spec->country)
+        {
+          var += "_";
+          var += language_spec->country;
+        }
+
+      if (language_spec->modifier)
+        {
+          var += "@";
+          var += language_spec->modifier;
+        }
+      return var;
+    }
+  else
+    {
+      return "";
+    }
+}
 
 } // namespace tinygettext
 

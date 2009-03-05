@@ -59,10 +59,22 @@ public:
   
   operator bool() const { return language_spec; }
 
+  /** Returns the language code (i.e. de, en, fr) */
   std::string get_language() const;
+
+  /** Returns the country code (i.e. DE, AT, US) */
   std::string get_country()  const;
+
+  /** Returns the modifier of the language (i.e. latn or Latn for
+      Serbian with non-cyrilic characters) */
   std::string get_modifier()  const;
+
+  /** Returns the human readable name of the Language */
   std::string get_name()     const;
+
+  /** Returns the Language as string in the form of an environment
+      variable: {language}_{country}@{modifier} */
+  std::string str() const;
 
   friend bool operator<(const Language& lhs, const Language& rhs);
 };
