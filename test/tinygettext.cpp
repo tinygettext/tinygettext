@@ -29,6 +29,7 @@ using namespace tinygettext;
 
 void print_msg(const std::string& msgid, const std::vector<std::string>& msgstrs)
 {
+  std::cout << "Msgid: " << msgid << std::endl;
   for(std::vector<std::string>::const_iterator i = msgstrs.begin(); i != msgstrs.end(); ++i)
     {
       std::cout << *i << std::endl;
@@ -37,13 +38,15 @@ void print_msg(const std::string& msgid, const std::vector<std::string>& msgstrs
 
 void print_msg_ctxt(const std::string& ctxt, const std::string& msgid, const std::vector<std::string>& msgstrs) 
 {
+  std::cout << "Msgctxt: " << ctxt << std::endl;
+  std::cout << "Msgid: " << msgid << std::endl;
   for(std::vector<std::string>::const_iterator i = msgstrs.begin(); i != msgstrs.end(); ++i)
     {
       std::cout << *i << std::endl;
     }
 }
 
-void print_usage(int argc, char** argv)
+void print_usage(int /*argc*/, char** argv)
 {
   std::cout << "Usage: " << argv[0] << " translate FILE MESSAGE" << std::endl;
   std::cout << "       " << argv[0] << " translate FILE MESSAGE_S MESSAGE_P NUM" << std::endl;

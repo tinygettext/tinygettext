@@ -51,7 +51,7 @@ PluralForms::from_string(const std::string& str)
     
   if (plural_forms.empty())
     {
-      // FIXME: Could match some more strings if we cut out all spaces before compare
+      // Note that the plural forms here shouldn't contain any spaces
       plural_forms["Plural-Forms:nplurals=1;plural=0;"] = PluralForms(1, plural1);
       plural_forms["Plural-Forms:nplurals=2;plural=(n!=1);"] = PluralForms(2, plural2_1);
       plural_forms["Plural-Forms:nplurals=2;plural=(n>1);"] = PluralForms(2, plural2_2);

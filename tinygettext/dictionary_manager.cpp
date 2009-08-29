@@ -235,7 +235,7 @@ DictionaryManager::set_use_fuzzy(bool t)
 }
 
 bool
-DictionaryManager::get_use_fuzzy(bool t) const
+DictionaryManager::get_use_fuzzy() const
 {
   return use_fuzzy;
 }

@@ -76,7 +76,7 @@ IConv::set_charsets(const std::string& from_charset_, const std::string& to_char
   else
     {
       cd = tinygettext_iconv_open(to_charset.c_str(), from_charset.c_str());
-      if (cd == (iconv_t)-1)
+      if (cd == reinterpret_cast<iconv_t>(-1))
         {
           if(errno == EINVAL)
             {
@@ -116,7 +116,7 @@ IConv::convert(const std::string& text)
   
       // Try to convert the text.
       size_t ret = tinygettext_iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
-      if (ret == (size_t)-1)
+      if (ret == static_cast<size_t>(-1))
         {
           if (errno == EILSEQ || errno == EINVAL)
             { // invalid multibyte sequence

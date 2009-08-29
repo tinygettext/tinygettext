@@ -1,8 +1,6 @@
 SuperTux specific stuff:
 ========================
 
-* make a release and let SuperTux link to the tags/tinygettext-0.1.0 instead of trunk/
-
 * move this into SuperTux:
 
   // use findlocale to setup language
@@ -91,7 +89,7 @@ Random Unimportant Stuff
 tinygettext Documentation:
 ==========================
 
-* recomment a way to handle translation of speech and other data files
+* recommend a way to handle translation of speech and other data files
 
 * document how to use tinygettext and make it work like gettext
 

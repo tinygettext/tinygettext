@@ -46,9 +46,9 @@ POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
 class POParserError {};
 
 POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_, bool use_fuzzy_)
-  : filename(filename_), in(in_), dict(dict_), use_fuzzy(use_fuzzy_), conv(),
+  : filename(filename_), in(in_), dict(dict_), use_fuzzy(use_fuzzy_),
     running(false), eof(false), big5(false),
-    line_number(0), current_line()
+    line_number(0), current_line(), conv()
 {
 }
 
@@ -85,10 +85,10 @@ POParser::next_line()
 }
 
 void
-POParser::get_string_line(std::ostringstream& out, int skip)
+POParser::get_string_line(std::ostringstream& out,unsigned int skip)
 {
-  if (skip+1 >= (int)current_line.size())
-    error("unexpected end of line5");
+  if (skip+1 >= static_cast<unsigned int>(current_line.size()))
+    error("unexpected end of line");
 
   if (current_line[skip] != '"')
     error("expected start of string '\"'");
@@ -96,7 +96,7 @@ POParser::get_string_line(std::ostringstream& out, int skip)
   std::string::size_type i;
   for(i = skip+1; current_line[i] != '\"'; ++i)
     {
-      if (big5 && (unsigned char)current_line[i] >= 0x81 && (unsigned char)current_line[i] <= 0xfe)
+      if (big5 && static_cast<unsigned char>(current_line[i]) >= 0x81 && static_cast<unsigned char>(current_line[i]) <= 0xfe)
         {
           out << current_line[i];
 
@@ -153,12 +153,12 @@ POParser::get_string_line(std::ostringstream& out, int skip)
 }
 
 std::string
-POParser::get_string(int skip)
+POParser::get_string(unsigned int skip)
 {
   std::ostringstream out;
 
-  if (skip+1 >= (int)current_line.size())
-    error("unexpected end of line+");
+  if (skip+1 >= static_cast<unsigned int>(current_line.size()))
+    error("unexpected end of line");
 
   if (current_line[skip] == ' ' && current_line[skip+1] == '"')
     {
@@ -171,7 +171,7 @@ POParser::get_string(int skip)
 
       for(;;)
         {
-          if (skip >= (int)current_line.size())
+          if (skip >= static_cast<unsigned int>(current_line.size()))
             error("unexpected end of line");
           else if (current_line[skip] == '\"')
             {
@@ -179,9 +179,13 @@ POParser::get_string(int skip)
               break;
             }
           else if (!isspace(current_line[skip]))
-            error("string must start with '\"'");
+            {
+              error("string must start with '\"'");
+            }
           else
-            ; // skip space
+            {
+            // skip space
+            }
 
           skip += 1;
         }
@@ -235,13 +239,13 @@ POParser::parse_header(const std::string& header)
           if (has_prefix(line, "Content-Type:"))
             {
               // from_charset = line.substr(len);
-              int len = strlen("Content-Type: text/plain; charset=");
+              unsigned int len = strlen("Content-Type: text/plain; charset=");
               if (line.compare(0, len, "Content-Type: text/plain; charset=") == 0)
                 {
                   from_charset = line.substr(len);
 
-                  for(std::string::iterator i = from_charset.begin(); i != from_charset.end(); ++i)
-                    *i = toupper(*i);
+                  for(std::string::iterator ch = from_charset.begin(); ch != from_charset.end(); ++ch)
+                    *ch = toupper(*ch);
                 }
               else
                 {
@@ -313,9 +317,9 @@ POParser::is_empty_line()
 }
 
 bool
-POParser::prefix(const char* prefix)
+POParser::prefix(const char* prefix_str)
 {
-  return current_line.compare(0, strlen(prefix), prefix) == 0;
+  return current_line.compare(0, strlen(prefix_str), prefix_str) == 0;
 }
 
 void
@@ -383,7 +387,7 @@ POParser::parse()
                            current_line.size() > 8 && 
                            isdigit(current_line[7]) && current_line[8] == ']')
                     {
-                      unsigned int number = current_line[7] - '0';
+                      unsigned int number = static_cast<unsigned int>(current_line[7] - '0');
 
                       if (number >= msgstr_num.size())
                         msgstr_num.resize(number+1);

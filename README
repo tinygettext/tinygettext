@@ -13,7 +13,7 @@ Detecting the locale setting
 ============================
 
 Different operating systems store the default locale in different
-places, a portable way to find it, is provided by FindLocale:
+places; a portable way to find it is provided by FindLocale:
 
  * http://icculus.org/~aspirin/findlocale/
 

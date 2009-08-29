@@ -72,7 +72,7 @@ public:
   Language get_language() const;
 
   void set_use_fuzzy(bool t);
-  bool get_use_fuzzy(bool t) const;
+  bool get_use_fuzzy() const;
 
   /** Set a charset that will be set on the returned dictionaries */
   void set_charset(const std::string& charset);

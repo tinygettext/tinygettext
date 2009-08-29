@@ -34,7 +34,6 @@ private:
   std::istream& in;
   Dictionary& dict;
   bool  use_fuzzy;
-  IConv conv;
 
   bool running;
   bool eof;
@@ -42,6 +41,8 @@ private:
 
   int line_number;
   std::string current_line;
+
+  IConv conv;
   
   POParser(const std::string& filename, std::istream& in_, Dictionary& dict_, bool use_fuzzy = true);
   ~POParser();
@@ -49,11 +50,11 @@ private:
   void parse_header(const std::string& header);
   void parse();
   void next_line();
-  std::string get_string(int skip);
-  void get_string_line(std::ostringstream& str, int skip);
+  std::string get_string(unsigned int skip);
+  void get_string_line(std::ostringstream& str,unsigned int skip);
   bool is_empty_line();
   bool prefix(const char* );
-  void error(const std::string& msg);
+  void error(const std::string& msg) __attribute__((__noreturn__));
   void warning(const std::string& msg);
 
 public:

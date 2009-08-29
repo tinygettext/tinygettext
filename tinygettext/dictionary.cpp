@@ -31,6 +31,10 @@ Dictionary::Dictionary(const std::string& charset_)
 {
 }
 
+Dictionary::~Dictionary()
+{
+}
+
 std::string
 Dictionary::get_charset() const
 {
@@ -71,7 +75,7 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
     {
       unsigned int n = 0;
       n = plural_forms.get_plural(count);
-      assert(n >= 0 && n < msgstrs.size());
+      assert(/*n >= 0 &&*/ n < msgstrs.size());
 
       if (!msgstrs[n].empty())
         return msgstrs[n];
@@ -85,7 +89,7 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
     {
       log_info << "Couldn't translate: " << msgid << std::endl;
       log_info << "Candidates: " << std::endl;
-      for (Entries::const_iterator i = dict.begin(); i != dict.end(); ++i)
+      for (i = dict.begin(); i != dict.end(); ++i)
         log_info << "'" << i->first << "'" << std::endl;
 
       if (count == 1) // default to english rules

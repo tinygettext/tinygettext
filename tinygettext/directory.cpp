@@ -36,9 +36,9 @@ char** unix_enumerate_files(const char* directory)
     }
   else
     {
-      int len = 32;
-      int i = 0;
-      char** lst = (char**)malloc(sizeof(lst) * len);
+      unsigned int len = 32;
+      unsigned int i = 0;
+      char** lst = static_cast<char**>(malloc(sizeof(lst) * len));
       struct dirent* dp;
       while((dp = readdir(dir)) != 0)
         {
@@ -49,7 +49,7 @@ char** unix_enumerate_files(const char* directory)
           if (i >= len)
             {
               len *= 2;
-              lst = (char**)realloc(lst, sizeof(lst) * len);
+              lst = static_cast<char**>(realloc(lst, sizeof(lst) * len));
             }
         }
       lst[i] = 0;

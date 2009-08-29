@@ -40,7 +40,7 @@ public:
       plural(0)
   {}
 
-  PluralForms(int nplural_, PluralFunc plural_)
+  PluralForms(unsigned int nplural_, PluralFunc plural_)
     : nplural(nplural_), 
       plural(plural_)
   {}

@@ -47,8 +47,9 @@ private:
   std::string translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgidplural, int num);
 
 public:
-  /** */
+  /** Constructs a dictionary converting to the specified \a charset (default UTF-8) */
   Dictionary(const std::string& charset = "UTF-8");
+  ~Dictionary();
 
   /** Return the charset used for this dictionary */
   std::string get_charset() const;
