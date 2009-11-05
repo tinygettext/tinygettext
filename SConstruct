@@ -1,6 +1,20 @@
 # -*- python -*-
 
-env = Environment(CXXFLAGS=['-g', '-O2', '-ansi', '-pedantic', '-Wall', '-Werror'], 
+env = Environment(CXXFLAGS=['-O2',
+                            '-g',
+                            '-Wall',
+                            '-Wcast-qual',
+                            '-Wconversion',
+                            '-Weffc++',
+                            '-Werror',
+                            '-Wextra',
+                            '-Winit-self',
+                            '-Wno-unused-parameter',
+                            '-Wnon-virtual-dtor',
+                            '-Wshadow',
+                            '-ansi',
+                            '-pedantic',
+                            ],
                   CPPPATH=['tinygettext', '.'])
 
 # env.ParseConfig("sdl-config --cflags --libs")

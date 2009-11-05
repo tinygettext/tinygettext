@@ -245,7 +245,7 @@ POParser::parse_header(const std::string& header)
                   from_charset = line.substr(len);
 
                   for(std::string::iterator ch = from_charset.begin(); ch != from_charset.end(); ++ch)
-                    *ch = toupper(*ch);
+                    *ch = static_cast<char>(toupper(*ch));
                 }
               else
                 {

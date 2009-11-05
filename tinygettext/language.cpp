@@ -347,7 +347,7 @@ resolve_language_alias(const std::string& name)
   std::string name_lowercase;
   name_lowercase.resize(name.size());
   for(std::string::size_type i = 0; i < name.size(); ++i)
-    name_lowercase[i] = tolower(name[i]);
+    name_lowercase[i] = static_cast<char>(tolower(name[i]));
 
   Aliases::iterator i = language_aliases.find(name_lowercase);
   if (i != language_aliases.end()) 
