@@ -34,7 +34,7 @@
 #endif
 
 #include "tinygettext.hpp"
-#include "log.hpp"
+#include "util/log.hpp"
 #include "physfs/physfs_stream.hpp"
 #include "findlocale.hpp"
 
