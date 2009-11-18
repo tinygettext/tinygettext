@@ -24,7 +24,7 @@
 #include <fstream>
 #include <algorithm>
 
-#include "log.hpp"
+#include "log_stream.hpp"
 #include "po_parser.hpp"
 #include "unix_file_system.hpp"
 

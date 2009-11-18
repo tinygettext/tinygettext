@@ -15,6 +15,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
+#include "po_parser.hpp"
+
 #include <iostream>
 #include <ctype.h>
 #include <string>
@@ -22,12 +24,11 @@
 #include <string.h>
 #include <map>
 #include <stdlib.h>
-#include "language.hpp"
-#include "log.hpp"
 
+#include "language.hpp"
+#include "log_stream.hpp"
 #include "iconv.hpp"
 #include "dictionary.hpp"
-#include "po_parser.hpp"
 #include "plural_forms.hpp"
 
 namespace tinygettext {
@@ -43,10 +44,17 @@ POParser::parse(const std::string& filename, std::istream& in, Dictionary& dict)
 
 class POParserError {};
 
-POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_, bool use_fuzzy_)
-  : filename(filename_), in(in_), dict(dict_), use_fuzzy(use_fuzzy_),
-    running(false), eof(false), big5(false),
-    line_number(0), current_line(), conv()
+POParser::POParser(const std::string& filename_, std::istream& in_, Dictionary& dict_, bool use_fuzzy_) :
+  filename(filename_), 
+  in(in_), 
+  dict(dict_), 
+  use_fuzzy(use_fuzzy_),
+  running(false), 
+  eof(false), 
+  big5(false),
+  line_number(0), 
+  current_line(), 
+  conv()
 {
 }
 
