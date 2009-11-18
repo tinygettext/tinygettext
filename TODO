@@ -22,10 +22,6 @@ SuperTux specific stuff:
 tinygettext API related stuff:
 ==============================
 
-* make DirOp a single function:
-
-  std::vector<std::string> open_directory(const std::string& filename);
-
 * translate, translate_ctxt, translate_ctxt_plural, ... could be
   unified via overloading, not sure if that is a good idea. For the
   same reason add_translation() could be de-overloaded, to
@@ -38,14 +34,16 @@ tinygettext API related stuff:
   to make it more obvious:
 
   - POParser::pedantic
-
-  - enumerate_files (list files in directory)
-  - free_list (cleanup, of the above)
-
-  - open file (return std::istream)
-
   - iconv (???)
   - logging (log_callback(std::string))
+
+* handle errors better, not with log_* stream, cases of errors:
+
+  - couldn't translate
+  - collision while adding translation
+  - failure to open file or directory
+  - unknown language
+  - iconv failure to convert charset
 
 
 tinygettext implementation details:
