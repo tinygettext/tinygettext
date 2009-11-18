@@ -100,9 +100,9 @@ public:
   Func foreach(Func func) 
   {
     for(Entries::iterator i = entries.begin(); i != entries.end(); ++i)
-      {
-        func(i->first, i->second);
-      }
+    {
+      func(i->first, i->second);
+    }
     return func;
   }
 
@@ -112,12 +112,12 @@ public:
   Func foreach_ctxt(Func func) 
   {
     for(CtxtEntries::iterator i = ctxt_entries.begin(); i != ctxt_entries.end(); ++i)
+    {
+      for(Entries::iterator j = i->second.begin(); j != i->second.end(); ++j)
       {
-        for(Entries::iterator j = i->second.begin(); j != i->second.end(); ++j)
-          {
-            func(i->first, j->first, j->second);
-          }
+        func(i->first, j->first, j->second);
       }
+    }
     return func;
   }
 };

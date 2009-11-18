@@ -49,23 +49,23 @@ PluralForms::from_string(const std::string& str)
   static std::map<std::string, struct PluralForms> plural_forms;
     
   if (plural_forms.empty())
-    {
-      // Note that the plural forms here shouldn't contain any spaces
-      plural_forms["Plural-Forms:nplurals=1;plural=0;"] = PluralForms(1, plural1);
-      plural_forms["Plural-Forms:nplurals=2;plural=(n!=1);"] = PluralForms(2, plural2_1);
-      plural_forms["Plural-Forms:nplurals=2;plural=(n>1);"] = PluralForms(2, plural2_2);
-      plural_forms["Plural-Forms:nplurals=2;plural=n==1||n%10==1?0:1;"] = PluralForms(2, plural2_mk);
+  {
+    // Note that the plural forms here shouldn't contain any spaces
+    plural_forms["Plural-Forms:nplurals=1;plural=0;"] = PluralForms(1, plural1);
+    plural_forms["Plural-Forms:nplurals=2;plural=(n!=1);"] = PluralForms(2, plural2_1);
+    plural_forms["Plural-Forms:nplurals=2;plural=(n>1);"] = PluralForms(2, plural2_2);
+    plural_forms["Plural-Forms:nplurals=2;plural=n==1||n%10==1?0:1;"] = PluralForms(2, plural2_mk);
 
-      plural_forms["Plural-Forms:nplurals=3;plural=n%10==1&&n%100!=11?0:n!=0?1:2);"] = PluralForms(2, plural3_lv);
-      plural_forms["Plural-Forms:nplurals=3;plural=n==1?0:n==2?1:2;"] = PluralForms(3, plural3_ga);
-      plural_forms["Plural-Forms:nplurals=3;plural=(n%10==1&&n%100!=11?0:n%10>=2&&(n%100<10||n%100>=20)?1:2);"] = PluralForms(3, plural3_lt);
-      plural_forms["Plural-Forms:nplurals=3;plural=(n%10==1&&n%100!=11?0:n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?1:2);"] = PluralForms(3, plural3_1);
-      plural_forms["Plural-Forms:nplurals=3;plural=(n==1)?0:(n>=2&&n<=4)?1:2;"] = PluralForms(3, plural3_sk);
-      plural_forms["Plural-Forms:nplurals=3;plural=(n==1?0:n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?1:2);"] = PluralForms(3, plural3_pl);
-      plural_forms["Plural-Forms:nplurals=3;plural=(n%100==1?0:n%100==2?1:n%100==3||n%100==4?2:3);"] = PluralForms(3, plural3_sl);
+    plural_forms["Plural-Forms:nplurals=3;plural=n%10==1&&n%100!=11?0:n!=0?1:2);"] = PluralForms(2, plural3_lv);
+    plural_forms["Plural-Forms:nplurals=3;plural=n==1?0:n==2?1:2;"] = PluralForms(3, plural3_ga);
+    plural_forms["Plural-Forms:nplurals=3;plural=(n%10==1&&n%100!=11?0:n%10>=2&&(n%100<10||n%100>=20)?1:2);"] = PluralForms(3, plural3_lt);
+    plural_forms["Plural-Forms:nplurals=3;plural=(n%10==1&&n%100!=11?0:n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?1:2);"] = PluralForms(3, plural3_1);
+    plural_forms["Plural-Forms:nplurals=3;plural=(n==1)?0:(n>=2&&n<=4)?1:2;"] = PluralForms(3, plural3_sk);
+    plural_forms["Plural-Forms:nplurals=3;plural=(n==1?0:n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?1:2);"] = PluralForms(3, plural3_pl);
+    plural_forms["Plural-Forms:nplurals=3;plural=(n%100==1?0:n%100==2?1:n%100==3||n%100==4?2:3);"] = PluralForms(3, plural3_sl);
 
-      plural_forms["Plural-Forms:nplurals=4;plural=n==1?0:n==2?1:n>=3&&n<=10?2:3;"]=PluralForms(4, plural4_ar);
-    }
+    plural_forms["Plural-Forms:nplurals=4;plural=n==1?0:n==2?1:n>=3&&n<=10?2:3;"]=PluralForms(4, plural4_ar);
+  }
   
   // Remove spaces from string before lookup
   std::string space_less_str;
@@ -75,13 +75,13 @@ PluralForms::from_string(const std::string& str)
   
   std::map<std::string, struct PluralForms>::const_iterator it= plural_forms.find(space_less_str);
   if (it != plural_forms.end())
-    {
-      return it->second;
-    }
+  {
+    return it->second;
+  }
   else
-    {
-      return PluralForms();
-    }
+  {
+    return PluralForms();
+  }
 }
 
 } // namespace tinygettext
