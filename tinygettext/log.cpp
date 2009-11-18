@@ -27,7 +27,7 @@ Log::log_callback_t Log::log_error_callback   = &Log::default_log_callback;
 void
 Log::default_log_callback(const std::string& str)
 {
-  std::cerr << str;
+  std::cerr << "tinygettext: " << str;
 }
 
 void
