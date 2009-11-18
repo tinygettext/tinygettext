@@ -31,7 +31,7 @@ libtinygettext = env.StaticLibrary('tinygettext/tinygettext',
                                     'tinygettext/iconv.cpp',
                                     'tinygettext/log.cpp'])
 
-env.Program('test/tinygettext', ['test/tinygettext.cpp', libtinygettext])
+env.Program('test/tinygettext_test', ['test/tinygettext_test.cpp', libtinygettext])
 env.Program('test/po_parser_test', ['test/po_parser_test.cpp', libtinygettext])
 
 # EOF #

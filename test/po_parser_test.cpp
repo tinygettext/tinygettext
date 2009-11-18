@@ -1,5 +1,3 @@
-//  $Id$
-//
 //  tinygettext - A gettext replacement that works directly on .po files
 //  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmx.de>
 //
@@ -34,39 +32,39 @@ void my_log_callback(const std::string& err)
 int main(int argc, char** argv)
 {
   if (argc < 2)
-    {
-      std::cout << argv[0] << " FILENAME..." << std::endl;
-    }
+  {
+    std::cout << argv[0] << " FILENAME..." << std::endl;
+  }
   else
+  {
+    tinygettext::Log::set_log_info_callback(my_log_callback);
+    tinygettext::Log::set_log_warning_callback(my_log_callback);
+    tinygettext::Log::set_log_error_callback(my_log_callback);
+
+    for(int i = 1; i < argc; ++i)
     {
-      tinygettext::Log::set_log_info_callback(my_log_callback);
-      tinygettext::Log::set_log_warning_callback(my_log_callback);
-      tinygettext::Log::set_log_error_callback(my_log_callback);
-
-      for(int i = 1; i < argc; ++i)
+      std::ifstream in(argv[i]);
+      if (!in)
+      {
+        std::cerr << argv[0] << ": cannot access " << argv[i] << ": " << strerror(errno) << std::endl;
+      }
+      else
+      {
+        try 
         {
-          std::ifstream in(argv[i]);
-          if (!in)
-            {
-              std::cerr << argv[0] << ": cannot access " << argv[i] << ": " << strerror(errno) << std::endl;
-            }
-          else
-            {
-              try 
-                {
-                  tinygettext::Dictionary dict1;
-                  tinygettext::POParser::parse(argv[i], in, dict1);
+          tinygettext::Dictionary dict1;
+          tinygettext::POParser::parse(argv[i], in, dict1);
 
-                  //tinygettext::Dictionary dict2;
-                  //tinygettext::POFileReader::read(in, dict2);
-                }
-              catch(std::runtime_error& err)
-                {
-                  std::cout << argv[i] << ": exception: " << err.what() << std::endl;
-                }
-            }
+          //tinygettext::Dictionary dict2;
+          //tinygettext::POFileReader::read(in, dict2);
         }
-    }  
+        catch(std::runtime_error& err)
+        {
+          std::cout << argv[i] << ": exception: " << err.what() << std::endl;
+        }
+      }
+    }
+  }  
 }
 
 /* EOF */
