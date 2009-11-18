@@ -1,5 +1,3 @@
-//  $Id$
-//
 //  tinygettext - A gettext replacement that works directly on .po files
 //  Copyright (C) 2006 Ingo Ruhnke <grumbel@gmx.de>
 //
@@ -70,7 +68,7 @@ public:
   std::string get_modifier()  const;
 
   /** Returns the human readable name of the Language */
-  std::string get_name()     const;
+  std::string get_name() const;
 
   /** Returns the Language as string in the form of an environment
       variable: {language}_{country}@{modifier} */

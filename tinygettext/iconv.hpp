@@ -1,7 +1,5 @@
-//  $Id$
-// 
-//  TinyGetText - A small flexible gettext() replacement
-//  Copyright (C) 2007 Ingo Ruhnke <grumbel@gmx.de>
+//  tinygettext - A gettext replacement that works directly on .po files
+//  Copyright (C) 2006 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by

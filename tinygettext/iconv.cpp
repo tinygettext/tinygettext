@@ -1,5 +1,3 @@
-//  $Id$
-//
 //  tinygettext - A gettext replacement that works directly on .po files
 //  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmx.de>
 //
