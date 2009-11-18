@@ -35,7 +35,7 @@
 
 #include "tinygettext.hpp"
 #include "util/log.hpp"
-#include "physfs/physfs_stream.hpp"
+#include "physfs/ifile_stream.hpp"
 #include "findlocale.hpp"
 
 //#define TRANSLATION_DEBUG
