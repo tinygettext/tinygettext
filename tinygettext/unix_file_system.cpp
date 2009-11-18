@@ -15,24 +15,51 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_DIRECTORY_HPP
-#define HEADER_DIRECTORY_HPP
+#include "unix_file_system.hpp"
+
+#include <sys/types.h>
+#include <fstream>
+#include <dirent.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
 
 namespace tinygettext {
 
-struct DirOp
+UnixFileSystem::UnixFileSystem()
 {
-  char** (*enumerate_files)(const char*);
-  void   (*free_list)(char**);
-  std::istream* (*open_file)(const char*);
-};
+}
 
-std::istream* unix_open_file(const char*);
-char** unix_enumerate_files(const char* directory);
-void   unix_free_list(char** lst);
+std::vector<std::string>
+UnixFileSystem::open_directory(const std::string& pathname)
+{
+  DIR* dir = opendir(pathname.c_str());
+  if (!dir)
+  {
+    // FIXME: error handling
+    return std::vector<std::string>();
+  }
+  else
+  {
+    std::vector<std::string> files;
+
+    struct dirent* dp;
+    while((dp = readdir(dir)) != 0)
+    {
+      files.push_back(dp->d_name);
+    }
+    closedir(dir);
+
+    return files;
+  }
+}
+  
+std::auto_ptr<std::istream>
+UnixFileSystem::open_file(const std::string& filename)
+{
+  return std::auto_ptr<std::istream>(new std::ifstream(filename.c_str()));
+}
 
 } // namespace tinygettext
-
-#endif
 
 /* EOF */

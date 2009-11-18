@@ -22,6 +22,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+
 #include "tinygettext/tinygettext.hpp"
 #include "tinygettext/log.hpp"
 

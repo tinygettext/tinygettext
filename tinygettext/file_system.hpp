@@ -1,5 +1,5 @@
 //  tinygettext - A gettext replacement that works directly on .po files
-//  Copyright (C) 2006 Ingo Ruhnke <grumbel@gmx.de>
+//  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmx.de>
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -15,18 +15,28 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef HEADER_TINYGETTEXT_H
-#define HEADER_TINYGETTEXT_H
+#ifndef HEADER_TINYGETTEXT_FILE_SYSTEM_HPP
+#define HEADER_TINYGETTEXT_FILE_SYSTEM_HPP
 
-#include "po_parser.hpp"
-#include "dictionary.hpp"
-#include "language.hpp"
-#include "dictionary_manager.hpp"
+#include <vector>
+#include <memory>
+#include <iosfwd>
+#include <string>
 
 namespace tinygettext {
+
+class FileSystem 
+{
+public:
+  virtual ~FileSystem() {}
+
+  virtual std::vector<std::string>    open_directory(const std::string& pathname) =0;
+  virtual std::auto_ptr<std::istream> open_file(const std::string& filename)      =0;
+};
 
 } // namespace tinygettext
 
 #endif
 
 /* EOF */
+

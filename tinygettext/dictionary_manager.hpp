@@ -22,11 +22,14 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <memory>
 
-#include "directory.hpp"
+#include "file_system.hpp"
 #include "dictionary.hpp"
 
 namespace tinygettext {
+
+class FileSystem;
 
 /** Manager class for dictionaries, you give it a bunch of directories
     with .po files and it will then automatically load the right file
@@ -48,7 +51,7 @@ private:
 
   Dictionary  empty_dict;
 
-  DirOp dir_op;
+  std::auto_ptr<FileSystem> filesystem;
 
   void clear_cache();
 
@@ -82,7 +85,7 @@ public:
   /** Return a set of the available languages in their country code */
   std::set<Language> get_languages();
 
-  void set_dir_op(const DirOp& dir_op);
+  void set_filesystem(std::auto_ptr<FileSystem> filesystem);
 
 private:
   DictionaryManager (const DictionaryManager&);
