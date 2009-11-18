@@ -145,10 +145,6 @@ private:
   void parseLocaleAliases();
   /// returns the language part in a language spec (like de_DE.UTF-8 -> de)
   std::string get_language_from_spec(const std::string& spec);
-
-private:
-  DictionaryManager(const DictionaryManager&);
-  DictionaryManager& operator=(const DictionaryManager&);
 };
 
 /** Read the content of the .po file given as \a in into the
