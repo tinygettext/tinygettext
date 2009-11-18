@@ -398,7 +398,7 @@ POParser::parse()
             if (number >= msgstr_num.size())
               msgstr_num.resize(number+1);
 
-            msgstr_num[number] = get_string(9);
+            msgstr_num[number] = conv.convert(get_string(9));
             goto next;
           }
           else 
@@ -452,9 +452,9 @@ POParser::parse()
             if (use_fuzzy || !fuzzy)
             {
               if (has_msgctxt)
-                dict.add_translation(msgctxt, msgid, msgstr);
+                dict.add_translation(msgctxt, msgid, conv.convert(msgstr));
               else
-                dict.add_translation(msgid, msgstr);
+                dict.add_translation(msgid, conv.convert(msgstr));
             }
 
             if (0)
