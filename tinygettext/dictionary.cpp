@@ -51,12 +51,6 @@ Dictionary::get_plural_forms() const
   return plural_forms;
 }
 
-const char*
-Dictionary::translate_plural(const char* msgid, const char* msgidplural, int num)
-{
-  return translate_plural(std::string(msgid), std::string(msgidplural), num).c_str();
-}
-
 std::string
 Dictionary::translate_plural(const std::string& msgid, const std::string& msgid_plural, int num)
 {
@@ -97,12 +91,6 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
   }
 }
 
-const char*
-Dictionary::translate(const char* msgid)
-{
-  return translate(std::string(msgid)).c_str();
-}
-
 std::string
 Dictionary::translate(const std::string& msgid)
 {
@@ -139,12 +127,6 @@ Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid)
   }
 }
 
-const char* 
-Dictionary::translate_ctxt(const char* msgctx, const char* msgid)
-{
-  return translate_ctxt(std::string(msgctx), std::string(msgid)).c_str();
-}
-
 std::string
 Dictionary::translate_ctxt_plural(const std::string& msgctxt, 
                                   const std::string& msgid, const std::string& msgidplural, int num)
@@ -162,12 +144,6 @@ Dictionary::translate_ctxt_plural(const std::string& msgctxt,
     else
       return msgid;
   }
-}
-
-const char*
-Dictionary::translate_ctxt_plural(const char* msgctxt, const char* msgid, const char* msgidplural, int num)
-{
-  return translate_ctxt_plural(std::string(msgctxt), std::string(msgid), std::string(msgidplural), num).c_str();
 }
 
 void

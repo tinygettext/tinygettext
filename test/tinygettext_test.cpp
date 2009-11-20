@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 
       Dictionary dict;
       read_dictionary(filename, dict);
-      std::cout << dict.translate(message) << std::endl;
+      std::cout << "TRANSLATION: \"\"\"" << dict.translate(message) << "\"\"\""<< std::endl;
     }
     else if (argc == 5 && strcmp(argv[1], "translate") == 0)
     {

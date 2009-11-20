@@ -58,13 +58,11 @@ public:
 
   /** Translate the string \a msgid. */
   std::string translate(const std::string& msgid);
-  const char* translate(const char* msgid);
 
   /** Translate the string \a msgid to its correct plural form, based
       on the number of items given by \a num. \a msgid_plural is \a msgid in
       plural form. */
   std::string translate_plural(const std::string& msgid, const std::string& msgidplural, int num);
-  const char* translate_plural(const char* msgid, const char* msgidplural, int num);
 
   /** Translate the string \a msgid that is in context \a msgctx. A
       context is a way to disambiguate msgids that contain the same
@@ -72,11 +70,8 @@ public:
       quit doing something or it might refer to a door that leads
       outside (i.e. 'Ausgang' vs 'Beenden' in german) */
   std::string translate_ctxt(const std::string& msgctxt, const std::string& msgid);
-  const char* translate_ctxt(const char* msgctxt, const char* msgid);
 
   std::string translate_ctxt_plural(const std::string& msgctxt, const std::string& msgid, const std::string& msgidplural, int num);
-  const char* translate_ctxt_plural(const char* msgctxt, const char* msgid, const char* msgidplural, int num);
-
 
   /** Add a translation from \a msgid to \a msgstr to the dictionary,
       where \a msgid is the singular form of the message, msgid_plural the

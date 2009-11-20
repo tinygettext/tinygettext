@@ -1,7 +1,7 @@
 # -*- python -*-
 
-env = Environment(CXXFLAGS=['-O2',
-                            '-g',
+env = Environment(CXXFLAGS=['-O0',
+                            '-g3',
                             '-Wall',
                             '-Wcast-qual',
                             '-Wconversion',
