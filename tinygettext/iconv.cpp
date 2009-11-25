@@ -28,8 +28,8 @@
 
 namespace tinygettext {
 
-#ifndef ICONV_CONST
-#  define ICONV_CONST 
+#ifndef tinygettext_ICONV_CONST
+#  define tinygettext_ICONV_CONST 
 #endif
 
 IConv::IConv() 
@@ -74,7 +74,7 @@ IConv::set_charsets(const std::string& from_charset_, const std::string& to_char
   else
   {
     cd = tinygettext_iconv_open(to_charset.c_str(), from_charset.c_str());
-    if (cd == reinterpret_cast<iconv_t>(-1))
+    if (cd == reinterpret_cast<tinygettext_iconv_t>(-1))
     {
       if(errno == EINVAL)
       {
@@ -108,7 +108,7 @@ IConv::convert(const std::string& text)
 
     // We try to avoid to much copying around, so we write directly into
     // a std::string
-    ICONV_CONST char* inbuf = const_cast<char*>(&text[0]);
+    tinygettext_ICONV_CONST char* inbuf = const_cast<char*>(&text[0]);
     std::string result(outbytesleft, 'X');
     char* outbuf = &result[0]; 
   
