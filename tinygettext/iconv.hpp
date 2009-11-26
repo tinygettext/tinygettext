@@ -18,7 +18,6 @@
 #define HEADER_TINYGETTEXT_ICONV_HPP
 
 #include <string>
-#include <config.h>
 
 #ifdef HAVE_SDL
 #  include "SDL.h"
@@ -31,7 +30,6 @@
 #else
 #  include <iconv.h>
 
-#  define tinygettext_ICONV_CONST ICONV_CONST
 #  define tinygettext_iconv_t     iconv_t
 #  define tinygettext_iconv       iconv
 #  define tinygettext_iconv_open  iconv_open
