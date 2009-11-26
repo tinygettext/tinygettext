@@ -21,7 +21,7 @@
 #include <string>
 
 namespace tinygettext {
-
+
 typedef unsigned int (*PluralFunc)(int n);
 
 class PluralForms
@@ -53,7 +53,7 @@ public:
     return plural;
   }
 };
-
+
 } // namespace tinygettext
 
 #endif 

@@ -24,8 +24,8 @@
 #include <vector>
 #include <memory>
 
-#include "file_system.hpp"
 #include "dictionary.hpp"
+#include "language.hpp"
 
 namespace tinygettext {
 

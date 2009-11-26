@@ -18,10 +18,9 @@
 #ifndef HEADER_TINYGETTEXT_TINYGETTEXT_HPP
 #define HEADER_TINYGETTEXT_TINYGETTEXT_HPP
 
-#include "po_parser.hpp"
 #include "dictionary.hpp"
-#include "language.hpp"
 #include "dictionary_manager.hpp"
+#include "language.hpp"
 
 #endif
 

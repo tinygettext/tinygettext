@@ -21,7 +21,7 @@
 #include <string>
 
 namespace tinygettext {
-
+
 struct LanguageSpec;
 
 /** Lightweight wrapper around LanguageSpec */
@@ -83,7 +83,7 @@ public:
 inline bool operator<(const Language& lhs, const Language& rhs) {
   return lhs.language_spec < rhs.language_spec;
 }
-
+
 } // namespace tinygettext
 
 #endif
