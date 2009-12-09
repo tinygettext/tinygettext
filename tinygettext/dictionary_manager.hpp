@@ -56,7 +56,7 @@ private:
   void clear_cache();
 
 public:
-  DictionaryManager(const std::string& charset_ = "utf-8");
+  DictionaryManager(const std::string& charset_ = "UTF-8");
   ~DictionaryManager();
 
   /** Return the currently active dictionary, if none is set, an empty
