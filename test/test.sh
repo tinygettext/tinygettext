@@ -1,8 +1,8 @@
 #!/bin/sh
 
-./tinygettext translate po/fr.po  "invalid"
-./tinygettext directory po/ umlaut Deutsch
-./tinygettext directory po/ umlaut deutsch
-./tinygettext directory po/ umlaut de
+./tinygettext_test translate po/fr.po  "invalid"
+./tinygettext_test directory po/ umlaut Deutsch
+./tinygettext_test directory po/ umlaut deutsch
+./tinygettext_test directory po/ umlaut de
 
 # EOF #
