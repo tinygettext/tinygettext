@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <stdexcept>
+#include "tinygettext/po_parser.hpp"
 #include "tinygettext/tinygettext.hpp"
 
 using namespace tinygettext;

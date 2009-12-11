@@ -21,6 +21,7 @@
 #include <fstream>
 #include <stdexcept>
 
+#include "tinygettext/po_parser.hpp"
 #include "tinygettext/tinygettext.hpp"
 #include "tinygettext/log.hpp"
 

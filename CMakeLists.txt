@@ -76,26 +76,27 @@ CHECK_CXX_SOURCE_COMPILES(
 	HAVE_ICONV_CONST
 )
 
+# TODO: better way of config
+
 IF(HAVE_ICONV_CONST)
-  ADD_DEFINITIONS(-DICONV_CONST=const)
+  ADD_DEFINITIONS(-DHAVE_ICONV_CONST)
 ELSE(HAVE_ICONV_CONST)
-  REMOVE_DEFINITIONS(-DICONV_CONST=const)
+  REMOVE_DEFINITIONS(-DHAVE_ICONV_CONST)
 ENDIF(HAVE_ICONV_CONST)
 
 ## TinyGetText library compilation
 
 ## build list of source files
 
-FILE(GLOB TINYGETTEXT_SOURCES tinygettext/*.cpp)
+FILE(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tinygettext/*.cpp)
 
 ## define a target for building the library
 
-ADD_LIBRARY(libtinygettext ${TINYGETTEXT_SOURCES})
-SET_TARGET_PROPERTIES(libtinygettext PROPERTIES OUTPUT_NAME tinygettext)
+ADD_LIBRARY(tinygettext ${TINYGETTEXT_SOURCES})
 
 ## Add tinygettext dir to search path
 
-LINK_DIRECTORIES(tinygettext)
+LINK_DIRECTORIES(${TINYGETTEXT_SOURCE_DIR}/tinygettext)
 INCLUDE_DIRECTORIES(${TINYGETTEXT_SOURCE_DIR})
 
 ## Debug options
@@ -142,11 +143,11 @@ SET(EXECUTABLE_OUTPUT_PATH ${TINYGETTEXT_SOURCE_DIR}/test)
 
 ## Build tinygettext tests
 
-FOREACH(TEST tinygettext po_parser_test)
+FOREACH(TEST tinygettext_test po_parser_test)
   ## Add target for tinygettext test
   ADD_EXECUTABLE(${TEST} test/${TEST}.cpp)
   ## Link with tinygettext library
-  TARGET_LINK_LIBRARIES(${TEST} libtinygettext)
+  TARGET_LINK_LIBRARIES(${TEST} tinygettext)
   TARGET_LINK_LIBRARIES(${TEST} ${ICONV_LIBRARY})
 ENDFOREACH(TEST)
 

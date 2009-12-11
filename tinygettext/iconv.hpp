@@ -30,6 +30,12 @@
 #else
 #  include <iconv.h>
 
+#  ifdef HAVE_ICONV_CONST
+#    define tinygettext_ICONV_CONST ICONV_CONST
+#  else
+#    define tinygettext_ICONV_CONST 
+#  endif
+
 #  define tinygettext_iconv_t     iconv_t
 #  define tinygettext_iconv       iconv
 #  define tinygettext_iconv_open  iconv_open
