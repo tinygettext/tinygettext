@@ -34,14 +34,14 @@ unsigned int plural1(int )     { return 0; }
 unsigned int plural2_1(int n)  { return (n != 1); }
 unsigned int plural2_2(int n)  { return (n > 1); }
 unsigned int plural2_mk(int n) { return n==1 || n%10==1 ? 0 : 1; }
-unsigned int plural3_lv(int n) { return (n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2); }
-unsigned int plural3_ga(int n) { return n==1 ? 0 : n==2 ? 1 : 2; }
-unsigned int plural3_lt(int n) { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2); }
-unsigned int plural3_1(int n)  { return (n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
-unsigned int plural3_sk(int n) { return (n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2; }
-unsigned int plural3_pl(int n) { return (n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
-unsigned int plural3_sl(int n) { return (n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3); }
-unsigned int plural4_ar(int n) { return n==1 ? 0 : n==2 ? 1 : n>=3 && n<=10 ? 2 : 3; }
+unsigned int plural3_lv(int n) { return static_cast<unsigned int>(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2); }
+unsigned int plural3_ga(int n) { return static_cast<unsigned int>(n==1 ? 0 : n==2 ? 1 : 2); }
+unsigned int plural3_lt(int n) { return static_cast<unsigned int>(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2); }
+unsigned int plural3_1(int n)  { return static_cast<unsigned int>(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
+unsigned int plural3_sk(int n) { return static_cast<unsigned int>( (n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2 ); }
+unsigned int plural3_pl(int n) { return static_cast<unsigned int>(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); }
+unsigned int plural3_sl(int n) { return static_cast<unsigned int>(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3); }
+unsigned int plural4_ar(int n) { return static_cast<unsigned int>( n==1 ? 0 : n==2 ? 1 : n>=3 && n<=10 ? 2 : 3 ); }
 
 PluralForms
 PluralForms::from_string(const std::string& str)
