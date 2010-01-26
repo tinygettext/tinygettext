@@ -51,10 +51,12 @@ MARK_AS_ADVANCED(
 	CMAKE_BUILD_TYPE
 	CMAKE_INSTALL_PREFIX
 	EXECUTABLE_OUTPUT_PATH
-	LIBRARY_OUTPUT_PATH
 	CMAKE_OSX_ARCHITECTURES
 	CMAKE_OSX_SYSROOT
 )
+
+## Reveal library type choice to users
+OPTION(BUILD_SHARED_LIBS "Produce dynamic library instead of static archive" ON)
 
 ## Add iconv to include directories
 
@@ -89,6 +91,7 @@ ENDIF(HAVE_ICONV_CONST)
 ## build list of source files
 
 FILE(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tinygettext/*.cpp)
+FILE(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} tinygettext/*.hpp)
 
 ## define a target for building the library
 
@@ -96,7 +99,6 @@ ADD_LIBRARY(tinygettext ${TINYGETTEXT_SOURCES})
 
 ## Add tinygettext dir to search path
 
-LINK_DIRECTORIES(${TINYGETTEXT_SOURCE_DIR}/tinygettext)
 INCLUDE_DIRECTORIES(${TINYGETTEXT_SOURCE_DIR})
 
 ## Debug options
@@ -137,9 +139,9 @@ IF(CMAKE_COMPILER_IS_GNUCC)
   ENDIF(WERROR)
 ENDIF(CMAKE_COMPILER_IS_GNUCC)
 
-## Generate executables in the right place
+## Generate test executables in the right place
 
-SET(EXECUTABLE_OUTPUT_PATH ${TINYGETTEXT_SOURCE_DIR}/test)
+SET(EXECUTABLE_OUTPUT_PATH ${TINYGETTEXT_BINARY_DIR}/test)
 
 ## Build tinygettext tests
 
@@ -151,3 +153,14 @@ FOREACH(TEST tinygettext_test po_parser_test)
   TARGET_LINK_LIBRARIES(${TEST} ${ICONV_LIBRARY})
 ENDFOREACH(TEST)
 
+## Install tinygettext
+
+# use standardized variable name
+SET(LIB_SUFFIX "lib"
+	CACHE STRING "Subdirectory of prefix into which libraries are installed (e.g., lib32, lib64)")
+
+INSTALL(TARGETS tinygettext
+	ARCHIVE DESTINATION ${LIB_SUFFIX}
+	LIBRARY DESTINATION ${LIB_SUFFIX})
+INSTALL(FILES ${TINYGETTEXT_HEADERS}
+	DESTINATION include/tinygettext)
