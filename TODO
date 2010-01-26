@@ -45,6 +45,9 @@ tinygettext API related stuff:
   - unknown language
   - iconv failure to convert charset
 
+* ABI management/freezing. If tinygettext is to benefit other projects,
+  it should be able to provide a stable API (and, better, ABI).
+
 
 tinygettext implementation details:
 ===================================
