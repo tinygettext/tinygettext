@@ -156,11 +156,11 @@ ENDFOREACH(TEST)
 ## Install tinygettext
 
 # use standardized variable name
-SET(LIB_SUFFIX "lib"
+SET(LIB_SUBDIR "lib${LIB_SUFFIX}"
 	CACHE STRING "Subdirectory of prefix into which libraries are installed (e.g., lib32, lib64)")
 
 INSTALL(TARGETS tinygettext
-	ARCHIVE DESTINATION ${LIB_SUFFIX}
-	LIBRARY DESTINATION ${LIB_SUFFIX})
+	ARCHIVE DESTINATION ${LIB_SUBDIR}
+	LIBRARY DESTINATION ${LIB_SUBDIR})
 INSTALL(FILES ${TINYGETTEXT_HEADERS}
 	DESTINATION include/tinygettext)
