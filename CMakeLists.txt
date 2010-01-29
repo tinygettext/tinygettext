@@ -34,8 +34,8 @@
 
 ## Project name to use as command prefix
 
-PROJECT(TINYGETTEXT)
-
+PROJECT(tinygettext)
+SET(VERSION "0.1")
 
 ### CMake configuration
 
@@ -139,6 +139,10 @@ IF(CMAKE_COMPILER_IS_GNUCC)
   ENDIF(WERROR)
 ENDIF(CMAKE_COMPILER_IS_GNUCC)
 
+## Extra definitions
+
+ADD_DEFINITIONS(-DVERSION=\\\"${VERSION}\\\")
+
 ## Generate test executables in the right place
 
 SET(EXECUTABLE_OUTPUT_PATH ${TINYGETTEXT_BINARY_DIR}/test)
@@ -158,6 +162,9 @@ ENDFOREACH(TEST)
 # use standardized variable name
 SET(LIB_SUBDIR "lib${LIB_SUFFIX}"
 	CACHE STRING "Subdirectory of prefix into which libraries are installed (e.g., lib32, lib64)")
+
+## prepare tinygettext.pc
+CONFIGURE_FILE(tinygettext.pc.in tinygettext.pc @ONLY)
 
 INSTALL(TARGETS tinygettext
 	ARCHIVE DESTINATION ${LIB_SUBDIR}
