@@ -32,6 +32,8 @@
 #
 
 
+CMAKE_POLICY(SET CMP0005 NEW)
+
 ## Project name to use as command prefix
 
 PROJECT(tinygettext)
@@ -43,7 +45,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 IF(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
 ENDIF(COMMAND cmake_policy)
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${TINYGETTEXT_SOURCE_DIR})
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${tinygettext_SOURCE_DIR})
 
 # move some config clutter to the advanced section
 MARK_AS_ADVANCED(
@@ -99,7 +101,7 @@ ADD_LIBRARY(tinygettext ${TINYGETTEXT_SOURCES})
 
 ## Add tinygettext dir to search path
 
-INCLUDE_DIRECTORIES(${TINYGETTEXT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${tinygettext_SOURCE_DIR})
 
 ## Debug options
 
@@ -145,7 +147,7 @@ ADD_DEFINITIONS(-DVERSION=\\\"${VERSION}\\\")
 
 ## Generate test executables in the right place
 
-SET(EXECUTABLE_OUTPUT_PATH ${TINYGETTEXT_BINARY_DIR}/test)
+SET(EXECUTABLE_OUTPUT_PATH ${tinygettext_BINARY_DIR}/test)
 
 ## Build tinygettext tests
 
@@ -171,3 +173,5 @@ INSTALL(TARGETS tinygettext
 	LIBRARY DESTINATION ${LIB_SUBDIR})
 INSTALL(FILES ${TINYGETTEXT_HEADERS}
 	DESTINATION include/tinygettext)
+INSTALL(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
+	DESTINATION ${LIB_SUBDIR}/pkgconfig)
