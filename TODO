@@ -1,24 +1,3 @@
-SuperTux specific stuff:
-========================
-
-* move this into SuperTux:
-
-  // use findlocale to setup language
-  char* env = getenv(SUPERTUX_LANG);
-  if (env)
-  {
-     dictionary_manager->set_language(Language::from_env(env));
-  }
-  else
-  {
-    FL_Locale *locale;
-    FL_FindLocale(&locale, FL_MESSAGES);
-    if (locale->lang)
-      dictionary_manager->set_language(Language::from_spec(locale->lang,
-                                                           locale->country?locale->country:""));
-    FL_FreeLocale(&locale);
-  }
-
 tinygettext API related stuff:
 ==============================
 
