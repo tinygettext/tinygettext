@@ -1041,3 +1041,7 @@ msgstr "aktiviert"
 msgid "disabled"
 msgstr "däktiviert"
 
+
+#: src/pingus_main.cxx:751
+msgid "reenabled"
+msgstr ""

@@ -27,3 +27,7 @@ msgid_plural "found %d fatal errors"
 msgstr[0] "s'ha trobat %d error fätal"
 msgstr[1] "s'han trobat %d errors fätals"
 
+
+msgid "I ate %d pizza."
+msgid_plural "I ate %d pizzas."
+msgstr[0] ""
