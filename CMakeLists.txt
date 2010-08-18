@@ -105,7 +105,7 @@ INCLUDE_DIRECTORIES(${tinygettext_SOURCE_DIR})
 
 ## Debug options
 
-OPTION(WERROR "Stops on first compiler warning in debug mode" ON)
+OPTION(WERROR "Stops on first compiler warning in debug mode" OFF)
 IF(CMAKE_COMPILER_IS_GNUCC)
   ADD_DEFINITIONS(-O3 -Wall -Wextra -Weffc++ -pedantic) 
   # -ansi fails in MinGW
