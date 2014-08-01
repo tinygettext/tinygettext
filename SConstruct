@@ -1,8 +1,14 @@
 # -*- python -*-
 
-env = Environment(CXXFLAGS=['-O0',
+import os
+
+env = Environment(ENV=os.environ,
+                  CXX="g++-svn",
+                  CXXFLAGS=['-O0',
                             '-g3',
+                            '-std=c++0x',
                             '-Wall',
+                            '-Wextra',
                             '-Wcast-qual',
                             '-Wconversion',
                             '-Weffc++',
@@ -12,7 +18,7 @@ env = Environment(CXXFLAGS=['-O0',
                             '-Wno-unused-parameter',
                             '-Wnon-virtual-dtor',
                             '-Wshadow',
-                            '-ansi',
+                            # '-ansi', # conflicts with -std=c++0x
                             '-pedantic',
                             ],
                   CPPPATH=['tinygettext', '.'])
