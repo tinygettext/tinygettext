@@ -91,7 +91,7 @@ POParser::next_line()
 }
 
 void
-POParser::get_string_line(std::ostringstream& out,unsigned int skip)
+POParser::get_string_line(std::ostringstream& out, size_t skip)
 {
   if (skip+1 >= static_cast<unsigned int>(current_line.size()))
     error("unexpected end of line");
@@ -207,7 +207,7 @@ next:
         if (pedantic)
           warning("leading whitespace before string");
 
-      get_string_line(out, i);
+      get_string_line(out,  i);
       goto next;
     }
     else if (isspace(current_line[i]))
