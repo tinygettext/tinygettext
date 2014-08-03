@@ -1,0 +1,6 @@
+*.o
+*~
+/.sconsign.dblite
+/src/libtinygettext.a
+/test/po_parser_test
+/test/tinygettext_test
