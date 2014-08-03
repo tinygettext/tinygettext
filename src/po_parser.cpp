@@ -15,7 +15,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#include "po_parser.hpp"
+#include "tinygettext/po_parser.hpp"
 
 #include <iostream>
 #include <ctype.h>
@@ -25,11 +25,11 @@
 #include <unordered_map>
 #include <stdlib.h>
 
-#include "language.hpp"
-#include "log_stream.hpp"
-#include "iconv.hpp"
-#include "dictionary.hpp"
-#include "plural_forms.hpp"
+#include "tinygettext/language.hpp"
+#include "tinygettext/log_stream.hpp"
+#include "tinygettext/iconv.hpp"
+#include "tinygettext/dictionary.hpp"
+#include "tinygettext/plural_forms.hpp"
 
 namespace tinygettext {
 

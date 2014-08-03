@@ -15,7 +15,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#include "dictionary_manager.hpp"
+#include "tinygettext/dictionary_manager.hpp"
 
 #include <memory>
 #include <assert.h>
@@ -24,9 +24,9 @@
 #include <fstream>
 #include <algorithm>
 
-#include "log_stream.hpp"
-#include "po_parser.hpp"
-#include "unix_file_system.hpp"
+#include "tinygettext/log_stream.hpp"
+#include "tinygettext/po_parser.hpp"
+#include "tinygettext/unix_file_system.hpp"
 
 namespace tinygettext {
 
