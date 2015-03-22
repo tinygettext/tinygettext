@@ -1,9 +1,9 @@
 *.o
 *~
-/.sconsign.dblite
 /CMakeCache.txt
 /CMakeFiles/
 /Makefile
+/build*/
 /cmake_install.cmake
 /libtinygettext.so
 /src/libtinygettext.a
