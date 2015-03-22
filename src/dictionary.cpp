@@ -110,7 +110,7 @@ Dictionary::translate(const Entries& dict, const std::string& msgid)
   {
     log_info << "Couldn't translate: " << msgid << std::endl;
     return msgid;
-  } 
+  }
 }
 
 std::string
@@ -129,7 +129,7 @@ Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid)
 }
 
 std::string
-Dictionary::translate_ctxt_plural(const std::string& msgctxt, 
+Dictionary::translate_ctxt_plural(const std::string& msgctxt,
                                   const std::string& msgid, const std::string& msgidplural, int num)
 {
   CtxtEntries::iterator i = ctxt_entries.find(msgctxt);
@@ -166,14 +166,14 @@ Dictionary::add_translation(const std::string& msgid, const std::string& msgstr)
   }
   else
   {
-    log_warning << "collision in add_translation: '" 
+    log_warning << "collision in add_translation: '"
                 << msgid << "' -> '" << msgstr << "' vs '" << vec[0] << "'" << std::endl;
     vec[0] = msgstr;
   }
 }
 
 void
-Dictionary::add_translation(const std::string& msgctxt, 
+Dictionary::add_translation(const std::string& msgctxt,
                             const std::string& msgid, const std::string& msgid_plural,
                             const std::vector<std::string>& msgstrs)
 {

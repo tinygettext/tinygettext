@@ -54,15 +54,15 @@ Log::Log(log_callback_t callback_) :
 {
 }
 
-Log::~Log() 
+Log::~Log()
 {
   callback(out.str());
 }
 
 std::ostream&
-Log::get() 
+Log::get()
 {
-  return out; 
+  return out;
 }
 
 } // namespace tinygettext

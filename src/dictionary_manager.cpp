@@ -75,7 +75,7 @@ DictionaryManager::get_dictionary()
 {
   if (current_dict)
   {
-    return *current_dict; 
+    return *current_dict;
   }
   else
   {
@@ -98,7 +98,7 @@ DictionaryManager::get_dictionary(const Language& language)
   //log_debug << "...normalized as \"" << lang << "\"" << std::endl;
   assert(language);
 
-  Dictionaries::iterator i = dictionaries.find(language); 
+  Dictionaries::iterator i = dictionaries.find(language);
   if (i != dictionaries.end())
   {
     return *i->second;
@@ -131,7 +131,7 @@ DictionaryManager::get_dictionary(const Language& language)
           else
           {
             int score = Language::match(language, po_language);
-                          
+
             if (score > best_score)
             {
               best_score = score;
@@ -140,11 +140,11 @@ DictionaryManager::get_dictionary(const Language& language)
           }
         }
       }
-              
+
       if (!best_filename.empty())
       {
         std::string pofile = *p + "/" + best_filename;
-        try 
+        try
         {
           std::unique_ptr<std::istream> in = filesystem->open_file(pofile);
           if (!in.get())
@@ -156,7 +156,7 @@ DictionaryManager::get_dictionary(const Language& language)
             POParser::parse(pofile, *in, *dict);
           }
         }
-        catch(std::exception& e) 
+        catch(std::exception& e)
         {
           log_error << "error: failure parsing: " << pofile << std::endl;
           log_error << e.what() << "" << std::endl;
@@ -179,7 +179,7 @@ DictionaryManager::get_languages()
 
     for(std::vector<std::string>::iterator file = files.begin(); file != files.end(); ++file)
     {
-      if (has_suffix(*file, ".po")) 
+      if (has_suffix(*file, ".po"))
       {
         languages.insert(Language::from_env(file->substr(0, file->size()-3)));
       }

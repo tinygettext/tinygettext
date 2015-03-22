@@ -35,7 +35,7 @@ void print_msg(const std::string& msgid, const std::vector<std::string>& msgstrs
     }
 }
 
-void print_msg_ctxt(const std::string& ctxt, const std::string& msgid, const std::vector<std::string>& msgstrs) 
+void print_msg_ctxt(const std::string& ctxt, const std::string& msgid, const std::vector<std::string>& msgstrs)
 {
   std::cout << "Msgctxt: " << ctxt << std::endl;
   std::cout << "Msgid: " << msgid << std::endl;
@@ -58,7 +58,7 @@ void print_usage(int /*argc*/, char** argv)
 void read_dictionary(const std::string& filename, Dictionary& dict)
 {
   std::ifstream in(filename.c_str());
-  
+
   if (!in)
     {
       throw std::runtime_error("Couldn't open " + filename);
@@ -72,7 +72,7 @@ void read_dictionary(const std::string& filename, Dictionary& dict)
 
 int main(int argc, char** argv)
 {
-  try 
+  try
   {
     if (argc == 3 && strcmp(argv[1], "language-dir") == 0)
     {
@@ -151,10 +151,10 @@ int main(int argc, char** argv)
       const char* directory = argv[2];
       const char* message   = argv[3];
       const char* language  = (argc == 5) ? argv[4] : NULL;
-          
+
       DictionaryManager manager;
       manager.add_directory(directory);
-          
+
       if (language)
       {
         Language lang = Language::from_name(language);
@@ -171,7 +171,7 @@ int main(int argc, char** argv)
 
       std::cout << "Directory:   '" << directory << "'"  << std::endl;
       std::cout << "Message:     '" << message << "'" << std::endl;
-      std::cout << "Language:    '" << manager.get_language().str() << "' (name: '" 
+      std::cout << "Language:    '" << manager.get_language().str() << "' (name: '"
                 << manager.get_language().get_name() << "', language: '"
                 << manager.get_language().get_language() << "', country: '"
                 << manager.get_language().get_country() << "', modifier: '"
@@ -193,11 +193,11 @@ int main(int argc, char** argv)
       print_usage(argc, argv);
     }
   }
-  catch(std::exception& err) 
+  catch(std::exception& err)
   {
     std::cout << "Exception: " << err.what() << std::endl;
   }
-  
+
   return 0;
 }
 

@@ -350,7 +350,7 @@ resolve_language_alias(const std::string& name)
     name_lowercase[i] = static_cast<char>(tolower(name[i]));
 
   Aliases::iterator i = language_aliases.find(name_lowercase);
-  if (i != language_aliases.end()) 
+  if (i != language_aliases.end())
   {
     return i->second;
   }
@@ -370,7 +370,7 @@ Language::from_spec(const std::string& language, const std::string& country, con
     for(int i = 0; languages[i].language != NULL; ++i)
       language_map[languages[i].language].push_back(&languages[i]);
   }
-  
+
   std::unordered_map<std::string, std::vector<LanguageSpec*> >::iterator i = language_map.find(language);
   if (i != language_map.end())
   {
@@ -381,7 +381,7 @@ Language::from_spec(const std::string& language, const std::string& country, con
     tmpspec.country  = country.c_str();
     tmpspec.modifier = modifier.c_str();
     Language tmplang(&tmpspec);
-      
+
     LanguageSpec* best_match = 0;
     int best_match_score = 0;
     for(std::vector<LanguageSpec*>::iterator j = lst.begin(); j != lst.end(); ++j)
@@ -469,7 +469,7 @@ Language::match(const Language& lhs, const Language& rhs)
       { 7, 6, 3 }, // country wildcard
       { 4, 2, 1 }, // country miss
     };
-  
+
     int c;
     if (lhs.get_country() == rhs.get_country())
       c = 0;
@@ -477,7 +477,7 @@ Language::match(const Language& lhs, const Language& rhs)
       c = 1;
     else
       c = 2;
-  
+
     int m;
     if (lhs.get_modifier() == rhs.get_modifier())
       m = 0;

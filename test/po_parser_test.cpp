@@ -51,7 +51,7 @@ int main(int argc, char** argv)
       }
       else
       {
-        try 
+        try
         {
           tinygettext::Dictionary dict1;
           tinygettext::POParser::parse(argv[i], in, dict1);
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
         }
       }
     }
-  }  
+  }
 }
 
 /* EOF */
