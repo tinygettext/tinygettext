@@ -131,9 +131,9 @@ IF(CMAKE_COMPILER_IS_GNUCC)
           -Wsign-conversion  -Wstack-protector
           -Wstrict-overflow=5
           -Wswitch-default  -Wswitch-enum
-          -Wundef)
+          -Wundef
+          -Wconversion)
         # Still left:
-        # -Wconversion  (find alternative to using toupper(int) on char)
         # -Wpadded      (DictionaryManager has a bool that sticks out)
   ENDIF(WARNINGS)
   IF(WERROR)
