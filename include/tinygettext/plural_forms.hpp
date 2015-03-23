@@ -49,7 +49,7 @@ public:
   bool operator==(const PluralForms& other) { return nplural == other.nplural && plural == other.plural; }
   bool operator!=(const PluralForms& other) { return !(*this == other); }
 
-  operator bool() const {
+  explicit operator bool() const {
     return plural != NULL;
   }
 };
