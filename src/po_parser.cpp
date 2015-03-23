@@ -245,7 +245,7 @@ POParser::parse_header(const std::string& header)
       if (has_prefix(line, "Content-Type:"))
       {
         // from_charset = line.substr(len);
-        unsigned int len = strlen("Content-Type: text/plain; charset=");
+        size_t len = strlen("Content-Type: text/plain; charset=");
         if (line.compare(0, len, "Content-Type: text/plain; charset=") == 0)
         {
           from_charset = line.substr(len);
