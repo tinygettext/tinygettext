@@ -364,7 +364,8 @@ resolve_language_alias(const std::string& name)
 Language
 Language::from_spec(const std::string& language, const std::string& country, const std::string& modifier)
 {
-  static std::unordered_map<std::string, std::vector<const LanguageSpec*> > language_map;
+  typedef std::unordered_map<std::string, std::vector<const LanguageSpec*> > LanguageSpecMap;
+  static LanguageSpecMap language_map;
 
   if (language_map.empty())
   { // Init language_map
@@ -372,7 +373,7 @@ Language::from_spec(const std::string& language, const std::string& country, con
       language_map[languages[i].language].push_back(&languages[i]);
   }
 
-  std::unordered_map<std::string, std::vector<const LanguageSpec*> >::iterator i = language_map.find(language);
+  LanguageSpecMap::iterator i = language_map.find(language);
   if (i != language_map.end())
   {
     std::vector<const LanguageSpec*>& lst = i->second;

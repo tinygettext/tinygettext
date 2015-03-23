@@ -47,7 +47,8 @@ unsigned int plural4_gd(int n) { return static_cast<unsigned int>( n==1 || n==11
 PluralForms
 PluralForms::from_string(const std::string& str)
 {
-  static std::unordered_map<std::string, PluralForms> plural_forms;
+  typedef std::unordered_map<std::string, PluralForms> PluralFormsMap;
+  static PluralFormsMap plural_forms;
 
   if (plural_forms.empty())
   {
@@ -75,7 +76,7 @@ PluralForms::from_string(const std::string& str)
     if (!isspace(str[i]))
       space_less_str += str[i];
 
-  std::unordered_map<std::string, PluralForms>::const_iterator it= plural_forms.find(space_less_str);
+  PluralFormsMap::const_iterator it= plural_forms.find(space_less_str);
   if (it != plural_forms.end())
   {
     return it->second;
