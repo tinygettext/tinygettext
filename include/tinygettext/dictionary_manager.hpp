@@ -45,7 +45,7 @@ private:
 
   std::string charset;
   bool        use_fuzzy;
-  
+
   Language    current_language;
   Dictionary* current_dict;
 

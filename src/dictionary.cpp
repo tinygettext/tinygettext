@@ -21,7 +21,7 @@
 #include "tinygettext/dictionary.hpp"
 
 namespace tinygettext {
-
+
 Dictionary::Dictionary(const std::string& charset_) :
   entries(),
   ctxt_entries(),
@@ -155,7 +155,7 @@ Dictionary::translate_ctxt_plural(const std::string& msgctxt,
       return msgid;
   }
 }
-
+
 void
 Dictionary::add_translation(const std::string& msgid, const std::string& ,
                             const std::vector<std::string>& msgstrs)
@@ -212,7 +212,7 @@ Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid
     vec[0] = msgstr;
   }
 }
-
+
 } // namespace tinygettext
 
 /* EOF */

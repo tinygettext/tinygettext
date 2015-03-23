@@ -20,7 +20,7 @@
 #include <unordered_map>
 
 namespace tinygettext {
-
+
 /**
  *  Plural functions are used to select a string that matches a given
  *  count. \a n is the count and the return value is the string index
@@ -43,7 +43,7 @@ unsigned int plural3_pl(int n) { return static_cast<unsigned int>(n==1 ? 0 : n%1
 unsigned int plural3_sl(int n) { return static_cast<unsigned int>(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3); }
 unsigned int plural4_ar(int n) { return static_cast<unsigned int>( n==1 ? 0 : n==2 ? 1 : n>=3 && n<=10 ? 2 : 3 ); }
 unsigned int plural4_gd(int n) { return static_cast<unsigned int>( n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3; }
-
+
 PluralForms
 PluralForms::from_string(const std::string& str)
 {

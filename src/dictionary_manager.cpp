@@ -244,10 +244,10 @@ DictionaryManager::set_filesystem(std::unique_ptr<FileSystem> filesystem_)
 }
 // ----------------------------------------------------------------------------
 /** This function converts a .po filename (e.g. zh_TW.po) into a language
- *  specification (zh_TW). On case insensitive file systems (think windows) 
- *  the filename and therefore the country specification is lower case 
- *  (zh_tw). It Converts the lower case characters of the country back to 
- *  upper case, otherwise tinygettext does not identify the country 
+ *  specification (zh_TW). On case insensitive file systems (think windows)
+ *  the filename and therefore the country specification is lower case
+ *  (zh_tw). It Converts the lower case characters of the country back to
+ *  upper case, otherwise tinygettext does not identify the country
  *  correctly.
  */
 std::string DictionaryManager::convertFilename2Language(const std::string &s_in) const

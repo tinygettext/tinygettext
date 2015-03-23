@@ -23,7 +23,7 @@
 #include <algorithm>
 
 namespace tinygettext {
-
+
 struct LanguageSpec {
   /** Language code: "de", "en", ... */
   const char* language;
@@ -37,7 +37,7 @@ struct LanguageSpec {
   /** Language name: "German", "English", "French", ... */
   const char* name;
 };
-
+
 /** Language Definitions */
 //*{
 static const LanguageSpec languages[] = {
@@ -282,7 +282,7 @@ static const LanguageSpec languages[] = {
   { NULL, 0,    0, NULL                          }
 };
 //*}
-
+
 std::string
 resolve_language_alias(const std::string& name)
 {
@@ -360,7 +360,7 @@ resolve_language_alias(const std::string& name)
     return name;
   }
 }
-
+
 Language
 Language::from_spec(const std::string& language, const std::string& country, const std::string& modifier)
 {
@@ -445,7 +445,7 @@ Language::from_env(const std::string& env)
 
   return from_spec(language, country, modifier);
 }
-
+
 Language::Language(const LanguageSpec* language_spec_)
   : language_spec(language_spec_)
 {
@@ -565,7 +565,7 @@ Language::operator!=(const Language& rhs) const
 {
   return language_spec != rhs.language_spec;
 }
-
+
 } // namespace tinygettext
 
 /* EOF */

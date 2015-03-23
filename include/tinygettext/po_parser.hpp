@@ -42,7 +42,7 @@ private:
   std::string current_line;
 
   IConv conv;
-  
+
   POParser(const std::string& filename, std::istream& in_, Dictionary& dict_, bool use_fuzzy = true);
   ~POParser();
 
