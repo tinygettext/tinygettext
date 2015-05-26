@@ -1,5 +1,5 @@
-tinygettext API related stuff:
-==============================
+tinygettext API related stuff
+=============================
 
 * translate, translate_ctxt, translate_ctxt_plural, ... could be
   unified via overloading, not sure if that is a good idea. For the
@@ -28,8 +28,8 @@ tinygettext API related stuff:
   it should be able to provide a stable API (and, better, ABI).
 
 
-tinygettext implementation details:
-===================================
+tinygettext implementation details
+----------------------------------
 
 * with PluralForms moved into Dictionary a lot of the Langugae stuff
   is pointless
@@ -50,7 +50,7 @@ tinygettext implementation details:
 * figure out how up-to-date other tinygettext implementations in the
   wild are (LinCity):
 
-  Pingus: 
+  Pingus:
   -------
   dictionary.hpp (synced with Pingus)
   dictionary_manager.hpp (PhysFS vs opendir())
@@ -58,19 +58,16 @@ tinygettext implementation details:
   po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
   tinygettext.hpp (iconv vs convert)
 
-
-Random Unimportant Stuff
-========================
 
-* a hashmap instead of std::map might be a good idea
+Random Unimportant Stuff
+------------------------
 
 * support for .gmo files would be cool
-
-tinygettext Documentation:
-==========================
+
+
+tinygettext Documentation
+-------------------------
 
 * recommend a way to handle translation of speech and other data files
 
 * document how to use tinygettext and make it work like gettext
-
-# EOF #
