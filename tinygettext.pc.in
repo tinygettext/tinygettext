@@ -9,7 +9,7 @@ includedir=${prefix}/include
 Name: @PROJECT_NAME@
 Description: tiny, minimal gettext replacement
 Version: @VERSION@
-URL: http://tinygettext.googlecode.com/
+URL: https://github.com/tinygettext/tinygettext
 Requires:
 Libs: -L${libdir} -ltinygettext
 Libs.private:
