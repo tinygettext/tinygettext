@@ -32,23 +32,23 @@
 #
 
 
-CMAKE_POLICY(SET CMP0005 NEW)
+cmake_policy(SET CMP0005 NEW)
 
 ## Project name to use as command prefix
 
-PROJECT(tinygettext)
-SET(VERSION "0.1")
+project(tinygettext)
+set(VERSION "0.1")
 
 ### CMake configuration
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
-IF(COMMAND cmake_policy)
+cmake_minimum_required(VERSION 2.4)
+if(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
-ENDIF(COMMAND cmake_policy)
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${tinygettext_SOURCE_DIR})
+endif(COMMAND cmake_policy)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${tinygettext_SOURCE_DIR})
 
 # move some config clutter to the advanced section
-MARK_AS_ADVANCED(
+mark_as_advanced(
 	CMAKE_BACKWARDS_COMPATIBILITY
 	CMAKE_BUILD_TYPE
 	CMAKE_INSTALL_PREFIX
@@ -58,19 +58,19 @@ MARK_AS_ADVANCED(
 )
 
 ## Reveal library type choice to users
-OPTION(BUILD_SHARED_LIBS "Produce dynamic library instead of static archive" ON)
+option(BUILD_SHARED_LIBS "Produce dynamic library instead of static archive" ON)
 
 ## Add iconv to include directories
 
-FIND_PACKAGE(ICONV REQUIRED)
-INCLUDE_DIRECTORIES(${ICONV_INCLUDE_DIR})
+find_package(ICONV REQUIRED)
+include_directories(${ICONV_INCLUDE_DIR})
 
 ## Check iconv_const
 
-INCLUDE(CheckCXXSourceCompiles)
+include(CheckCXXSourceCompiles)
 
-SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${ICONV_INCLUDE_DIR})
-CHECK_CXX_SOURCE_COMPILES(
+set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${ICONV_INCLUDE_DIR})
+check_cxx_source_compiles(
 	"
 	#include <iconv.h>
 	// this declaration will fail when there already exists a non const char** version which returns size_t
@@ -82,36 +82,36 @@ CHECK_CXX_SOURCE_COMPILES(
 
 # TODO: better way of config
 
-IF(HAVE_ICONV_CONST)
-  ADD_DEFINITIONS(-DHAVE_ICONV_CONST)
-ELSE(HAVE_ICONV_CONST)
-  REMOVE_DEFINITIONS(-DHAVE_ICONV_CONST)
-ENDIF(HAVE_ICONV_CONST)
+if(HAVE_ICONV_CONST)
+  add_definitions(-DHAVE_ICONV_CONST)
+else(HAVE_ICONV_CONST)
+  remove_definitions(-DHAVE_ICONV_CONST)
+endif(HAVE_ICONV_CONST)
 
 ## TinyGetText library compilation
 
 ## build list of source files
 
-FILE(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
-FILE(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
+file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
+file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
 
 ## define a target for building the library
 
-ADD_LIBRARY(tinygettext ${TINYGETTEXT_SOURCES})
+add_library(tinygettext ${TINYGETTEXT_SOURCES})
 
 ## Add tinygettext dir to search path
 
-INCLUDE_DIRECTORIES(include/)
+include_directories(include/)
 
 ## Debug options
 
-OPTION(WERROR "Stops on first compiler warning in debug mode" OFF)
-IF(CMAKE_COMPILER_IS_GNUCC)
-  ADD_DEFINITIONS(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
+option(WERROR "Stops on first compiler warning in debug mode" OFF)
+if(CMAKE_COMPILER_IS_GNUCC)
+  add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
   # -ansi fails in MinGW
-  OPTION(WARNINGS "Enable long list of warnings for compiler to check" ON)
-  IF(WARNINGS)
-    ADD_DEFINITIONS(
+  option(WARNINGS "Enable long list of warnings for compiler to check" ON)
+  if(WARNINGS)
+    add_definitions(
           -Wabi  -Wctor-dtor-privacy
           -Wstrict-null-sentinel
           -Wold-style-cast
@@ -135,45 +135,45 @@ IF(CMAKE_COMPILER_IS_GNUCC)
           -Wconversion)
         # Still left:
         # -Wpadded      (DictionaryManager has a bool that sticks out)
-  ENDIF(WARNINGS)
-  IF(WERROR)
-    ADD_DEFINITIONS(-Werror)
-  ENDIF(WERROR)
-ENDIF(CMAKE_COMPILER_IS_GNUCC)
+  endif(WARNINGS)
+  if(WERROR)
+    add_definitions(-Werror)
+  endif(WERROR)
+endif(CMAKE_COMPILER_IS_GNUCC)
 
 ## Extra definitions
 
-ADD_DEFINITIONS(-DVERSION=${VERSION})
+add_definitions(-DVERSION=${VERSION})
 
 ## Generate test executables in the right place
 
-SET(EXECUTABLE_OUTPUT_PATH ${tinygettext_BINARY_DIR}/test)
+set(EXECUTABLE_OUTPUT_PATH ${tinygettext_BINARY_DIR}/test)
 
 ## Build tinygettext tests
 
-FOREACH(TEST tinygettext_test po_parser_test)
+foreach(TEST tinygettext_test po_parser_test)
   ## Add target for tinygettext test
-  ADD_EXECUTABLE(${TEST} test/${TEST}.cpp)
+  add_executable(${TEST} test/${TEST}.cpp)
   ## Link with tinygettext library
-  TARGET_LINK_LIBRARIES(${TEST} tinygettext)
+  target_link_libraries(${TEST} tinygettext)
   TARGET_LINK_LIBRARIES(${TEST} ${ICONV_LIBRARY})
-ENDFOREACH(TEST)
+endforeach(TEST)
 
 ## Install tinygettext
 
 # use standardized variable name
-SET(LIB_SUBDIR "lib${LIB_SUFFIX}"
+set(LIB_SUBDIR "lib${LIB_SUFFIX}"
 	CACHE STRING "Subdirectory of prefix into which libraries are installed (e.g., lib32, lib64)")
 
 ## prepare tinygettext.pc
-CONFIGURE_FILE(tinygettext.pc.in tinygettext.pc @ONLY)
+configure_file(tinygettext.pc.in tinygettext.pc @ONLY)
 
-INSTALL(TARGETS tinygettext
+install(TARGETS tinygettext
 	ARCHIVE DESTINATION ${LIB_SUBDIR}
 	LIBRARY DESTINATION ${LIB_SUBDIR})
-INSTALL(FILES ${TINYGETTEXT_HEADERS}
+install(FILES ${TINYGETTEXT_HEADERS}
 	DESTINATION include/tinygettext)
-INSTALL(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
+install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
 	DESTINATION ${LIB_SUBDIR}/pkgconfig)
 
 # EOF #
