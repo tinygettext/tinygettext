@@ -6,7 +6,8 @@ can read `.po` files directly and doesn't need `.mo` files generated
 from `.po`. It also can read the `.po` files from arbitary locations,
 so it's better suited for non-Unix systems and situations in which one
 wants to store or distribute `.po` files seperately from the software
-itself.
+itself. It is licensed under
+[zlib license](http://en.wikipedia.org/wiki/Zlib_License).
 
 The latest version can be found at:
 
