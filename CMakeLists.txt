@@ -104,40 +104,40 @@ include_directories(include/)
 ## Debug options
 
 option(WERROR "Stops on first compiler warning in debug mode" OFF)
-if(CMAKE_COMPILER_IS_GNUCC)
-  add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
-  # -ansi fails in MinGW
-  option(WARNINGS "Enable long list of warnings for compiler to check" ON)
-  if(WARNINGS)
-    add_definitions(
-          -Wabi  -Wctor-dtor-privacy
-          -Wstrict-null-sentinel
-          -Wold-style-cast
-          -Woverloaded-virtual
-          -Wsign-promo -Wswitch-enum
-          -Wcast-align  -Wcast-qual
-          -Wdisabled-optimization
-          -Wfloat-equal
-          -Wformat=2
-          -Winit-self
-          -Winvalid-pch  -Wunsafe-loop-optimizations
-          -Wlogical-op
-          -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
-          -Wpacked
-          -Wredundant-decls
-          -Wshadow
-          -Wsign-conversion  -Wstack-protector
-          -Wstrict-overflow=5
-          -Wswitch-default  -Wswitch-enum
-          -Wundef
-          -Wconversion)
-        # Still left:
-        # -Wpadded      (DictionaryManager has a bool that sticks out)
-  endif(WARNINGS)
-  if(WERROR)
-    add_definitions(-Werror)
-  endif(WERROR)
-endif(CMAKE_COMPILER_IS_GNUCC)
+option(WARNINGS "Enable long list of warnings for compiler to check" ON)
+
+add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
+
+if(WARNINGS)
+  add_definitions(
+    -Wabi  -Wctor-dtor-privacy
+    -Wstrict-null-sentinel
+    -Wold-style-cast
+    -Woverloaded-virtual
+    -Wsign-promo -Wswitch-enum
+    -Wcast-align  -Wcast-qual
+    -Wdisabled-optimization
+    -Wfloat-equal
+    -Wformat=2
+    -Winit-self
+    -Winvalid-pch  -Wunsafe-loop-optimizations
+    -Wlogical-op
+    -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
+    -Wpacked
+    -Wredundant-decls
+    -Wshadow
+    -Wsign-conversion  -Wstack-protector
+    -Wstrict-overflow=5
+    -Wswitch-default  -Wswitch-enum
+    -Wundef
+    -Wconversion)
+  # Still left:
+  # -Wpadded      (DictionaryManager has a bool that sticks out)
+endif(WARNINGS)
+
+if(WERROR)
+  add_definitions(-Werror)
+endif(WERROR)
 
 ## Extra definitions
 
