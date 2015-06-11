@@ -111,7 +111,6 @@ add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
 if(WARNINGS)
   add_definitions(
     -Wabi  -Wctor-dtor-privacy
-    -Wstrict-null-sentinel
     -Wold-style-cast
     -Woverloaded-virtual
     -Wsign-promo -Wswitch-enum
@@ -120,8 +119,7 @@ if(WARNINGS)
     -Wfloat-equal
     -Wformat=2
     -Winit-self
-    -Winvalid-pch  -Wunsafe-loop-optimizations
-    -Wlogical-op
+    -Winvalid-pch
     -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
     -Wpacked
     -Wredundant-decls
@@ -133,6 +131,13 @@ if(WARNINGS)
     -Wconversion)
   # Still left:
   # -Wpadded      (DictionaryManager has a bool that sticks out)
+
+  if(CMAKE_COMPILER_IS_GNUCC)
+    add_definitions(
+      -Wstrict-null-sentinel
+      -Wlogical-op
+      -Wunsafe-loop-optimizations)
+  endif()
 endif(WARNINGS)
 
 if(WERROR)
