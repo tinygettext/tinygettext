@@ -35,8 +35,7 @@ env:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y build-essential cmake g++-4.7
-  - if [ "$CXX" = "g++" ]; then CXX="g++-4.7"; fi
+  - sudo apt-get install -y build-essential cmake
 
 script:
   - git clean -f
