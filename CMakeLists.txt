@@ -30,7 +30,6 @@
 #   make
 #
 
-
 cmake_policy(SET CMP0005 NEW)
 
 ## Project name to use as command prefix
@@ -155,7 +154,7 @@ foreach(TEST tinygettext_test po_parser_test)
   add_executable(${TEST} test/${TEST}.cpp)
   ## Link with tinygettext library
   target_link_libraries(${TEST} tinygettext)
-  TARGET_LINK_LIBRARIES(${TEST} ${ICONV_LIBRARY})
+  target_link_libraries(${TEST} ${ICONV_LIBRARY})
 endforeach(TEST)
 
 ## Install tinygettext
