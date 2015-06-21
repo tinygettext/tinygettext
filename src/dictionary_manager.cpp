@@ -119,13 +119,13 @@ DictionaryManager::get_dictionary(const Language& language)
       std::string best_filename;
       int best_score = 0;
 
-      for(std::vector<std::string>::iterator filename = files.begin(); filename != files.end(); filename++)
+      for (std::vector<std::string>::iterator filename = files.begin(); filename != files.end(); ++filename)
       {
         // check if filename matches requested language
         if (has_suffix(*filename, ".po"))
         { // ignore anything that isn't a .po file
 
-            Language po_language = Language::from_env(convertFilename2Language(*filename));
+          Language po_language = Language::from_env(convertFilename2Language(*filename));
 
           if (!po_language)
           {
@@ -167,7 +167,7 @@ DictionaryManager::get_dictionary(const Language& language)
       }
     }
 
-    if (language.get_country().size() > 0)
+    if (!language.get_country().empty())
     {
         printf("Adding language fallback %s\n", language.get_language().c_str());
         dict->addFallback( &get_dictionary(Language::from_spec(language.get_language())) );
