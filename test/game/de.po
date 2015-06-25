@@ -770,7 +770,7 @@ msgstr ""
 
 #: src/pingus_main.cxx:93
 msgid ""
-"| Please write a little bug report to <grumbel@gmx.de>, include informations"
+"| Please write a little bug report to <grumbel@gmail.com>, include informations"
 msgstr ""
 "| Bitte schreibe einen kleinen Report an <pingus-devel@nongnu.org, mit "
 "Informationen,"
