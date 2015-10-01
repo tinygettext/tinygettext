@@ -43,6 +43,7 @@ cmake_minimum_required(VERSION 2.4)
 if(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
+SET(CMAKE_MACOSX_RPATH ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${tinygettext_SOURCE_DIR})
 
 # move some config clutter to the advanced section
