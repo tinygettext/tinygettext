@@ -28,7 +28,7 @@
 
 #include "tinygettext/log_stream.hpp"
 #include "tinygettext/po_parser.hpp"
-#include "tinygettext/filesystem.hpp"
+#include "tinygettext/file_system.hpp"
 
 namespace tinygettext {
 

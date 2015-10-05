@@ -25,6 +25,7 @@
 #include <stdexcept>
 #include "tinygettext/po_parser.hpp"
 #include "tinygettext/tinygettext.hpp"
+#include "tinygettext/unix_file_system.hpp"
 
 using namespace tinygettext;
 
@@ -78,7 +79,7 @@ int main(int argc, char** argv)
   {
     if (argc == 3 && strcmp(argv[1], "language-dir") == 0)
     {
-      DictionaryManager dictionary_manager;
+      DictionaryManager dictionary_manager(std::unique_ptr<tinygettext::FileSystem>(new UnixFileSystem));
       dictionary_manager.add_directory(argv[2]);
       const std::set<Language>& languages = dictionary_manager.get_languages();
       std::cout << "Number of languages: " << languages.size() << std::endl;
@@ -155,7 +156,7 @@ int main(int argc, char** argv)
       const char* message   = argv[3];
       const char* language  = (argc == 5) ? argv[4] : NULL;
 
-      DictionaryManager manager;
+      DictionaryManager manager(std::unique_ptr<tinygettext::FileSystem>(new UnixFileSystem));
       manager.add_directory(directory);
 
       if (language)
