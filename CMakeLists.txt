@@ -59,15 +59,33 @@ mark_as_advanced(
 ## Reveal library type choice to users
 option(BUILD_SHARED_LIBS "Produce dynamic library instead of static archive" ON)
 
+# TinyGetText library compilation
+
+## build list of source files
+
+file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
+file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
+
+## define a target for building the library
+
+add_library(tinygettext ${TINYGETTEXT_SOURCES})
+
+## Add tinygettext dir to search path
+target_include_directories(tinygettext PUBLIC include/)
+
+## SDL/iconv usage
+option(HAVE_SDL "Use SDL_iconv instead of system iconv" FALSE)
+if(HAVE_SDL)
+set_source_files_properties(${TINYGETTEXT_SOURCES} PROPERTIES COMPILE_DEFINITIONS HAVE_SDL)
+TARGET_INCLUDE_DIRECTORIES(tinygettext PUBLIC ${SDL2_INCLUDE_DIRS})
+TARGET_LINK_LIBRARIES(tinygettext PUBLIC ${SDL2_LIBRARIES})
+
+else(HAVE_SDL)
+
 ## Add iconv to include directories
-
 find_package(ICONV REQUIRED)
-include_directories(${ICONV_INCLUDE_DIR})
-
 ## Check iconv_const
-
 include(CheckCXXSourceCompiles)
-
 set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${ICONV_INCLUDE_DIR})
 check_cxx_source_compiles(
 	"
@@ -87,20 +105,10 @@ else(HAVE_ICONV_CONST)
   remove_definitions(-DHAVE_ICONV_CONST)
 endif(HAVE_ICONV_CONST)
 
-## TinyGetText library compilation
+target_include_directories(tinygettext PUBLIC ${ICONV_INCLUDE_DIR})
+target_link_libraries(tinygettext PUBLIC ${ICONV_LIBRARY})
 
-## build list of source files
-
-file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
-file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
-
-## define a target for building the library
-
-add_library(tinygettext ${TINYGETTEXT_SOURCES})
-
-## Add tinygettext dir to search path
-
-include_directories(include/)
+endif(HAVE_SDL)
 
 ## Debug options
 
@@ -160,7 +168,6 @@ foreach(TEST tinygettext_test po_parser_test)
   add_executable(${TEST} test/${TEST}.cpp)
   ## Link with tinygettext library
   target_link_libraries(${TEST} tinygettext)
-  target_link_libraries(${TEST} ${ICONV_LIBRARY})
 endforeach(TEST)
 
 ## Install tinygettext
