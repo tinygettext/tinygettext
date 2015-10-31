@@ -240,6 +240,17 @@ DictionaryManager::add_directory(const std::string& pathname)
 }
 
 void
+DictionaryManager::remove_directory(const std::string& pathname)
+{
+  SearchPath::iterator it = std::find(search_path.begin(), search_path.end(), pathname);
+  if (it != search_path.end())
+  {
+    clear_cache(); // removing directories invalidates cache
+    search_path.erase(it);
+  }
+}
+
+void
 DictionaryManager::set_filesystem(std::unique_ptr<FileSystem> filesystem_)
 {
   filesystem = std::move(filesystem_);
