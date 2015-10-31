@@ -84,6 +84,9 @@ public:
       added directories have higher priority then later added ones */
   void add_directory(const std::string& pathname);
 
+  /** Remove a directory from the search path */
+  void remove_directory(const std::string& pathname);
+
   /** Return a set of the available languages in their country code */
   std::set<Language> get_languages();
 

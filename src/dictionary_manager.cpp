@@ -241,6 +241,16 @@ DictionaryManager::add_directory(const std::string& pathname)
     }
 }
 
+void
+DictionaryManager::remove_directory(const std::string& pathname)
+{
+    SearchPath::iterator it = find(search_path.begin(), search_path.end(), pathname);
+    if(it != search_path.end()) {
+        clear_cache(); // removing directories invalidates cache
+        search_path.erase(it);
+    }
+}
+
 // ----------------------------------------------------------------------------
 /** This function converts a .po filename (e.g. zh_TW.po) into a language
  *  specification (zh_TW). On case insensitive file systems (think windows)
