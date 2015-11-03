@@ -95,7 +95,8 @@ int main(int argc, char** argv)
     }
     else if (argc == 3 && strcmp(argv[1], "language") == 0)
     {
-      Language language = Language::from_name(argv[2]);
+      const char* language_cstr = argv[2];
+      Language language = Language::from_name(language_cstr);
 
       if (language)
         std::cout << "Env:       " << language.str()           << std::endl
