@@ -134,7 +134,7 @@ if(WARNINGS)
     -Wredundant-decls
     -Wshadow
     -Wsign-conversion  -Wstack-protector
-    -Wstrict-overflow=5
+    -Wstrict-overflow=2
     -Wswitch-default  -Wswitch-enum
     -Wundef
     -Wconversion)
