@@ -77,8 +77,8 @@ target_include_directories(tinygettext PUBLIC include/)
 option(HAVE_SDL "Use SDL_iconv instead of system iconv" FALSE)
 if(HAVE_SDL)
 set_source_files_properties(${TINYGETTEXT_SOURCES} PROPERTIES COMPILE_DEFINITIONS HAVE_SDL)
-TARGET_INCLUDE_DIRECTORIES(tinygettext PUBLIC ${SDL2_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(tinygettext PUBLIC ${SDL2_LIBRARIES})
+target_include_directories(tinygettext SYSTEM PUBLIC ${SDL2_INCLUDE_DIRS})
+target_link_libraries(tinygettext PUBLIC ${SDL2_LIBRARIES})
 
 else(HAVE_SDL)
 
