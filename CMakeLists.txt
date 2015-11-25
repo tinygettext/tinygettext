@@ -133,7 +133,7 @@ if(WARNINGS)
   # Still left:
   # -Wpadded      (DictionaryManager has a bool that sticks out)
 
-  if(CMAKE_COMPILER_IS_GNUCC)
+  if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions(
       -Wstrict-null-sentinel
       -Wlogical-op
