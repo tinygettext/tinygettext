@@ -20,13 +20,15 @@
 #ifndef HEADER_TINYGETTEXT_PO_PARSER_HPP
 #define HEADER_TINYGETTEXT_PO_PARSER_HPP
 
+#include "tinygettext_Export.h"
+
 #include <iosfwd>
 
 #include "iconv.hpp"
 
 namespace tinygettext {
 
-class Dictionary;
+class TINYGETTEXT_API Dictionary;
 
 class POParser
 {

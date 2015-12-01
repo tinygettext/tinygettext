@@ -44,7 +44,9 @@ if(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 SET(CMAKE_MACOSX_RPATH ON)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${tinygettext_SOURCE_DIR})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${tinygettext_SOURCE_DIR} ${tinygettext_SOURCE_DIR}/CMake)
+
+INCLUDE(CompilerFlags)
 
 # move some config clutter to the advanced section
 mark_as_advanced(
@@ -70,13 +72,24 @@ file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinyg
 
 add_library(tinygettext ${TINYGETTEXT_SOURCES})
 
+## Fix Windows exports
+
+INCLUDE (GenerateExportHeader)
+GENERATE_EXPORT_HEADER( tinygettext
+             BASE_NAME tinygettext
+             EXPORT_MACRO_NAME TINYGETTEXT_API
+             EXPORT_FILE_NAME tinygettext_Export.h
+             STATIC_DEFINE tinygettext_BUILT_AS_STATIC
+)
+
 ## Add tinygettext dir to search path
-target_include_directories(tinygettext PUBLIC include/)
+target_include_directories(tinygettext PUBLIC include/ ${CMAKE_CURRENT_BINARY_DIR})
+
 
 ## SDL/iconv usage
 option(HAVE_SDL "Use SDL_iconv instead of system iconv" FALSE)
 if(HAVE_SDL)
-set_source_files_properties(${TINYGETTEXT_SOURCES} PROPERTIES COMPILE_DEFINITIONS HAVE_SDL)
+set_directory_properties(PROPERTIES COMPILE_DEFINITIONS HAVE_SDL)
 target_include_directories(tinygettext SYSTEM PUBLIC ${SDL2_INCLUDE_DIRS})
 target_link_libraries(tinygettext PUBLIC ${SDL2_LIBRARIES})
 
@@ -97,7 +110,8 @@ check_cxx_source_compiles(
 	HAVE_ICONV_CONST
 )
 
-# TODO: better way of config
+# TODO: better way of config (until then...)
+CHECK_CXX_FLAG(fpermissive)
 
 if(HAVE_ICONV_CONST)
   add_definitions(-DHAVE_ICONV_CONST)
@@ -115,42 +129,49 @@ endif(HAVE_SDL)
 option(WERROR "Stops on first compiler warning in debug mode" OFF)
 option(WARNINGS "Enable long list of warnings for compiler to check" ON)
 
-add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
+CHECK_CXX_FLAG(O3)
+CHECK_CXX_FLAG(Wall)
+CHECK_CXX_FLAG(Wextra)
+CHECK_CXX_FLAG(Weffc++)
+CHECK_CXX_FLAG(pedantic)
 
 if(WARNINGS)
-  add_definitions(
-    -Wabi  -Wctor-dtor-privacy
-    -Wold-style-cast
-    -Woverloaded-virtual
-    -Wsign-promo -Wswitch-enum
-    -Wcast-align  -Wcast-qual
-    -Wdisabled-optimization
-    -Wfloat-equal
-    -Wformat=2
-    -Winit-self
-    -Winvalid-pch
-    -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
-    -Wpacked
-    -Wredundant-decls
-    -Wshadow
-    -Wsign-conversion  -Wstack-protector
-    -Wstrict-overflow=2
-    -Wswitch-default  -Wswitch-enum
-    -Wundef
-    -Wconversion)
+  CHECK_CXX_FLAG(Wabi)
+  CHECK_CXX_FLAG(Wctor-dtor-privacy)
+  CHECK_CXX_FLAG(Wold-style-cast)
+  CHECK_CXX_FLAG(Woverloaded-virtual)
+  CHECK_CXX_FLAG(Wsign-promo)
+  CHECK_CXX_FLAG(Wswitch-enum)
+  CHECK_CXX_FLAG(Wcast-align)
+  CHECK_CXX_FLAG(Wcast-qual)
+  CHECK_CXX_FLAG(Wdisabled-optimization)
+  CHECK_CXX_FLAG(Wfloat-equal)
+  CHECK_CXX_FLAG(Wformat=2)
+  CHECK_CXX_FLAG(Winit-self)
+  CHECK_CXX_FLAG(Winvalid-pch)
+  CHECK_CXX_FLAG(Wmissing-format-attribute)
+  CHECK_CXX_FLAG(Wmissing-include-dirs)
+  CHECK_CXX_FLAG(Wmissing-noreturn)
+  CHECK_CXX_FLAG(Wpacked)
+  CHECK_CXX_FLAG(Wredundant-decl s)
+  CHECK_CXX_FLAG(Wshadow)
+  CHECK_CXX_FLAG(Wsign-conversion)
+  CHECK_CXX_FLAG(Wstack-protector)
+  CHECK_CXX_FLAG(Wstrict-overflow=5)
+  CHECK_CXX_FLAG(Wswitch-default)
+  CHECK_CXX_FLAG(Wswitch-enum)
+  CHECK_CXX_FLAG(Wundef)
+  CHECK_CXX_FLAG(Wconversion)
   # Still left:
   # -Wpadded      (DictionaryManager has a bool that sticks out)
 
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(
-      -Wstrict-null-sentinel
-      -Wlogical-op
-      -Wunsafe-loop-optimizations)
-  endif()
+  CHECK_CXX_FLAG(Wstrict-null-sentinel)
+  CHECK_CXX_FLAG(Wlogical-op)
+  CHECK_CXX_FLAG(Wunsafe-loop-optimizations)
 endif(WARNINGS)
 
 if(WERROR)
-  add_definitions(-Werror)
+  CHECK_CXX_FLAG(Werror)
 endif(WERROR)
 
 ## Extra definitions
@@ -163,12 +184,14 @@ set(EXECUTABLE_OUTPUT_PATH ${tinygettext_BINARY_DIR}/test)
 
 ## Build tinygettext tests
 
-foreach(TEST tinygettext_test po_parser_test)
-  ## Add target for tinygettext test
-  add_executable(${TEST} test/${TEST}.cpp)
-  ## Link with tinygettext library
-  target_link_libraries(${TEST} tinygettext)
-endforeach(TEST)
+IF(NOT HAVE_SDL) 
+  foreach(TEST tinygettext_test po_parser_test)
+    ## Add target for tinygettext test
+    add_executable(${TEST} test/${TEST}.cpp)
+    ## Link with tinygettext library
+    target_link_libraries(${TEST} tinygettext)
+  endforeach(TEST)
+ENDIF()
 
 ## Install tinygettext
 
@@ -180,6 +203,7 @@ set(LIB_SUBDIR "lib${LIB_SUFFIX}"
 configure_file(tinygettext.pc.in tinygettext.pc @ONLY)
 
 install(TARGETS tinygettext
+    RUNTIME DESTINATION bin
 	ARCHIVE DESTINATION ${LIB_SUBDIR}
 	LIBRARY DESTINATION ${LIB_SUBDIR})
 install(FILES ${TINYGETTEXT_HEADERS}
