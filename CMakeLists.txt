@@ -129,6 +129,7 @@ endif(HAVE_SDL)
 option(WERROR "Stops on first compiler warning in debug mode" OFF)
 option(WARNINGS "Enable long list of warnings for compiler to check" ON)
 
+CHECK_CXX_FLAG(std=c++0x)
 CHECK_CXX_FLAG(O3)
 CHECK_CXX_FLAG(Wall)
 CHECK_CXX_FLAG(Wextra)
