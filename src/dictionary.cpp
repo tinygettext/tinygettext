@@ -57,13 +57,13 @@ Dictionary::get_plural_forms() const
 }
 
 std::string
-Dictionary::translate_plural(const std::string& msgid, const std::string& msgid_plural, int num)
+Dictionary::translate_plural(const std::string& msgid, const std::string& msgid_plural, int num) const
 {
   return translate_plural(entries, msgid, msgid_plural, num);
 }
 
 std::string
-Dictionary::translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgid_plural, int count)
+Dictionary::translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgid_plural, int count) const
 {
   Entries::const_iterator i = dict.find(msgid);
   const std::vector<std::string>& msgstrs = i->second;
@@ -102,13 +102,13 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
 }
 
 std::string
-Dictionary::translate(const std::string& msgid)
+Dictionary::translate(const std::string& msgid) const
 {
   return translate(entries, msgid);
 }
 
 std::string
-Dictionary::translate(const Entries& dict, const std::string& msgid)
+Dictionary::translate(const Entries& dict, const std::string& msgid) const
 {
   Entries::const_iterator i = dict.find(msgid);
   if (i != dict.end() && !i->second.empty())
@@ -125,9 +125,9 @@ Dictionary::translate(const Entries& dict, const std::string& msgid)
 }
 
 std::string
-Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid)
+Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid) const
 {
-  CtxtEntries::iterator i = ctxt_entries.find(msgctxt);
+  CtxtEntries::const_iterator i = ctxt_entries.find(msgctxt);
   if (i != ctxt_entries.end())
   {
     return translate(i->second, msgid);
@@ -141,9 +141,9 @@ Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid)
 
 std::string
 Dictionary::translate_ctxt_plural(const std::string& msgctxt,
-                                  const std::string& msgid, const std::string& msgidplural, int num)
+                                  const std::string& msgid, const std::string& msgidplural, int num) const
 {
-  CtxtEntries::iterator i = ctxt_entries.find(msgctxt);
+  CtxtEntries::const_iterator i = ctxt_entries.find(msgctxt);
   if (i != ctxt_entries.end())
   {
     return translate_plural(i->second, msgid, msgidplural, num);
