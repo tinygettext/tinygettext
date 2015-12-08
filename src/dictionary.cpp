@@ -24,6 +24,17 @@
 
 namespace tinygettext {
 
+std::ostream& operator<<(std::ostream& o, const std::vector<std::string>& v)
+{
+  for (std::vector<std::string>::const_iterator it = v.begin(); it != v.end(); ++it)
+  {
+    if (it != v.begin())
+      o << ", ";
+    o << "'" << *it << "'";
+  }
+  return o;
+}
+
 Dictionary::Dictionary(const std::string& charset_) :
   entries(),
   ctxt_entries(),
@@ -157,12 +168,21 @@ Dictionary::translate_ctxt_plural(const std::string& msgctxt,
 }
 
 void
-Dictionary::add_translation(const std::string& msgid, const std::string& ,
+Dictionary::add_translation(const std::string& msgid, const std::string& msgid_plural,
                             const std::vector<std::string>& msgstrs)
 {
-  // Do we need msgid2 for anything? its after all supplied to the
-  // translate call, so we just throw it away here
-  entries[msgid] = msgstrs;
+  std::vector<std::string>& vec = entries[msgid];
+  if (vec.empty())
+  {
+    vec = msgstrs;
+  }
+  else if (vec != msgstrs)
+  {
+    log_warning << "collision in add_translation: '"
+                << msgid << "', '" << msgid_plural
+                << "' -> [" << vec << "] vs [" << msgstrs << "]" << std::endl;
+    vec = msgstrs;
+  }
 }
 
 void
@@ -191,9 +211,11 @@ Dictionary::add_translation(const std::string& msgctxt,
   {
     vec = msgstrs;
   }
-  else
+  else if (vec != msgstrs)
   {
-    log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\", \"" << msgid_plural << "\")" << std::endl;
+    log_warning << "collision in add_translation: '"
+                << msgctxt << "', '" << msgid << "', '" << msgid_plural
+                << "' -> [" << vec << "] vs [" << msgstrs << "]" << std::endl;
     vec = msgstrs;
   }
 }
@@ -206,9 +228,11 @@ Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid
   {
     vec.push_back(msgstr);
   }
-  else
+  else if (vec[0] != msgstr)
   {
-    log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\")" << std::endl;
+    log_warning << "collision in add_translation: '"
+                << msgctxt << "', '" << msgid
+                << "' -> '" << vec[0] << "' vs '" << msgstr << "'" << std::endl;
     vec[0] = msgstr;
   }
 }
