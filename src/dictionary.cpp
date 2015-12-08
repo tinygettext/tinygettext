@@ -24,6 +24,17 @@
 
 namespace tinygettext {
 
+std::ostream& operator<<(std::ostream& o, const std::vector<std::string>& v)
+{
+  for (std::vector<std::string>::const_iterator it = v.begin(); it != v.end(); ++it)
+  {
+    if (it != v.begin())
+      o << ", ";
+    o << "'" << *it << "'";
+  }
+  return o;
+}
+
 Dictionary::Dictionary(const std::string& charset_) :
   entries(),
   ctxt_entries(),
@@ -195,7 +206,9 @@ Dictionary::add_translation(const std::string& msgctxt,
   }
   else if (vec != msgstrs)
   {
-    log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\", \"" << msgid_plural << "\")" << std::endl;
+    log_warning << "collision in add_translation: '"
+                << msgctxt << "', '" << msgid << "', '" << msgid_plural
+                << "' -> [" << vec << "] vs [" << msgstrs << "]" << std::endl;
     vec = msgstrs;
   }
 }
@@ -210,7 +223,9 @@ Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid
   }
   else if (vec[0] != msgstr)
   {
-    log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\")" << std::endl;
+    log_warning << "collision in add_translation: '"
+                << msgctxt << "', '" << msgid
+                << "' -> '" << vec[0] << "' vs '" << msgstr << "'" << std::endl;
     vec[0] = msgstr;
   }
 }
