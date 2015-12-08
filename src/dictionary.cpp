@@ -170,12 +170,21 @@ Dictionary::translate_ctxt_plural(const std::string& msgctxt,
 }
 
 void
-Dictionary::add_translation(const std::string& msgid, const std::string& ,
+Dictionary::add_translation(const std::string& msgid, const std::string& msgid_plural,
                             const std::vector<std::string>& msgstrs)
 {
-  // Do we need msgid2 for anything? its after all supplied to the
-  // translate call, so we just throw it away here
-  entries[msgid] = msgstrs;
+  std::vector<std::string>& vec = entries[msgid];
+  if (vec.empty())
+  {
+    vec = msgstrs;
+  }
+  else if (vec != msgstrs)
+  {
+    log_warning << "collision in add_translation: '"
+                << msgid << "', '" << msgid_plural
+                << "' -> [" << vec << "] vs [" << msgstrs << "]" << std::endl;
+    vec = msgstrs;
+  }
 }
 
 void
