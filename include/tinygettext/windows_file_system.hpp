@@ -1,5 +1,5 @@
 // tinygettext - A gettext replacement that works directly on .po files
-// Copyright (c) 2006 Ingo Ruhnke <grumbel@gmail.com>
+// Copyright (c) 2009 Ingo Ruhnke <grumbel@gmail.com>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -17,44 +17,21 @@
 //    misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef HEADER_TINYGETTEXT_PLURAL_FORMS_HPP
-#define HEADER_TINYGETTEXT_PLURAL_FORMS_HPP
+#ifndef HEADER_TINYGETTEXT_WINDOWS_FILE_SYSTEM_HPP
+#define HEADER_TINYGETTEXT_WINDOWS_FILE_SYSTEM_HPP
 
-#include <string>
+#include "file_system.hpp"
 
 namespace tinygettext {
 
-typedef unsigned int (*PluralFunc)(int n);
+	class WindowsFileSystem : public FileSystem
+	{
+	public:
+		WindowsFileSystem();
 
-class PluralForms
-{
-private:
-  unsigned int nplural;
-  PluralFunc   plural;
-
-public:
-  static PluralForms from_string(const std::string& str);
-
-  PluralForms()
-    : nplural(0),
-      plural(0)
-  {}
-
-  PluralForms(unsigned int nplural_, PluralFunc plural_)
-    : nplural(nplural_),
-      plural(plural_)
-  {}
-
-  unsigned int get_nplural() const { return nplural; }
-  unsigned int get_plural(int n) const { if (plural) return plural(n); else return 0; }
-
-  bool operator==(const PluralForms& other) { return nplural == other.nplural && plural == other.plural; }
-  bool operator!=(const PluralForms& other) { return !(*this == other); }
-
-  operator bool() const {
-    return plural != NULL;
-  }
-};
+		std::vector<std::string>    open_directory(const std::string& pathname);
+		std::unique_ptr<std::istream> open_file(const std::string& filename);
+	};
 
 } // namespace tinygettext
 

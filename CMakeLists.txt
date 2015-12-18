@@ -79,6 +79,11 @@ check_cxx_source_compiles(
 	HAVE_ICONV_CONST
 )
 
+if(MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4503")
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif(MSVC)
+
 # TODO: better way of config
 
 if(HAVE_ICONV_CONST)
@@ -91,55 +96,88 @@ endif(HAVE_ICONV_CONST)
 
 ## build list of source files
 
-file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
-file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
+set(TINYGETTEXT_SOURCES
+	src/dictionary.cpp
+	src/dictionary_manager.cpp
+	src/iconv.cpp
+	src/language.cpp
+	src/log.cpp
+	src/plural_forms.cpp
+	src/po_parser.cpp
+	src/tinygettext.cpp
+)
+
+set(TINYGETTEXT_HEADERS
+	include/tinygettext/dictionary.hpp
+	include/tinygettext/dictionary_manager.hpp
+	include/tinygettext/file_system.hpp
+	include/tinygettext/iconv.hpp
+	include/tinygettext/language.hpp
+	include/tinygettext/log.hpp
+	include/tinygettext/log_stream.hpp
+	include/tinygettext/plural_forms.hpp
+	include/tinygettext/po_parser.hpp
+	include/tinygettext/tinygettext.hpp	
+)
+
+if(WIN32)
+	list(APPEND TINYGETTEXT_SOURCES "src/windows_file_system.cpp")
+	list(APPEND TINYGETTEXT_HEADERS "include/tinygettext/windows_file_system.hpp")
+else(WIN32)
+	list(APPEND TINYGETTEXT_SOURCES "src/unix_file_system.cpp")
+	list(APPEND TINYGETTEXT_HEADERS "include/tinygettext/unix_file_system.hpp")
+endif(WIN32)
+
+source_group("" FILES ${TINYGETTEXT_HEADERS})
+source_group("" FILES ${TINYGETTEXT_SOURCES})
 
 ## define a target for building the library
+add_library(tinygettext ${TINYGETTEXT_SOURCES} ${TINYGETTEXT_HEADERS})
 
-add_library(tinygettext ${TINYGETTEXT_SOURCES})
+target_link_libraries(tinygettext ${ICONV_LIBRARY})
 
 ## Add tinygettext dir to search path
-
-include_directories(include/)
+include_directories(include/ src/win32/)
 
 ## Debug options
-
 option(WERROR "Stops on first compiler warning in debug mode" OFF)
 option(WARNINGS "Enable long list of warnings for compiler to check" ON)
 
-add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
+if(CMAKE_COMPILER_IS_GNUCC)
+	add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
 
-if(WARNINGS)
-  add_definitions(
-    -Wabi  -Wctor-dtor-privacy
-    -Wold-style-cast
-    -Woverloaded-virtual
-    -Wsign-promo -Wswitch-enum
-    -Wcast-align  -Wcast-qual
-    -Wdisabled-optimization
-    -Wfloat-equal
-    -Wformat=2
-    -Winit-self
-    -Winvalid-pch
-    -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
-    -Wpacked
-    -Wredundant-decls
-    -Wshadow
-    -Wsign-conversion  -Wstack-protector
-    -Wstrict-overflow=5
-    -Wswitch-default  -Wswitch-enum
-    -Wundef
-    -Wconversion)
-  # Still left:
-  # -Wpadded      (DictionaryManager has a bool that sticks out)
+	if(WARNINGS)
+		add_definitions(
+			-Wabi  -Wctor-dtor-privacy
+			-Wold-style-cast
+			-Woverloaded-virtual
+			-Wsign-promo -Wswitch-enum
+			-Wcast-align  -Wcast-qual
+			-Wdisabled-optimization
+			-Wfloat-equal
+			-Wformat=2
+			-Winit-self
+			-Winvalid-pch
+			-Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
+			-Wpacked
+			-Wredundant-decls
+			-Wshadow
+			-Wsign-conversion  -Wstack-protector
+			-Wstrict-overflow=5
+			-Wswitch-default  -Wswitch-enum
+			-Wundef
+			-Wconversion)
+			# Still left:
+			# -Wpadded      (DictionaryManager has a bool that sticks out)
 
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(
-      -Wstrict-null-sentinel
-      -Wlogical-op
-      -Wunsafe-loop-optimizations)
-  endif()
-endif(WARNINGS)
+		if(CMAKE_COMPILER_IS_GNUCXX)
+			add_definitions(
+				-Wstrict-null-sentinel
+				-Wlogical-op
+				-Wunsafe-loop-optimizations)
+		endif()
+	endif(WARNINGS)
+endif(CMAKE_COMPILER_IS_GNUCC)
 
 if(WERROR)
   add_definitions(-Werror)

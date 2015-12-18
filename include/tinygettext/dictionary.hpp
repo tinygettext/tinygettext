@@ -128,8 +128,8 @@ public:
   }
 
 private:
-  Dictionary(const Dictionary&) = delete;
-  Dictionary& operator=(const Dictionary&) = delete;
+  Dictionary(const Dictionary&);
+  Dictionary& operator=(const Dictionary&);
 };
 
 } // namespace tinygettext

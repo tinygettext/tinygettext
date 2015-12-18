@@ -34,7 +34,11 @@
 #  include <iconv.h>
 
 #  ifdef HAVE_ICONV_CONST
-#    define tinygettext_ICONV_CONST ICONV_CONST
+#    ifdef _WIN32
+#      define tinygettext_ICONV_CONST const
+#    else
+#      define tinygettext_ICONV_CONST ICONV_CONST
+#    endif
 #  else
 #    define tinygettext_ICONV_CONST
 #  endif
