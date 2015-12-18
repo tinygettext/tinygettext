@@ -177,11 +177,16 @@ if(CMAKE_COMPILER_IS_GNUCC)
 				-Wunsafe-loop-optimizations)
 		endif()
 	endif(WARNINGS)
+	
+	if(WERROR)
+		add_definitions(-Werror)
+	endif(WERROR)
+else()
+	if(WERROR)
+		add_definitions(/WX)
+	endif(WERROR)
 endif(CMAKE_COMPILER_IS_GNUCC)
 
-if(WERROR)
-  add_definitions(-Werror)
-endif(WERROR)
 
 ## Extra definitions
 
