@@ -384,7 +384,7 @@ POParser::parse()
         {
           std::string msgid_plural = get_string(12);
           std::vector<std::string> msgstr_num;
-	  bool saw_nonempty_msgstr = false;
+          bool saw_nonempty_msgstr = false;
 
         next:
           if (is_empty_line())
@@ -433,22 +433,12 @@ POParser::parse()
 	      }
 
 	      if (has_msgctxt)
-		dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
+            dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
 	      else
-		dict.add_translation(msgid, msgid_plural, msgstr_num);
-	    }
-
-	    if (0)
-	    {
-	      std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
-	      std::cout << "msgid \"" << msgid << "\"" << std::endl;
-	      std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
-	      for(std::vector<std::string>::size_type i = 0; i < msgstr_num.size(); ++i)
-		std::cout << "msgstr[" << i << "] \"" << conv.convert(msgstr_num[i]) << "\"" << std::endl;
-	      std::cout << std::endl;
+            dict.add_translation(msgid, msgid_plural, msgstr_num);
 	    }
 	  }
-        }
+    }
         else if (prefix("msgstr"))
         {
           std::string msgstr = get_string(6);
@@ -465,14 +455,6 @@ POParser::parse()
                 dict.add_translation(msgctxt, msgid, conv.convert(msgstr));
               else
                 dict.add_translation(msgid, conv.convert(msgstr));
-            }
-
-            if (0)
-            {
-              std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
-              std::cout << "msgid \"" << msgid << "\"" << std::endl;
-              std::cout << "msgstr \"" << conv.convert(msgstr) << "\"" << std::endl;
-              std::cout << std::endl;
             }
           }
         }

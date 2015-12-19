@@ -185,6 +185,10 @@ else()
 	if(WERROR)
 		add_definitions(/WX)
 	endif(WERROR)
+	
+	if(WARNINGS)
+		add_definitions(/W4)
+	endif(WARNINGS)
 endif(CMAKE_COMPILER_IS_GNUCC)
 
 
