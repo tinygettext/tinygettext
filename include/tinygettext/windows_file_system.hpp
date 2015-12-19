@@ -24,14 +24,14 @@
 
 namespace tinygettext {
 
-	class WindowsFileSystem : public FileSystem
-	{
-	public:
-		WindowsFileSystem();
+class WindowsFileSystem : public FileSystem
+{
+public:
+  WindowsFileSystem();
 
-		std::vector<std::string>    open_directory(const std::string& pathname);
-		std::unique_ptr<std::istream> open_file(const std::string& filename);
-	};
+  std::vector<std::string>      open_directory(const std::string& pathname);
+  std::unique_ptr<std::istream> open_file(const std::string& filename);
+};
 
 } // namespace tinygettext
 

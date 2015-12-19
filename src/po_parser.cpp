@@ -397,10 +397,10 @@ POParser::parse()
                    isdigit(current_line[7]) && current_line[8] == ']')
           {
             unsigned int number = static_cast<unsigned int>(current_line[7] - '0');
-	    std::string msgstr = get_string(9);
+            std::string msgstr = get_string(9);
 
-	    if(!msgstr.empty())
-	      saw_nonempty_msgstr = true;
+            if(!msgstr.empty())
+              saw_nonempty_msgstr = true;
 
             if (number >= msgstr_num.size())
               msgstr_num.resize(number+1);
@@ -416,29 +416,29 @@ POParser::parse()
           if (!is_empty_line())
             error("expected 'msgstr[N]' or empty line");
 
-	  if (saw_nonempty_msgstr)
-	  {
-	    if (use_fuzzy || !fuzzy)
+          if (saw_nonempty_msgstr)
+          {
+            if (use_fuzzy || !fuzzy)
             {
-	      if (!dict.get_plural_forms())
-	      {
-		warning("msgstr[N] seen, but no Plural-Forms given");
-	      }
-	      else
-	      {
-		if (msgstr_num.size() != dict.get_plural_forms().get_nplural())
-		{
-		  warning("msgstr[N] count doesn't match Plural-Forms.nplural");
-		}
-	      }
+              if (!dict.get_plural_forms())
+              {
+                warning("msgstr[N] seen, but no Plural-Forms given");
+              }
+              else
+              {
+                if (msgstr_num.size() != dict.get_plural_forms().get_nplural())
+                {
+                  warning("msgstr[N] count doesn't match Plural-Forms.nplural");
+                }
+              }
 
-	      if (has_msgctxt)
-            dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
-	      else
-            dict.add_translation(msgid, msgid_plural, msgstr_num);
-	    }
-	  }
-    }
+              if (has_msgctxt)
+                dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
+              else
+                dict.add_translation(msgid, msgid_plural, msgstr_num);
+            }
+          }
+        }
         else if (prefix("msgstr"))
         {
           std::string msgstr = get_string(6);
