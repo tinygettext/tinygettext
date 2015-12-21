@@ -67,6 +67,7 @@ option(BUILD_SHARED_LIBS "Produce dynamic library instead of static archive" ON)
 
 file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
+list(SORT TINYGETTEXT_SOURCES)
 
 ## define a target for building the library
 
