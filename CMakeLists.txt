@@ -204,13 +204,21 @@ set(LIB_SUBDIR "lib${LIB_SUFFIX}"
 ## prepare tinygettext.pc
 configure_file(tinygettext.pc.in tinygettext.pc @ONLY)
 
-install(TARGETS tinygettext
-    RUNTIME DESTINATION bin
-	ARCHIVE DESTINATION ${LIB_SUBDIR}
-	LIBRARY DESTINATION ${LIB_SUBDIR})
-install(FILES ${TINYGETTEXT_HEADERS}
-	DESTINATION include/tinygettext)
-install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
-	DESTINATION ${LIB_SUBDIR}/pkgconfig)
+IF(TINYGETTEXT_IS_SUBPROJECT)
+	IF(BUILD_SHARED_LIBS)
+		install(TARGETS tinygettext
+			RUNTIME DESTINATION bin
+			LIBRARY DESTINATION ${LIB_SUBDIR})
+	ENDIF()
+ELSE()
+	install(TARGETS tinygettext
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION ${LIB_SUBDIR}
+		LIBRARY DESTINATION ${LIB_SUBDIR})
+	install(FILES ${TINYGETTEXT_HEADERS}
+		DESTINATION include/tinygettext)
+	install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
+		DESTINATION ${LIB_SUBDIR}/pkgconfig)
+ENDIF()
 
 # EOF #
