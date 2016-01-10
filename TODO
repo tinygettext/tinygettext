@@ -5,6 +5,8 @@ tinygettext API related stuff
   unified via overloading, not sure if that is a good idea. For the
   same reason add_translation() could be de-overloaded, to
   add_translation_ctxt, ...
+  `Note that an empty context string and an absent msgctxt line do not mean the same thing.'
+  https://www.gnu.org/software/gettext/manual/gettext.html
 
 * iconv handling needs cleanup and more flexibility, since some
   systems don't provide iconv or only through SDL
