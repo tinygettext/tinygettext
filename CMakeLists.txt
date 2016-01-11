@@ -215,7 +215,7 @@ ELSE()
 		RUNTIME DESTINATION bin
 		ARCHIVE DESTINATION ${LIB_SUBDIR}
 		LIBRARY DESTINATION ${LIB_SUBDIR})
-	install(FILES ${TINYGETTEXT_HEADERS}
+	install(FILES ${TINYGETTEXT_HEADERS} ${tinygettext_BINARY_DIR}/tinygettext_Export.h
 		DESTINATION include/tinygettext)
 	install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
 		DESTINATION ${LIB_SUBDIR}/pkgconfig)
