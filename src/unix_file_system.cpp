@@ -21,7 +21,11 @@
 
 #include <sys/types.h>
 #include <fstream>
-#include <dirent.h>
+#ifdef WIN32
+#  include "tinygettext/dirent.h"
+#else
+# include <dirent.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
