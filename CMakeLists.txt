@@ -132,7 +132,10 @@ option(WARNINGS "Enable long list of warnings for compiler to check" ON)
 
 CHECK_CXX_FLAG(std=c++0x)
 CHECK_CXX_FLAG(O3)
-CHECK_CXX_FLAG(Wall)
+IF(NOT MSVC)
+    #MSVC is excessivly verbose when Wall is activated
+    CHECK_CXX_FLAG(Wall)
+ENDIF()
 CHECK_CXX_FLAG(Wextra)
 CHECK_CXX_FLAG(Weffc++)
 CHECK_CXX_FLAG(pedantic)
