@@ -233,11 +233,14 @@ DictionaryManager::get_use_fuzzy() const
 }
 
 void
-DictionaryManager::add_directory(const std::string& pathname)
+DictionaryManager::add_directory(const std::string& pathname, bool precedence /* = false */)
 {
     if(std::find(search_path.begin(), search_path.end(), pathname) == search_path.end()) {
         clear_cache(); // adding directories invalidates cache
-        search_path.push_back(pathname);
+        if(precedence)
+            search_path.push_front(pathname)
+        else
+            search_path.push_back(pathname);
     }
 }
 
