@@ -238,7 +238,7 @@ DictionaryManager::add_directory(const std::string& pathname, bool precedence /*
     if(std::find(search_path.begin(), search_path.end(), pathname) == search_path.end()) {
         clear_cache(); // adding directories invalidates cache
         if(precedence)
-            search_path.push_front(pathname)
+            search_path.push_front(pathname);
         else
             search_path.push_back(pathname);
     }

@@ -22,7 +22,7 @@
 
 #include "tinygettext_Export.h"
 
-#include <dequeue>
+#include <deque>
 #include <memory>
 #include <set>
 #include <string>
@@ -44,7 +44,7 @@ private:
   typedef std::unordered_map<Language, Dictionary*, Language_hash> Dictionaries;
   Dictionaries dictionaries;
 
-  typedef std::dequeue<std::string> SearchPath;
+  typedef std::deque<std::string> SearchPath;
   SearchPath search_path;
 
   std::string charset;
