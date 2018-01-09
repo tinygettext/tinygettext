@@ -26,12 +26,12 @@ places; a portable way to find it is provided by FindLocale:
 Projects using this library
 ---------------------------
 
-[0 A.D.](http://play0ad.com/)
-[ET:Legacy](https://www.etlegacy.com/)
-[LinCity-NG](https://github.com/lincity-ng/lincity-ng)
-[Me and My Shadow](http://meandmyshadow.sourceforge.net/)
-[Multi Theft Auto](http://www.multitheftauto.com/)
-[Pingus](http://pingus.seul.org/)
-[SuperTux](http://supertuxproject.org/)
-[SuperTuxKart](http://supertuxkart.net/)
-[Unvanquished](https://www.unvanquished.net/)
+* [0 A.D.](http://play0ad.com/)
+* [ET:Legacy](https://www.etlegacy.com/)
+* [LinCity-NG](https://github.com/lincity-ng/lincity-ng)
+* [Me and My Shadow](http://meandmyshadow.sourceforge.net/)
+* [Multi Theft Auto](http://www.multitheftauto.com/)
+* [Pingus](http://pingus.seul.org/)
+* [SuperTux](http://supertuxproject.org/)
+* [SuperTuxKart](http://supertuxkart.net/)
+* [Unvanquished](https://www.unvanquished.net/)
