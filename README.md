@@ -3,7 +3,7 @@ tinygettext
 
 tinygettext is a minimal replacement for gettext written in C++. It
 can read `.po` files directly and doesn't need `.mo` files generated
-from `.po`. It also can read the `.po` files from arbitary locations,
+from `.po`. It also can read the `.po` files from arbitrary locations,
 so it's better suited for non-Unix systems and situations in which one
 wants to store or distribute `.po` files separately from the software
 itself. It is licensed under
