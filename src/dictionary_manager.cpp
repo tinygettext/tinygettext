@@ -28,7 +28,11 @@
 
 #include "tinygettext/log_stream.hpp"
 #include "tinygettext/po_parser.hpp"
-#include "tinygettext/unix_file_system.hpp"
+#ifdef _WIN32
+#  include "tinygettext/windows_file_system.hpp"
+#else
+#  include "tinygettext/unix_file_system.hpp"
+#endif
 
 namespace tinygettext {
 
@@ -48,7 +52,11 @@ DictionaryManager::DictionaryManager(const std::string& charset_) :
   current_language(),
   current_dict(0),
   empty_dict(),
+#ifdef _WIN32
+  filesystem(new WindowsFileSystem)
+#else
   filesystem(new UnixFileSystem)
+#endif
 {
 }
 

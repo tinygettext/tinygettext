@@ -338,9 +338,9 @@ POParser::parse()
   // skip UTF-8 intro that some text editors produce
   // see http://en.wikipedia.org/wiki/Byte-order_mark
   if (current_line.size() >= 3 &&
-      current_line[0] == static_cast<char>(0xef) &&
-      current_line[1] == static_cast<char>(0xbb) &&
-      current_line[2] == static_cast<char>(0xbf))
+      current_line[0] == static_cast<unsigned char>(0xef) &&
+      current_line[1] == static_cast<unsigned char>(0xbb) &&
+      current_line[2] == static_cast<unsigned char>(0xbf))
   {
     current_line = current_line.substr(3);
   }
@@ -384,7 +384,7 @@ POParser::parse()
         {
           std::string msgid_plural = get_string(12);
           std::vector<std::string> msgstr_num;
-	  bool saw_nonempty_msgstr = false;
+          bool saw_nonempty_msgstr = false;
 
         next:
           if (is_empty_line())
@@ -397,10 +397,10 @@ POParser::parse()
                    isdigit(current_line[7]) && current_line[8] == ']')
           {
             unsigned int number = static_cast<unsigned int>(current_line[7] - '0');
-	    std::string msgstr = get_string(9);
+            std::string msgstr = get_string(9);
 
-	    if(!msgstr.empty())
-	      saw_nonempty_msgstr = true;
+            if(!msgstr.empty())
+              saw_nonempty_msgstr = true;
 
             if (number >= msgstr_num.size())
               msgstr_num.resize(number+1);
@@ -416,38 +416,28 @@ POParser::parse()
           if (!is_empty_line())
             error("expected 'msgstr[N]' or empty line");
 
-	  if (saw_nonempty_msgstr)
-	  {
-	    if (use_fuzzy || !fuzzy)
+          if (saw_nonempty_msgstr)
+          {
+            if (use_fuzzy || !fuzzy)
             {
-	      if (!dict.get_plural_forms())
-	      {
-		warning("msgstr[N] seen, but no Plural-Forms given");
-	      }
-	      else
-	      {
-		if (msgstr_num.size() != dict.get_plural_forms().get_nplural())
-		{
-		  warning("msgstr[N] count doesn't match Plural-Forms.nplural");
-		}
-	      }
+              if (!dict.get_plural_forms())
+              {
+                warning("msgstr[N] seen, but no Plural-Forms given");
+              }
+              else
+              {
+                if (msgstr_num.size() != dict.get_plural_forms().get_nplural())
+                {
+                  warning("msgstr[N] count doesn't match Plural-Forms.nplural");
+                }
+              }
 
-	      if (has_msgctxt)
-		dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
-	      else
-		dict.add_translation(msgid, msgid_plural, msgstr_num);
-	    }
-
-	    if (0)
-	    {
-	      std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
-	      std::cout << "msgid \"" << msgid << "\"" << std::endl;
-	      std::cout << "msgid_plural \"" << msgid_plural << "\"" << std::endl;
-	      for(std::vector<std::string>::size_type i = 0; i < msgstr_num.size(); ++i)
-		std::cout << "msgstr[" << i << "] \"" << conv.convert(msgstr_num[i]) << "\"" << std::endl;
-	      std::cout << std::endl;
-	    }
-	  }
+              if (has_msgctxt)
+                dict.add_translation(msgctxt, msgid, msgid_plural, msgstr_num);
+              else
+                dict.add_translation(msgid, msgid_plural, msgstr_num);
+            }
+          }
         }
         else if (prefix("msgstr"))
         {
@@ -465,14 +455,6 @@ POParser::parse()
                 dict.add_translation(msgctxt, msgid, conv.convert(msgstr));
               else
                 dict.add_translation(msgid, conv.convert(msgstr));
-            }
-
-            if (0)
-            {
-              std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
-              std::cout << "msgid \"" << msgid << "\"" << std::endl;
-              std::cout << "msgstr \"" << conv.convert(msgstr) << "\"" << std::endl;
-              std::cout << std::endl;
             }
           }
         }
