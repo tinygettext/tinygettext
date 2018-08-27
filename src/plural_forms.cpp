@@ -23,9 +23,6 @@
 
 #include <unordered_map>
 #include <stdlib.h>
-#include <assert.h>
-
-#include <SDL.h>
 
 namespace tinygettext {
 
@@ -86,30 +83,6 @@ PluralForms::from_string(const std::string& str)
 
     plural_forms["Plural-Forms:nplurals=4;plural=(n==1||n==11)?0:(n==2||n==12)?1:(n>2&&n<20)?2:3;"]=PluralForms(4, plural4_gd);
     plural_forms["Plural-Forms:nplurals=6;plural=n==0?0:n==1?1:n==2?2:n%100>=3&&n%100<=10?3:n%100>=11?4:5"]=PluralForms(6, plural6_ar);
-
-	// some sanity test
-	for (auto it = plural_forms.begin(); it != plural_forms.end(); ++it) {
-		PluralForms obj1 = it->second;
-		PluralForms obj2 = PluralForms::from_string(it->first + ";;;");
-
-		for (int i = -1000000; i <= 1000000; i++) {
-			unsigned int ret1 = obj1.get_plural(i);
-			unsigned int ret2 = obj2.get_plural(i);
-			assert(ret1 == ret2);
-		}
-
-		Uint32 t1 = SDL_GetTicks();
-		for (int i = -1000000; i <= 1000000; i++) {
-			unsigned int ret1 = obj1.get_plural(i);
-		}
-		t1 = SDL_GetTicks() - t1;
-		Uint32 t2 = SDL_GetTicks();
-		for (int i = -1000000; i <= 1000000; i++) {
-			unsigned int ret2 = obj2.get_plural(i);
-		}
-		t2 = SDL_GetTicks() - t2;
-		log_error << "Builtin: " << t1 << ", Parsed: " << t2 << std::endl;
-	}
   }
 
   // Remove spaces from string before lookup
