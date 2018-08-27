@@ -18,8 +18,14 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include "tinygettext/plural_forms.hpp"
+#include "tinygettext/log_stream.hpp"
+#include "tinygettext/expression_parser.hpp"
 
 #include <unordered_map>
+#include <stdlib.h>
+#include <assert.h>
+
+#include <SDL.h>
 
 namespace tinygettext {
 
@@ -46,6 +52,15 @@ unsigned int plural3_sl(int n) { return static_cast<unsigned int>(n%100==1 ? 0 :
 unsigned int plural4_gd(int n) { return static_cast<unsigned int>( n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3; }
 unsigned int plural6_ar(int n) { return static_cast<unsigned int>( n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5); }
 
+PluralFunctor::~PluralFunctor() {
+}
+
+unsigned int PluralFuncFunctor::operator()(int n) const {
+  if (plural) return plural(n); else return 0;
+}
+
+PluralFuncFunctor::~PluralFuncFunctor() {
+}
 
 PluralForms
 PluralForms::from_string(const std::string& str)
@@ -71,6 +86,30 @@ PluralForms::from_string(const std::string& str)
 
     plural_forms["Plural-Forms:nplurals=4;plural=(n==1||n==11)?0:(n==2||n==12)?1:(n>2&&n<20)?2:3;"]=PluralForms(4, plural4_gd);
     plural_forms["Plural-Forms:nplurals=6;plural=n==0?0:n==1?1:n==2?2:n%100>=3&&n%100<=10?3:n%100>=11?4:5"]=PluralForms(6, plural6_ar);
+
+	// some sanity test
+	for (auto it = plural_forms.begin(); it != plural_forms.end(); ++it) {
+		PluralForms obj1 = it->second;
+		PluralForms obj2 = PluralForms::from_string(it->first + ";;;");
+
+		for (int i = -1000000; i <= 1000000; i++) {
+			unsigned int ret1 = obj1.get_plural(i);
+			unsigned int ret2 = obj2.get_plural(i);
+			assert(ret1 == ret2);
+		}
+
+		Uint32 t1 = SDL_GetTicks();
+		for (int i = -1000000; i <= 1000000; i++) {
+			unsigned int ret1 = obj1.get_plural(i);
+		}
+		t1 = SDL_GetTicks() - t1;
+		Uint32 t2 = SDL_GetTicks();
+		for (int i = -1000000; i <= 1000000; i++) {
+			unsigned int ret2 = obj2.get_plural(i);
+		}
+		t2 = SDL_GetTicks() - t2;
+		log_error << "Builtin: " << t1 << ", Parsed: " << t2 << std::endl;
+	}
   }
 
   // Remove spaces from string before lookup
@@ -86,7 +125,28 @@ PluralForms::from_string(const std::string& str)
   }
   else
   {
-    return PluralForms();
+    log_warning << "The plural forms '" << space_less_str << "' is not in the predefined list! Try to parse it as an expression!" << std::endl;
+
+    size_t i = space_less_str.find("nplurals=");
+    if (i == std::string::npos) {
+      log_warning << "Can't find 'nplurals=' in the plural forms definition!" << std::endl;
+      return PluralForms();
+    }
+    unsigned int nplural = strtoul(space_less_str.c_str() + (i + 9), NULL, 10);
+
+    i = space_less_str.find("plural=");
+    if (i == std::string::npos) {
+      log_warning << "Can't find 'plural=' in the plural forms definition!" << std::endl;
+      return PluralForms();
+    }
+
+    PluralFunctor *plural = plural_functor_from_expression(space_less_str.c_str() + (i + 7));
+    if (plural == NULL) {
+      log_warning << "Failed to parse plural expression in the plural forms definition!" << std::endl;
+      return PluralForms();
+    }
+
+    return PluralForms(nplural, plural);
   }
 }
 

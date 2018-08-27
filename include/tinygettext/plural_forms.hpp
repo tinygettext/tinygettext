@@ -21,16 +21,34 @@
 #define HEADER_TINYGETTEXT_PLURAL_FORMS_HPP
 
 #include <string>
+#include <memory>
 
 namespace tinygettext {
 
+class PluralFunctor
+{
+public:
+  virtual unsigned int operator()(int n) const = 0;
+  virtual ~PluralFunctor();
+};
+
 typedef unsigned int (*PluralFunc)(int n);
+
+class PluralFuncFunctor : public PluralFunctor
+{
+private:
+  PluralFunc plural;
+public:
+  PluralFuncFunctor(PluralFunc plural_) : plural(plural_) {}
+  unsigned int operator()(int n) const override;
+  ~PluralFuncFunctor();
+};
 
 class PluralForms
 {
 private:
   unsigned int nplural;
-  PluralFunc   plural;
+  std::shared_ptr<PluralFunctor> plural;
 
 public:
   static PluralForms from_string(const std::string& str);
@@ -42,11 +60,16 @@ public:
 
   PluralForms(unsigned int nplural_, PluralFunc plural_)
     : nplural(nplural_),
+      plural(new PluralFuncFunctor(plural_))
+  {}
+
+  PluralForms(unsigned int nplural_, PluralFunctor* plural_)
+    : nplural(nplural_),
       plural(plural_)
   {}
 
   unsigned int get_nplural() const { return nplural; }
-  unsigned int get_plural(int n) const { if (plural) return plural(n); else return 0; }
+  unsigned int get_plural(int n) const { if (plural) return (*plural)(n); else return 0; }
 
   bool operator==(const PluralForms& other) { return nplural == other.nplural && plural == other.plural; }
   bool operator!=(const PluralForms& other) { return !(*this == other); }
