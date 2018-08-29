@@ -36,23 +36,27 @@ using tinygettext::Log;
 // The lexer and parser are partially copied from LLVM Kaleidoscope tutorial
 // http://www.llvm.org/docs/tutorial/index.html
 //
+// According to official GNU Gettext implementation
+// https://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html
+// http://git.savannah.gnu.org/cgit/gettext.git/tree/gettext-runtime/intl/plural-exp.h#n34
+// http://git.savannah.gnu.org/cgit/gettext.git/tree/gettext-runtime/intl/plural.y#n132
+// there are no bitwise operators and all the numbers should be regarded as UNSIGNED integers.
+// However, the existing tinygettext implementation treats numbers as SIGNED integers.
+// So our parser also uses SIGNED integers and preserves the unary minus operator.
+//
 // Supported operators and precedences are:
 //
-// Precedence | Operator  | Description                                       | Associativity
-// -----------|-----------|---------------------------------------------------|---------------
-// 999999     | ( )       | Parenthesis                                       | -
-// 120        | + - ! ~   | Unary plus and minus, Logical NOT and bitwise NOT | Right-to-left
-// 110        | * / %     | Multiplication, division, and remainder           | Left-to-right
-// 100        | + -       | Addition and subtraction                          | Left-to-right
-// 90         | << >>     | Bitwise left shift and (signed) right shift       | Left-to-right
-// 80         | < <= > >= | Comparisons                                       | Left-to-right
-// 70         | == !=     | Comparisons                                       | Left-to-right
-// 60         | &         | Bitwise AND                                       | Left-to-right
-// 50         | ^         | Bitwise XOR (exclusive or)                        | Left-to-right
-// 40         | |         | Bitwise OR (inclusive or)                         | Left-to-right
-// 30         | &&        | Logical AND (short-circuited)                     | Left-to-right
-// 20         | ||        | Logical OR (short-circuited)                      | Left-to-right
-// 10         | ? :       | Ternary conditional                               | Right-to-left
+// Precedence | Operator  | Description                             | Associativity
+// -----------|-----------|-----------------------------------------|---------------
+// N/A        | ( )       | Parenthesis                             | -
+// N/A        | + - !     | Unary plus and minus, Logical NOT       | Right-to-left
+// 110        | * / %     | Multiplication, division, and remainder | Left-to-right
+// 100        | + -       | Addition and subtraction                | Left-to-right
+// 80         | < <= > >= | Comparisons                             | Left-to-right
+// 70         | == !=     | Comparisons                             | Left-to-right
+// 30         | &&        | Logical AND (short-circuited)           | Left-to-right
+// 20         | ||        | Logical OR (short-circuited)            | Left-to-right
+// 10         | ? :       | Ternary conditional                     | Right-to-left
 //
 // EBNF:
 //
@@ -71,24 +75,68 @@ using tinygettext::Log;
 // NOTE: we only support the variable n
 
 // The list of tokens.
-// NOTE: for some other tokens the char value is used, and not listed in this enum.
 enum Token {
-	tok_invalid = 0,
+	tok_invalid,
 
-	tok_eof = -1,
+	tok_eof,
 
-	tok_number = -2,
-	tok_variable = -3,
+	tok_number,
+	tok_variable,
 
-	tok_left_shift = -4,
-	tok_right_shift = -5,
-	tok_le = -6,
-	tok_ge = -7,
-	tok_eq = -8,
-	tok_ne = -9,
-	tok_logical_and = -10,
-	tok_logical_or = -11,
+	tok_logical_not,
+
+	// The following tokens are also used as types of binary operations,
+	// where the first 2 tokens together with tok_logical_not are also used as types
+	// of unary operations.
+	// NOTE: in the function getOperatorPrecedence() it's assumed that tok_plus
+	// is the first binary operator in this enum.
+
+	// Precendence 100
+	tok_plus, tok_minus,
+
+	// Precendence 110
+	tok_times, tok_divides, tok_modulo,
+
+	// Precendence 80
+	tok_lt, tok_le, tok_gt, tok_ge,
+
+	// Precendence 70
+	tok_eq, tok_ne,
+
+	// Precendence 30
+	tok_logical_and,
+
+	// Precendence 20
+	tok_logical_or,
+
+	// End of binary operations.
+
+	tok_question_mark,
+	tok_colon,
+	tok_left_parenthesis,
+	tok_right_parenthesis,
 };
+
+// Get the precendence of the binary operator (should be >0).
+// -1 means not a binary operator.
+int getOperatorPrecedence(Token token) {
+	const int precedence[] = {
+		100, 100,
+		110, 110, 110,
+		80, 80, 80, 80,
+		70, 70,
+		30,
+		20,
+	};
+
+	int i = (int)token - (int)tok_plus;
+	if (i >= 0 && i < sizeof(precedence) / sizeof(precedence[0])) {
+		return precedence[i];
+	}
+
+	//Not a binary operator.
+	return -1;
+}
 
 struct AST;
 struct Tokenizer;
@@ -102,7 +150,7 @@ struct Tokenizer {
 	const char* expression;
 
 	// The next token.
-	int token;
+	Token token;
 
 	// The position.
 	int pos;
@@ -116,12 +164,12 @@ struct Tokenizer {
 	Tokenizer(const char* expression) : expression(expression), token(tok_invalid), pos(0), numVal(0) {}
 
 	// Return the next token.
-	int getNextToken() {
+	Token getNextToken() {
 		token = getNextTokenInternal();
 		return token;
 	}
 
-	int getNextTokenInternal();
+	Token getNextTokenInternal();
 
 	// Print error message.
 	void printError(const char* message, int position = -1, int length = -1, int highlight = -1);
@@ -141,7 +189,7 @@ void Tokenizer::printError(const char* message, int position, int length, int hi
 	log_error << "Error: " << message << "\n" << expression << "\n" << indicator << std::endl;
 }
 
-int Tokenizer::getNextTokenInternal() {
+Token Tokenizer::getNextTokenInternal() {
 	char c;
 
 	// Skip any whitespace.
@@ -168,28 +216,29 @@ int Tokenizer::getNextTokenInternal() {
 
 	// Check operators.
 	switch (c) {
-	case '(': case ')':
-	case '+': case '-':
-	case '~':
-	case '*': case '/': case '%':
-	case '^': case '?': case ':':
-		return c;
+	case '(': return tok_left_parenthesis;
+	case ')': return tok_right_parenthesis;
+	case '+': return tok_plus;
+	case '-': return tok_minus;
+	case '*': return tok_times;
+	case '/': return tok_divides;
+	case '%': return tok_modulo;
+	case '?': return tok_question_mark;
+	case ':': return tok_colon;
 	case '<':
 		switch (expression[pos++]) {
-		case '<': return tok_left_shift;
 		case '=': return tok_le;
-		default: pos--; return c;
+		default: pos--; return tok_lt;
 		}
 	case '>':
 		switch (expression[pos++]) {
-		case '>': return tok_right_shift;
 		case '=': return tok_ge;
-		default: pos--; return c;
+		default: pos--; return tok_gt;
 		}
 	case '!':
 		switch (expression[pos++]) {
 		case '=': return tok_ne;
-		default: pos--; return c;
+		default: pos--; return tok_logical_not;
 		}
 	case '=':
 		switch (expression[pos++]) {
@@ -199,18 +248,20 @@ int Tokenizer::getNextTokenInternal() {
 	case '&':
 		switch (expression[pos++]) {
 		case '&': return tok_logical_and;
-		default: pos--; return c;
+		default: printError("'&' expected", -1, -1, pos - 1); pos--; return tok_invalid;
 		}
 	case '|':
 		switch (expression[pos++]) {
 		case '|': return tok_logical_or;
-		default: pos--; return c;
+		default: printError("'|' expected", -1, -1, pos - 1); pos--; return tok_invalid;
 		}
+	case ';': case '\0':
+		pos--; return tok_eof;
+	case '^': case '~':
+		printError("This operator is unsupported in plural forms expression"); pos--; return tok_invalid;
+	default:
+		printError("Invalid character"); pos--; return tok_invalid;
 	}
-
-	// EOF.
-	pos--;
-	return tok_eof;
 }
 
 struct AST {
@@ -235,39 +286,41 @@ struct VariableExprAST : public AST {
 };
 
 struct UnaryExprAST : public AST {
-	int type;
+	Token type;
 	AST *child;
 
-	UnaryExprAST(int type, AST *child) : type(type), child(child) {}
+	UnaryExprAST(Token type, AST *child) : type(type), child(child) {}
 	~UnaryExprAST() {
 		delete child;
 	}
 	int evaluate(int n) {
 		int ret = child->evaluate(n);
 		switch (type) {
-		case '-': return -ret;
-		case '!': return ret ? 0 : 1;
-		case '~': return ~ret;
-		default: return ret;
+		case tok_plus: return ret;
+		case tok_minus: return -ret;
+		case tok_logical_not: return ret ? 0 : 1;
+		default:
+			log_error << "Unknown unary operator: " << (int)type << std::endl;
+			return 0;
 		}
 	}
 };
 
 struct BinaryExprAST : public AST {
-	int type;
+	Token type;
 	AST *child1, *child2;
 
-	BinaryExprAST(int type, AST *child1, AST *child2) : type(type), child1(child1), child2(child2) {}
+	BinaryExprAST(Token type, AST *child1, AST *child2) : type(type), child1(child1), child2(child2) {}
 	~BinaryExprAST() {
 		delete child1;
 		delete child2;
 	}
 	int evaluate(int n) {
 		switch (type) {
-		case '+': return child1->evaluate(n) + child2->evaluate(n);
-		case '-': return child1->evaluate(n) - child2->evaluate(n);
-		case '*': return child1->evaluate(n) * child2->evaluate(n);
-		case '/': {
+		case tok_plus: return child1->evaluate(n) + child2->evaluate(n);
+		case tok_minus: return child1->evaluate(n) - child2->evaluate(n);
+		case tok_times: return child1->evaluate(n) * child2->evaluate(n);
+		case tok_divides: {
 			int ret1 = child1->evaluate(n);
 			int ret2 = child2->evaluate(n);
 			if (ret2 == 0) {
@@ -281,7 +334,7 @@ struct BinaryExprAST : public AST {
 				return ret1 / ret2;
 			}
 		}
-		case '%': {
+		case tok_modulo: {
 			int ret1 = child1->evaluate(n);
 			int ret2 = child2->evaluate(n);
 			if (ret2 == 0) {
@@ -293,23 +346,18 @@ struct BinaryExprAST : public AST {
 				return ret1 % ret2;
 			}
 		}
-		case '&': return child1->evaluate(n) & child2->evaluate(n);
-		case '|': return child1->evaluate(n) | child2->evaluate(n);
-		case '^': return child1->evaluate(n) ^ child2->evaluate(n);
-		case tok_left_shift: return child1->evaluate(n) << child2->evaluate(n);
-		case tok_right_shift: return child1->evaluate(n) >> child2->evaluate(n);
 		case tok_logical_and: return (child1->evaluate(n) && child2->evaluate(n)) ? 1 : 0;
 		case tok_logical_or: return (child1->evaluate(n) || child2->evaluate(n)) ? 1 : 0;
-		case '<': return (child1->evaluate(n) < child2->evaluate(n)) ? 1 : 0;
-		case '>': return (child1->evaluate(n) > child2->evaluate(n)) ? 1 : 0;
+		case tok_lt: return (child1->evaluate(n) < child2->evaluate(n)) ? 1 : 0;
+		case tok_gt: return (child1->evaluate(n) > child2->evaluate(n)) ? 1 : 0;
 		case tok_le: return (child1->evaluate(n) <= child2->evaluate(n)) ? 1 : 0;
 		case tok_ge: return (child1->evaluate(n) >= child2->evaluate(n)) ? 1 : 0;
 		case tok_eq: return (child1->evaluate(n) == child2->evaluate(n)) ? 1 : 0;
 		case tok_ne: return (child1->evaluate(n) != child2->evaluate(n)) ? 1 : 0;
+		default:
+			log_error << "Unknown binary operator: " << (int)type << std::endl;
+			return 0;
 		}
-
-		log_error << "Unknown binary operator: " << type << std::endl;
-		return 0;
 	}
 };
 
@@ -335,7 +383,7 @@ AST* parseTernaryExpression(Tokenizer& tokenizer) {
 	AST *child1 = parseBinaryExpression(tokenizer);
 	if (child1 == NULL) return NULL;
 
-	if (tokenizer.token != '?') return child1;
+	if (tokenizer.token != tok_question_mark) return child1;
 
 	tokenizer.getNextToken();
 
@@ -345,7 +393,7 @@ AST* parseTernaryExpression(Tokenizer& tokenizer) {
 		return NULL;
 	}
 
-	if (tokenizer.token != ':') {
+	if (tokenizer.token != tok_colon) {
 		tokenizer.printError("':' expected");
 		delete child1;
 		delete child2;
@@ -365,32 +413,14 @@ AST* parseTernaryExpression(Tokenizer& tokenizer) {
 }
 
 AST* parseBinaryExpressionInternal(Tokenizer& tokenizer, AST* lhs, int min_precedence) {
-	static std::map<int, int> precendence;
-
-	if (precendence.empty()) {
-		precendence[tok_logical_or] = 20;
-		precendence[tok_logical_and] = 30;
-		precendence['|'] = 40;
-		precendence['^'] = 50;
-		precendence['&'] = 60;
-		precendence[tok_eq] = precendence[tok_ne] = 70;
-		precendence['<'] = precendence['>'] = precendence[tok_le] = precendence[tok_ge] = 80;
-		precendence[tok_left_shift] = precendence[tok_right_shift] = 90;
-		precendence['+'] = precendence['-'] = 100;
-		precendence['*'] = precendence['/'] = precendence['%'] = 110;
-	}
-
 	// These codes are adapted from the pseudo code in
 	// https://en.wikipedia.org/wiki/Operator-precedence_parser
 
 	for (;;) {
-		std::map<int, int>::const_iterator it = precendence.find(tokenizer.token);
-		if (it == precendence.end()) return lhs;
-
-		const int current_precendence = it->second;
+		const int current_precendence = getOperatorPrecedence(tokenizer.token);
 		if (current_precendence < min_precedence) return lhs;
 
-		int type = tokenizer.token;
+		Token type = tokenizer.token;
 
 		tokenizer.getNextToken();
 
@@ -401,10 +431,10 @@ AST* parseBinaryExpressionInternal(Tokenizer& tokenizer, AST* lhs, int min_prece
 		}
 
 		for (;;) {
-			it = precendence.find(tokenizer.token);
-			if (it == precendence.end() || it->second <= current_precendence) break;
+			int precendence = getOperatorPrecedence(tokenizer.token);
+			if (precendence <= current_precendence) break;
 
-			rhs = parseBinaryExpressionInternal(tokenizer, rhs, it->second);
+			rhs = parseBinaryExpressionInternal(tokenizer, rhs, precendence);
 			if (rhs == NULL) {
 				delete lhs;
 				return NULL;
@@ -424,13 +454,13 @@ AST* parseBinaryExpression(Tokenizer& tokenizer) {
 
 AST* parsePrimaryExpression(Tokenizer& tokenizer) {
 	switch (tokenizer.token) {
-	case '(': {
+	case tok_left_parenthesis: {
 		tokenizer.getNextToken();
 
 		AST *ret = parseExpression(tokenizer);
 		if (ret == NULL) return NULL;
 
-		if (tokenizer.token != ')') {
+		if (tokenizer.token != tok_right_parenthesis) {
 			tokenizer.printError("')' expected");
 			delete ret;
 			return NULL;
@@ -448,14 +478,14 @@ AST* parsePrimaryExpression(Tokenizer& tokenizer) {
 	case tok_variable:
 		tokenizer.getNextToken();
 		return new VariableExprAST();
-	case '+': case '-': case '!': case '~': {
-		int type = tokenizer.token;
+	case tok_plus: case tok_minus: case tok_logical_not: {
+		Token type = tokenizer.token;
 		tokenizer.getNextToken();
 
 		AST *ret = parsePrimaryExpression(tokenizer);
 		if (ret == NULL) return NULL;
 
-		if (type == '+') return ret;
+		if (type == tok_plus) return ret;
 		return new UnaryExprAST(type, ret);
 	}
 	case tok_invalid:
