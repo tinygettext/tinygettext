@@ -438,7 +438,7 @@ POParser::parse()
 		dict.add_translation(msgid, msgid_plural, msgstr_num);
 	    }
 
-	    if (0)
+	    if ((false))
 	    {
 	      std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
 	      std::cout << "msgid \"" << msgid << "\"" << std::endl;
@@ -467,7 +467,7 @@ POParser::parse()
                 dict.add_translation(msgid, conv.convert(msgstr));
             }
 
-            if (0)
+            if ((false))
             {
               std::cout << (fuzzy?"fuzzy":"not-fuzzy") << std::endl;
               std::cout << "msgid \"" << msgid << "\"" << std::endl;
