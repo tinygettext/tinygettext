@@ -286,6 +286,8 @@ static const LanguageSpec languages[] = {
 };
 //*}
 
+namespace {
+
 std::string
 resolve_language_alias(const std::string& name)
 {
@@ -363,6 +365,8 @@ resolve_language_alias(const std::string& name)
     return name;
   }
 }
+
+} // namespace
 
 Language
 Language::from_spec(const std::string& language, const std::string& country, const std::string& modifier)

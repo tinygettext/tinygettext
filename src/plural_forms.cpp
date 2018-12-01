@@ -23,6 +23,8 @@
 
 namespace tinygettext {
 
+namespace {
+
 /**
  *  Plural functions are used to select a string that matches a given
  *  count. \a n is the count and the return value is the string index
@@ -46,6 +48,7 @@ unsigned int plural3_sl(int n) { return static_cast<unsigned int>(n%100==1 ? 0 :
 unsigned int plural4_gd(int n) { return static_cast<unsigned int>( n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3; }
 unsigned int plural6_ar(int n) { return static_cast<unsigned int>( n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5); }
 
+} // namespace
 
 PluralForms
 PluralForms::from_string(const std::string& str)

@@ -28,6 +28,8 @@
 
 using namespace tinygettext;
 
+namespace {
+
 void print_msg(const std::string& msgid, const std::vector<std::string>& msgstrs)
 {
   std::cout << "Msgid: " << msgid << std::endl;
@@ -71,6 +73,8 @@ void read_dictionary(const std::string& filename, Dictionary& dict)
       in.close();
     }
 }
+
+} // namespace
 
 int main(int argc, char** argv)
 {

@@ -27,10 +27,14 @@
 #include "tinygettext/tinygettext.hpp"
 #include "tinygettext/log.hpp"
 
+namespace {
+
 void my_log_callback(const std::string& err)
 {
   std::cerr << err;
 }
+
+} // namespace
 
 int main(int argc, char** argv)
 {
