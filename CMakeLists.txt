@@ -110,31 +110,40 @@ option(WARNINGS "Enable long list of warnings for compiler to check" ON)
 add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
 
 if(WARNINGS)
-  add_definitions(
-    -Wabi  -Wctor-dtor-privacy
-    -Wold-style-cast
-    -Woverloaded-virtual
-    -Wsign-promo -Wswitch-enum
-    -Wcast-align  -Wcast-qual
-    -Wdisabled-optimization
-    -Wfloat-equal
-    -Wformat=2
-    -Winit-self
-    -Winvalid-pch
-    -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
-    -Wpacked
-    -Wredundant-decls
-    -Wshadow
-    -Wsign-conversion  -Wstack-protector
-    -Wstrict-overflow=5
-    -Wswitch-default  -Wswitch-enum
-    -Wundef
-    -Wconversion)
-  # Still left:
-  # -Wpadded      (DictionaryManager has a bool that sticks out)
-
-  if(CMAKE_COMPILER_IS_GNUCXX)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_definitions(
+      -Weverything
+
+      # flags that we deliberately ignore
+      -Wno-c++98-compat
+      -Wno-padded
+      -Wno-weak-vtables
+      -Wno-documentation
+      -Wno-documentation-unknown-command
+      -Wno-exit-time-destructors
+      -Wno-zero-as-null-pointer-constant
+      )
+  elseif(CMAKE_COMPILER_IS_GNUCXX)
+    add_definitions(
+      -Wctor-dtor-privacy
+      -Wold-style-cast
+      -Woverloaded-virtual
+      -Wsign-promo -Wswitch-enum
+      -Wcast-align  -Wcast-qual
+      -Wdisabled-optimization
+      -Wfloat-equal
+      -Wformat=2
+      -Winit-self
+      -Winvalid-pch
+      -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
+      -Wpacked
+      -Wredundant-decls
+      -Wshadow
+      -Wsign-conversion  -Wstack-protector
+      -Wstrict-overflow=5
+      -Wswitch-default  -Wswitch-enum
+      -Wundef
+      -Wconversion
       -Wstrict-null-sentinel
       -Wlogical-op
       -Wunsafe-loop-optimizations)
