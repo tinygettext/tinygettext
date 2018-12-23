@@ -200,6 +200,7 @@ static const LanguageSpec languages[] = {
   { "my", "MM", 0, "Burmese (Myanmar)"           , 0                          },
   { "nb", 0,    0, "Norwegian Bokmal"            , 0                          },
   { "nb", "NO", 0, "Norwegian Bokmål (Norway)"   , 0                          },
+  { "nds", 0,   0, "Low German"                  , 0                          },
   { "ne", 0,    0, "Nepali"                      , 0                          },
   { "nl", 0,    0, "Dutch"                       , "Nederlands"               },
   { "nl", "BE", 0, "Dutch (Belgium)"             , 0                          },
