@@ -89,18 +89,11 @@ target_include_directories(tinygettext PUBLIC include/ ${CMAKE_CURRENT_BINARY_DI
 
 ## SDL/iconv usage
 option(HAVE_SDL "Use SDL_iconv instead of system iconv" FALSE)
-option(VCPKG_BUILD "Use VCPKG for handling dependencies" FALSE)
 if(HAVE_SDL)
-  set_directory_properties(PROPERTIES COMPILE_DEFINITIONS HAVE_SDL)
-  if(VCPKG_BUILD)
-    find_package(SDL2 CONFIG REQUIRED)
-    find_path(SDL2_INCLUDE_DIRS SDL2/SDL.h)
-    find_library(SDL2_LIBRARIES SDL2)
-    find_library(SDL2_MAIN SDL2main)
-    add_definitions(-DVCPKG_BUILD)
-  endif(VCPKG_BUILD)
-  target_include_directories(tinygettext SYSTEM PUBLIC ${SDL2_INCLUDE_DIRS})
-  target_link_libraries(tinygettext PUBLIC ${SDL2_LIBRARIES})
+set_directory_properties(PROPERTIES COMPILE_DEFINITIONS HAVE_SDL)
+target_include_directories(tinygettext SYSTEM PUBLIC ${SDL2_INCLUDE_DIRS})
+target_link_libraries(tinygettext PUBLIC ${SDL2_LIBRARIES})
+
 else(HAVE_SDL)
 
 ## Add iconv to include directories

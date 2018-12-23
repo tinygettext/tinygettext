@@ -23,11 +23,7 @@
 #include <string>
 
 #ifdef HAVE_SDL
-#ifdef VCPKG_BUILD
-    #include <SDL2/SDL.h>
-#else
-    #include <SDL.h>
-#endif
+#  include "SDL.h"
 
 #  define tinygettext_ICONV_CONST const
 #  define tinygettext_iconv_t     SDL_iconv_t
