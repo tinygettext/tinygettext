@@ -152,6 +152,7 @@ static const LanguageSpec languages[] = {
   { "he", 0,    0, "Hebrew"                      , "עברית"                     },
   { "he", "IL", 0, "Hebrew (Israel)"             , 0                          },
   { "hi", 0,    0, "Hindi"                       , "हिन्दी"                      },
+  { "hi", "IN", 0, "Hindi (India)"               , 0                          },
   { "hr", 0,    0, "Croatian"                    , "Hrvatski"                 },
   { "hr", "HR", 0, "Croatian (Croatia)"          , 0                          },
   { "hu", 0,    0, "Hungarian"                   , "magyar"                   },
