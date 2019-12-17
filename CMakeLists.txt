@@ -35,7 +35,7 @@ cmake_policy(SET CMP0005 NEW)
 ## Project name to use as command prefix
 
 project(tinygettext)
-set(VERSION "0.1")
+set(VERSION "0.1.0")
 
 ### CMake configuration
 
