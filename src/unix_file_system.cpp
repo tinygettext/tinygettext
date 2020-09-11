@@ -19,11 +19,9 @@
 
 #include "tinygettext/unix_file_system.hpp"
 
-#include <sys/types.h>
+#include <filesystem>
 #include <fstream>
-#include <dirent.h>
 #include <stdlib.h>
-#include <string.h>
 
 namespace tinygettext {
 
@@ -34,31 +32,18 @@ UnixFileSystem::UnixFileSystem()
 std::vector<std::string>
 UnixFileSystem::open_directory(const std::string& pathname)
 {
-  DIR* dir = opendir(pathname.c_str());
-  if (!dir)
+  std::vector<std::string> files;
+  for(auto const& p : std::filesystem::directory_iterator(pathname))
   {
-    // FIXME: error handling
-    return std::vector<std::string>();
+    files.push_back(p.path().stem().string());
   }
-  else
-  {
-    std::vector<std::string> files;
-
-    struct dirent* dp;
-    while((dp = readdir(dir)) != nullptr)
-    {
-      files.push_back(dp->d_name);
-    }
-    closedir(dir);
-
-    return files;
-  }
+  return files;
 }
 
 std::unique_ptr<std::istream>
 UnixFileSystem::open_file(const std::string& filename)
 {
-  return std::unique_ptr<std::istream>(new std::ifstream(filename.c_str()));
+  return std::unique_ptr<std::istream>(new std::ifstream(filename));
 }
 
 } // namespace tinygettext

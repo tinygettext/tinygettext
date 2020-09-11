@@ -96,6 +96,10 @@ file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinyg
 ## define a target for building the library
 
 add_library(tinygettext ${TINYGETTEXT_SOURCES})
+set_target_properties(tinygettext PROPERTIES
+  CXX_STANDARD 17
+  CXX_STANDARD_REQUIRED ON
+  CXX_EXTENSIONS OFF)
 target_include_directories(tinygettext PUBLIC include/)
 target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
 target_link_libraries(tinygettext PUBLIC Iconv::Iconv)
@@ -169,6 +173,10 @@ set(EXECUTABLE_OUTPUT_PATH ${tinygettext_BINARY_DIR}/test)
 foreach(TEST tinygettext_test po_parser_test)
   ## Add target for tinygettext test
   add_executable(${TEST} test/${TEST}.cpp)
+  set_target_properties(${TEST} PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+    CXX_EXTENSIONS OFF)
   target_compile_options(${TEST} PRIVATE ${WARNINGS_CXX_FLAGS})
   ## Link with tinygettext library
   target_link_libraries(${TEST} tinygettext)
