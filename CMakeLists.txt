@@ -39,7 +39,7 @@ set(VERSION "0.1.0")
 
 ### CMake configuration
 
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 3.0)
 if(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
@@ -61,14 +61,13 @@ option(BUILD_SHARED_LIBS "Produce dynamic library instead of static archive" ON)
 
 ## Add iconv to include directories
 
-find_package(ICONV REQUIRED)
-include_directories(${ICONV_INCLUDE_DIR})
+find_package(Iconv REQUIRED)
 
 ## Check iconv_const
 
 include(CheckCXXSourceCompiles)
 
-set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${ICONV_INCLUDE_DIR})
+set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${Iconv_INCLUDE_DIRS})
 check_cxx_source_compiles(
 	"
 	#include <iconv.h>
@@ -97,10 +96,9 @@ file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinyg
 ## define a target for building the library
 
 add_library(tinygettext ${TINYGETTEXT_SOURCES})
+target_include_directories(tinygettext PUBLIC include/)
 
 ## Add tinygettext dir to search path
-
-include_directories(include/)
 
 ## Debug options
 
@@ -169,7 +167,7 @@ foreach(TEST tinygettext_test po_parser_test)
   add_executable(${TEST} test/${TEST}.cpp)
   ## Link with tinygettext library
   target_link_libraries(${TEST} tinygettext)
-  target_link_libraries(${TEST} ${ICONV_LIBRARY})
+  target_link_libraries(${TEST} Iconv::Iconv)
 endforeach(TEST)
 
 ## Install tinygettext
