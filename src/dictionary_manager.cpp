@@ -46,7 +46,7 @@ DictionaryManager::DictionaryManager(const std::string& charset_) :
   charset(charset_),
   use_fuzzy(true),
   current_language(),
-  current_dict(0),
+  current_dict(nullptr),
   empty_dict(),
   filesystem(new UnixFileSystem)
 {
@@ -69,7 +69,7 @@ DictionaryManager::clear_cache()
   }
   dictionaries.clear();
 
-  current_dict = 0;
+  current_dict = nullptr;
 }
 
 Dictionary&
@@ -150,7 +150,7 @@ DictionaryManager::get_dictionary(const Language& language)
         try
         {
           std::unique_ptr<std::istream> in = filesystem->open_file(pofile);
-          if (!in.get())
+          if (!in)
           {
             log_error << "error: failure opening: " << pofile << std::endl;
           }
@@ -202,7 +202,7 @@ DictionaryManager::set_language(const Language& language)
   if (current_language != language)
   {
     current_language = language;
-    current_dict     = 0;
+    current_dict     = nullptr;
   }
 }
 

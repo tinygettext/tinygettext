@@ -45,7 +45,7 @@ UnixFileSystem::open_directory(const std::string& pathname)
     std::vector<std::string> files;
 
     struct dirent* dp;
-    while((dp = readdir(dir)) != 0)
+    while((dp = readdir(dir)) != nullptr)
     {
       files.push_back(dp->d_name);
     }
