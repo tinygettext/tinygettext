@@ -97,6 +97,8 @@ file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinyg
 
 add_library(tinygettext ${TINYGETTEXT_SOURCES})
 target_include_directories(tinygettext PUBLIC include/)
+target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
+target_link_libraries(tinygettext PUBLIC Iconv::Iconv)
 
 ## Add tinygettext dir to search path
 
@@ -105,11 +107,9 @@ target_include_directories(tinygettext PUBLIC include/)
 option(WERROR "Stops on first compiler warning in debug mode" OFF)
 option(WARNINGS "Enable long list of warnings for compiler to check" ON)
 
-add_definitions(-std=c++0x -O3 -Wall -Wextra -Weffc++ -pedantic)
-
 if(WARNINGS)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_definitions(
+    list(APPEND WARNING_CXX_FLAGS
       -Weverything
 
       # flags that we deliberately ignore
@@ -122,7 +122,11 @@ if(WARNINGS)
       -Wno-zero-as-null-pointer-constant
       )
   elseif(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(
+    list(APPEND WARNING_CXX_FLAGS
+      -Wall
+      -Wextra
+      -Weffc++
+      -pedantic
       -Wctor-dtor-privacy
       -Wold-style-cast
       -Woverloaded-virtual
@@ -149,7 +153,7 @@ if(WARNINGS)
 endif(WARNINGS)
 
 if(WERROR)
-  add_definitions(-Werror)
+  list(APPEND WARNING_CXX_FLAGS -Werror)
 endif(WERROR)
 
 ## Extra definitions
@@ -165,9 +169,9 @@ set(EXECUTABLE_OUTPUT_PATH ${tinygettext_BINARY_DIR}/test)
 foreach(TEST tinygettext_test po_parser_test)
   ## Add target for tinygettext test
   add_executable(${TEST} test/${TEST}.cpp)
+  target_compile_options(${TEST} PRIVATE ${WARNINGS_CXX_FLAGS})
   ## Link with tinygettext library
   target_link_libraries(${TEST} tinygettext)
-  target_link_libraries(${TEST} Iconv::Iconv)
 endforeach(TEST)
 
 ## Install tinygettext
