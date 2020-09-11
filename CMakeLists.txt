@@ -55,9 +55,6 @@ mark_as_advanced(
 	CMAKE_OSX_SYSROOT
 )
 
-## Reveal library type choice to users
-option(BUILD_SHARED_LIBS "Produce dynamic library instead of static archive" ON)
-
 ## Add iconv to include directories
 
 find_package(Iconv REQUIRED)
@@ -89,7 +86,7 @@ endif(HAVE_ICONV_CONST)
 file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
 
-add_library(tinygettext ${TINYGETTEXT_SOURCES})
+add_library(tinygettext STATIC ${TINYGETTEXT_SOURCES})
 set_target_properties(tinygettext PROPERTIES
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED ON
