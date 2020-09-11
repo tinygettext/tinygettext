@@ -44,7 +44,6 @@ if(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 SET(CMAKE_MACOSX_RPATH ON)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${tinygettext_SOURCE_DIR})
 
 # move some config clutter to the advanced section
 mark_as_advanced(
@@ -87,13 +86,8 @@ else(HAVE_ICONV_CONST)
 endif(HAVE_ICONV_CONST)
 
 ## TinyGetText library compilation
-
-## build list of source files
-
 file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
-
-## define a target for building the library
 
 add_library(tinygettext ${TINYGETTEXT_SOURCES})
 set_target_properties(tinygettext PROPERTIES
@@ -102,12 +96,13 @@ set_target_properties(tinygettext PROPERTIES
   CXX_EXTENSIONS OFF)
 target_include_directories(tinygettext PUBLIC include/)
 target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
+target_compile_definitions(tinygettext PRIVATE VERSION=${VERSION})
+if(WIN32)
+  target_compile_definitions(tinygettext PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
 target_link_libraries(tinygettext PUBLIC Iconv::Iconv)
 
-## Add tinygettext dir to search path
-
 ## Debug options
-
 option(WERROR "Stops on first compiler warning in debug mode" OFF)
 option(WARNINGS "Enable long list of warnings for compiler to check" ON)
 
@@ -160,14 +155,6 @@ if(WERROR)
   list(APPEND WARNING_CXX_FLAGS -Werror)
 endif(WERROR)
 
-## Extra definitions
-
-add_definitions(-DVERSION=${VERSION})
-
-## Generate test executables in the right place
-
-set(EXECUTABLE_OUTPUT_PATH ${tinygettext_BINARY_DIR}/test)
-
 ## Build tinygettext tests
 if(BUILD_TESTS)
   foreach(TEST tinygettext_test po_parser_test)
@@ -177,7 +164,10 @@ if(BUILD_TESTS)
       CXX_STANDARD_REQUIRED ON
       CXX_EXTENSIONS OFF)
     target_compile_options(${TEST} PRIVATE ${WARNINGS_CXX_FLAGS})
-    target_link_libraries(${TEST} tinygettext)
+    if(WIN32)
+      target_compile_definitions(${TEST} PRIVATE _CRT_SECURE_NO_WARNINGS)
+    endif()
+    target_link_libraries(${TEST} PRIVATE tinygettext)
   endforeach(TEST)
 endif()
 
