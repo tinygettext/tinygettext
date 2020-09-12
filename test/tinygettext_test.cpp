@@ -157,7 +157,7 @@ int main(int argc, char** argv)
     {
       const char* directory = argv[2];
       const char* message   = argv[3];
-      const char* language  = (argc == 5) ? argv[4] : NULL;
+      const char* language  = (argc == 5) ? argv[4] : nullptr;
 
       DictionaryManager manager;
       manager.add_directory(directory);
