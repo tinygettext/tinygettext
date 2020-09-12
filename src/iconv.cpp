@@ -30,10 +30,6 @@
 
 namespace tinygettext {
 
-#ifndef tinygettext_ICONV_CONST
-#  define tinygettext_ICONV_CONST
-#endif
-
 IConv::IConv()
   : to_charset(),
     from_charset(),
@@ -51,14 +47,14 @@ IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
 IConv::~IConv()
 {
   if (cd)
-    tinygettext_iconv_close(cd);
+    iconv_close(cd);
 }
 
 void
 IConv::set_charsets(const std::string& from_charset_, const std::string& to_charset_)
 {
   if (cd)
-    tinygettext_iconv_close(cd);
+    iconv_close(cd);
 
   from_charset = from_charset_;
   to_charset   = to_charset_;
@@ -75,8 +71,8 @@ IConv::set_charsets(const std::string& from_charset_, const std::string& to_char
   }
   else
   {
-    cd = tinygettext_iconv_open(to_charset.c_str(), from_charset.c_str());
-    if (cd == reinterpret_cast<tinygettext_iconv_t>(-1))
+    cd = iconv_open(to_charset.c_str(), from_charset.c_str());
+    if (cd == reinterpret_cast<iconv_t>(-1))
     {
       if(errno == EINVAL)
       {
@@ -110,17 +106,17 @@ IConv::convert(const std::string& text)
 
     // We try to avoid to much copying around, so we write directly into
     // a std::string
-    tinygettext_ICONV_CONST char* inbuf = const_cast<char*>(&text[0]);
+    const char* inbuf = &text[0];
     std::string result(outbytesleft, 'X');
     char* outbuf = &result[0];
 
     // Try to convert the text.
-    size_t ret = tinygettext_iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+    size_t ret = iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
     if (ret == static_cast<size_t>(-1))
     {
       if (errno == EILSEQ || errno == EINVAL)
       { // invalid multibyte sequence
-        tinygettext_iconv(cd, nullptr, nullptr, nullptr, nullptr); // reset state
+        iconv(cd, nullptr, nullptr, nullptr, nullptr); // reset state
 
         // FIXME: Could try to skip the invalid byte and continue
         log_error << "error: tinygettext:iconv: invalid multibyte sequence in:  \"" << text << "\"" << std::endl;
