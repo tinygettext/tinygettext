@@ -30,6 +30,10 @@
 #   make
 #
 
+cmake_minimum_required(VERSION 3.0)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/)
+
 cmake_policy(SET CMP0005 NEW)
 
 ## Project name to use as command prefix
@@ -37,9 +41,10 @@ cmake_policy(SET CMP0005 NEW)
 project(tinygettext)
 set(VERSION "0.1.0")
 
+include(MaximumWarnings)
+
 ### CMake configuration
 
-cmake_minimum_required(VERSION 3.0)
 if(COMMAND cmake_policy)
 	CMAKE_POLICY(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
@@ -98,59 +103,6 @@ if(WIN32)
   target_compile_definitions(tinygettext PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 target_link_libraries(tinygettext PUBLIC Iconv::Iconv)
-
-## Debug options
-option(WERROR "Stops on first compiler warning in debug mode" OFF)
-option(WARNINGS "Enable long list of warnings for compiler to check" ON)
-
-if(WARNINGS)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    list(APPEND WARNING_CXX_FLAGS
-      -Weverything
-
-      # flags that we deliberately ignore
-      -Wno-c++98-compat
-      -Wno-padded
-      -Wno-weak-vtables
-      -Wno-documentation
-      -Wno-documentation-unknown-command
-      -Wno-exit-time-destructors
-      -Wno-zero-as-null-pointer-constant
-      )
-  elseif(CMAKE_COMPILER_IS_GNUCXX)
-    list(APPEND WARNING_CXX_FLAGS
-      -Wall
-      -Wextra
-      -Weffc++
-      -pedantic
-      -Wctor-dtor-privacy
-      -Wold-style-cast
-      -Woverloaded-virtual
-      -Wsign-promo -Wswitch-enum
-      -Wcast-align  -Wcast-qual
-      -Wdisabled-optimization
-      -Wfloat-equal
-      -Wformat=2
-      -Winit-self
-      -Winvalid-pch
-      -Wmissing-format-attribute  -Wmissing-include-dirs -Wmissing-noreturn
-      -Wpacked
-      -Wredundant-decls
-      -Wshadow
-      -Wsign-conversion  -Wstack-protector
-      -Wstrict-overflow=5
-      -Wswitch-default  -Wswitch-enum
-      -Wundef
-      -Wconversion
-      -Wstrict-null-sentinel
-      -Wlogical-op
-      -Wunsafe-loop-optimizations)
-  endif()
-endif(WARNINGS)
-
-if(WERROR)
-  list(APPEND WARNING_CXX_FLAGS -Werror)
-endif(WERROR)
 
 ## Build tinygettext tests
 if(BUILD_TESTS)

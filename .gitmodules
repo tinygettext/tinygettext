@@ -1,0 +1,3 @@
+[submodule "external/cmake-modules"]
+	path = external/cmake-modules
+	url = https://gitlab.com/grumbel/cmake-modules.git
