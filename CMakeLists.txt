@@ -27,8 +27,6 @@ project(tinygettext VERSION "0.2.0")
 include(MaximumWarnings)
 include(GNUInstallDirs)
 
-find_package(Iconv REQUIRED)
-
 file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
 
@@ -41,10 +39,20 @@ set_target_properties(tinygettext PROPERTIES
 target_include_directories(tinygettext PUBLIC include/)
 target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
 target_compile_definitions(tinygettext PRIVATE VERSION=${TINYGETTEXT_VERSION})
+
+if(TINYGETTEXT_WITH_SDL)
+  find_package(PkgConfig REQUIRED)
+  pkg_search_module(SDL2 REQUIRED sdl2 IMPORTED_TARGET)
+  target_compile_definitions(tinygettext PRIVATE HAVE_SDL)
+  target_link_libraries(tinygettext PUBLIC PkgConfig::SDL2)
+else()
+  find_package(Iconv REQUIRED)
+  target_link_libraries(tinygettext PUBLIC Iconv::Iconv)
+endif()
+
 if(WIN32)
   target_compile_definitions(tinygettext PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
-target_link_libraries(tinygettext PUBLIC Iconv::Iconv)
 
 if(BUILD_TESTS)
   foreach(TEST tinygettext_test po_parser_test)
