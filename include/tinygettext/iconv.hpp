@@ -22,7 +22,7 @@
 
 #include <string>
 
-#ifdef HAVE_SDL
+#ifdef TINYGETTEXT_WITH_SDL
 #  include "SDL.h"
 #else
 #  include <iconv.h>
@@ -40,7 +40,7 @@ struct ConstPtrHack {
 };
 } // namespace detail
 
-#ifdef HAVE_SDL
+#ifdef TINYGETTEXT_WITH_SDL
 using iconv_t = ::SDL_iconv_t;
 #else
 using iconv_t = ::iconv_t;
@@ -48,7 +48,7 @@ using iconv_t = ::iconv_t;
 
 inline iconv_t iconv_open(const char* tocode, const char* fromcode)
 {
-#ifdef HAVE_SDL
+#ifdef TINYGETTEXT_WITH_SDL
   return SDL_iconv_open(tocode, fromcode);
 #else
   return ::iconv_open(tocode, fromcode);
@@ -59,7 +59,7 @@ inline size_t iconv(iconv_t cd,
                     const char** inbuf, size_t* inbytesleft,
                     char** outbuf, size_t* outbytesleft)
 {
-#ifdef HAVE_SDL
+#ifdef TINYGETTEXT_WITH_SDL
   return SDL_iconv(cd, inbuf, inbytesleft, outbuf, outbytesleft);
 #else
   return ::iconv(cd, detail::ConstPtrHack(inbuf), inbytesleft, outbuf, outbytesleft);
@@ -68,7 +68,7 @@ inline size_t iconv(iconv_t cd,
 
 inline int iconv_close(iconv_t cd)
 {
-#ifdef HAVE_SDL
+#ifdef TINYGETTEXT_WITH_SDL
   return SDL_iconv_close(cd);
 #else
   return ::iconv_close(cd);
