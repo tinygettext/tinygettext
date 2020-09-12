@@ -1,5 +1,6 @@
 # tinygettext - A gettext replacement that works directly on .po files
-# Copyright (C) 2006 Christoph Sommer <christoph.sommer@2006.expires.deltadevelopment.de>
+# Copyright (C) 2006 Christoph Sommer <christoph.sommer@2006.expires.deltadevelopment.de>,
+#               2020 Ingo Ruhnke <grumbel@gmail.com>
 #
 # This software is provided 'as-is', without any express or implied
 # warranty. In no event will the authors be held liable for any damages
@@ -17,77 +18,17 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 
-#
-# INSTRUCTIONS:
-# -------------
-#
-# Create a directory build/ and change to it. Run
-#
-#   cmake ..
-#
-# This creates a set of Makefiles to build the project. Run
-#
-#   make
-#
-
 cmake_minimum_required(VERSION 3.0)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/)
 
-cmake_policy(SET CMP0005 NEW)
-
-## Project name to use as command prefix
-
-project(tinygettext)
-set(VERSION "0.1.0")
+project(tinygettext VERSION "0.2.0")
 
 include(MaximumWarnings)
-
-### CMake configuration
-
-if(COMMAND cmake_policy)
-	CMAKE_POLICY(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
-SET(CMAKE_MACOSX_RPATH ON)
-
-# move some config clutter to the advanced section
-mark_as_advanced(
-	CMAKE_BACKWARDS_COMPATIBILITY
-	CMAKE_BUILD_TYPE
-	CMAKE_INSTALL_PREFIX
-	EXECUTABLE_OUTPUT_PATH
-	CMAKE_OSX_ARCHITECTURES
-	CMAKE_OSX_SYSROOT
-)
-
-## Add iconv to include directories
+include(GNUInstallDirs)
 
 find_package(Iconv REQUIRED)
 
-## Check iconv_const
-
-include(CheckCXXSourceCompiles)
-
-set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${Iconv_INCLUDE_DIRS})
-check_cxx_source_compiles(
-	"
-	#include <iconv.h>
-	// this declaration will fail when there already exists a non const char** version which returns size_t
-	double iconv(iconv_t cd,  char **inbuf, size_t *inbytesleft, char **outbuf, size_t *outbytesleft);
-	int main() { return 0; }
-	"
-	HAVE_ICONV_CONST
-)
-
-# TODO: better way of config
-
-if(HAVE_ICONV_CONST)
-  add_definitions(-DHAVE_ICONV_CONST)
-else(HAVE_ICONV_CONST)
-  remove_definitions(-DHAVE_ICONV_CONST)
-endif(HAVE_ICONV_CONST)
-
-## TinyGetText library compilation
 file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
 
@@ -95,16 +36,16 @@ add_library(tinygettext STATIC ${TINYGETTEXT_SOURCES})
 set_target_properties(tinygettext PROPERTIES
   CXX_STANDARD 17
   CXX_STANDARD_REQUIRED ON
-  CXX_EXTENSIONS OFF)
+  CXX_EXTENSIONS OFF
+  PUBLIC_HEADER "${TINYGETTEXT_HEADERS}")
 target_include_directories(tinygettext PUBLIC include/)
 target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
-target_compile_definitions(tinygettext PRIVATE VERSION=${VERSION})
+target_compile_definitions(tinygettext PRIVATE VERSION=${TINYGETTEXT_VERSION})
 if(WIN32)
   target_compile_definitions(tinygettext PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 target_link_libraries(tinygettext PUBLIC Iconv::Iconv)
 
-## Build tinygettext tests
 if(BUILD_TESTS)
   foreach(TEST tinygettext_test po_parser_test)
     add_executable(${TEST} test/${TEST}.cpp)
@@ -120,21 +61,12 @@ if(BUILD_TESTS)
   endforeach(TEST)
 endif()
 
-## Install tinygettext
-
-# use standardized variable name
-set(LIB_SUBDIR "lib${LIB_SUFFIX}"
-	CACHE STRING "Subdirectory of prefix into which libraries are installed (e.g., lib32, lib64)")
-
-## prepare tinygettext.pc
 configure_file(tinygettext.pc.in tinygettext.pc @ONLY)
 
 install(TARGETS tinygettext
-	ARCHIVE DESTINATION ${LIB_SUBDIR}
-	LIBRARY DESTINATION ${LIB_SUBDIR})
-install(FILES ${TINYGETTEXT_HEADERS}
-	DESTINATION include/tinygettext)
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
 install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
-	DESTINATION ${LIB_SUBDIR}/pkgconfig)
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # EOF #
