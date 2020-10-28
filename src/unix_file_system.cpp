@@ -35,7 +35,7 @@ UnixFileSystem::open_directory(const std::string& pathname)
   std::vector<std::string> files;
   for(auto const& p : std::filesystem::directory_iterator(pathname))
   {
-    files.push_back(p.path().stem().string());
+    files.push_back(p.path().filename().string());
   }
   return files;
 }
