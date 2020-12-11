@@ -47,14 +47,14 @@ IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
 IConv::~IConv()
 {
   if (cd)
-    iconv_close(cd);
+    tinygettext::iconv_close(cd);
 }
 
 void
 IConv::set_charsets(const std::string& from_charset_, const std::string& to_charset_)
 {
   if (cd)
-    iconv_close(cd);
+    tinygettext::iconv_close(cd);
 
   from_charset = from_charset_;
   to_charset   = to_charset_;
@@ -71,7 +71,7 @@ IConv::set_charsets(const std::string& from_charset_, const std::string& to_char
   }
   else
   {
-    cd = iconv_open(to_charset.c_str(), from_charset.c_str());
+    cd = tinygettext::iconv_open(to_charset.c_str(), from_charset.c_str());
     if (cd == reinterpret_cast<iconv_t>(-1))
     {
       if(errno == EINVAL)
@@ -111,12 +111,12 @@ IConv::convert(const std::string& text)
     char* outbuf = &result[0];
 
     // Try to convert the text.
-    size_t ret = iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
+    size_t ret = tinygettext::iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
     if (ret == static_cast<size_t>(-1))
     {
       if (errno == EILSEQ || errno == EINVAL)
       { // invalid multibyte sequence
-        iconv(cd, nullptr, nullptr, nullptr, nullptr); // reset state
+        tinygettext::iconv(cd, nullptr, nullptr, nullptr, nullptr); // reset state
 
         // FIXME: Could try to skip the invalid byte and continue
         log_error << "error: tinygettext:iconv: invalid multibyte sequence in:  \"" << text << "\"" << std::endl;
