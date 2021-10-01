@@ -24,7 +24,7 @@
 
 #ifdef TINYGETTEXT_WITH_SDL
 #  include "SDL.h"
-#else
+#elif !defined(TINYGETTEXT_UTF8_ONLY)
 #  include <iconv.h>
 #endif
 
@@ -40,11 +40,15 @@ struct ConstPtrHack {
 };
 } // namespace detail
 
-#ifdef TINYGETTEXT_WITH_SDL
+#ifdef TINYGETTEXT_UTF8_ONLY
+using iconv_t = void*;
+#elif defined(TINYGETTEXT_WITH_SDL)
 using iconv_t = ::SDL_iconv_t;
 #else
 using iconv_t = ::iconv_t;
 #endif
+
+#ifndef TINYGETTEXT_UTF8_ONLY
 
 inline iconv_t iconv_open(const char* tocode, const char* fromcode)
 {
@@ -74,6 +78,8 @@ inline int iconv_close(iconv_t cd)
   return ::iconv_close(cd);
 #endif
 }
+
+#endif  // !TINYGETTEXT_UTF8_ONLY
 
 class IConv
 {

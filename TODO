@@ -8,8 +8,7 @@ tinygettext API related stuff
   `Note that an empty context string and an absent msgctxt line do not mean the same thing.'
   https://www.gnu.org/software/gettext/manual/gettext.html
 
-* iconv handling needs cleanup and more flexibility, since some
-  systems don't provide iconv or only through SDL
+* iconv handling needs cleanup
 
 * Customizability could use grouping and documentation or other means
   to make it more obvious:
