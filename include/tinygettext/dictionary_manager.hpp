@@ -28,6 +28,7 @@
 
 #include "dictionary.hpp"
 #include "language.hpp"
+#include "unix_file_system.hpp"
 
 namespace tinygettext {
 
@@ -58,7 +59,8 @@ private:
   void clear_cache();
 
 public:
-  DictionaryManager(const std::string& charset_ = "UTF-8");
+  DictionaryManager(const std::string& charset_ = "UTF-8",
+                    std::unique_ptr<FileSystem> filesystem = std::unique_ptr<FileSystem>(new UnixFileSystem));
   ~DictionaryManager();
 
   /** Return the currently active dictionary, if none is set, an empty
