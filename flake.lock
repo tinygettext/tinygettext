@@ -1,0 +1,106 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1634851050,
+        "narHash": "sha256-N83GlSGPJJdcqhUxSCS/WwW5pksYf3VP1M13cDRTSVA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c91f3de5adaf1de973b797ef7485e441a65b8935",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "lowdown-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1633514407,
+        "narHash": "sha256-Dw32tiMjdK9t3ETl5fzGrutQTzh2rufgZV4A/BbxuD4=",
+        "owner": "kristapsdz",
+        "repo": "lowdown",
+        "rev": "d2c2b44ff6c27b936ec27358a2653caaef8f73b8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kristapsdz",
+        "repo": "lowdown",
+        "type": "github"
+      }
+    },
+    "nix": {
+      "inputs": {
+        "lowdown-src": "lowdown-src",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1636543031,
+        "narHash": "sha256-wCRgxF4+8U5pseHSNLBEGoG8mBzzsL7OeiwDAFrv/qg=",
+        "owner": "NixOS",
+        "repo": "nix",
+        "rev": "a218cfd6c7e1686ee10cb0ef214cf3c624d15765",
+        "type": "github"
+      },
+      "original": {
+        "id": "nix",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1636554451,
+        "narHash": "sha256-lNO7kEswhQrsiOUodUsrwoMChgeLffn2kqDfne2oriw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "323d835fe577d29a7c1acc0b15df4a75bbce5dea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nix": "nix",
+        "nixpkgs": "nixpkgs",
+        "tinycmmc": "tinycmmc"
+      }
+    },
+    "tinycmmc": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nix": [
+          "nix"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1636472398,
+        "narHash": "sha256-j/HbXbIWjBQNrKOIwpBFCZGp4S1GGdqz6/wmpWT90zE=",
+        "owner": "grumbel",
+        "repo": "cmake-modules",
+        "rev": "36d0a7b7b10c7fa3c0b6776a34eaebfcbe65deb5",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "grumbel",
+        "repo": "cmake-modules",
+        "type": "gitlab"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
