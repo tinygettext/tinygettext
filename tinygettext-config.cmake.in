@@ -1,4 +1,7 @@
-get_filename_component(TINYGETTEXT "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(TINYGETTEXT_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+include(CMakeFindDependencyMacro)
+find_dependency(Iconv)
 
 if(NOT TARGET tinygettext)
   include("${TINYGETTEXT_CMAKE_DIR}/tinygettext-targets.cmake")
