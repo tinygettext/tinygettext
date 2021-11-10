@@ -20,7 +20,10 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/)
+set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/modules/")
+find_package(tinycmmc CONFIG)
+message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
+list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
 
 project(tinygettext VERSION "0.2.0")
 
@@ -36,7 +39,9 @@ set_target_properties(tinygettext PROPERTIES
   CXX_STANDARD_REQUIRED ON
   CXX_EXTENSIONS OFF
   PUBLIC_HEADER "${TINYGETTEXT_HEADERS}")
-target_include_directories(tinygettext PUBLIC include/)
+target_include_directories(tinygettext PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
 target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
 target_compile_definitions(tinygettext PRIVATE VERSION=${TINYGETTEXT_VERSION})
 
@@ -54,6 +59,27 @@ if(WIN32)
   target_compile_definitions(tinygettext PRIVATE _CRT_SECURE_NO_WARNINGS)
 endif()
 
+configure_file(tinygettext.pc.in tinygettext.pc @ONLY)
+
+install(TARGETS tinygettext
+  EXPORT tinygettext-targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
+install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+
+# CMake integration
+configure_file(tinygettext-config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/tinygettext-config.cmake" @ONLY)
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/tinygettext-config.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/tinygettext/")
+export(TARGETS tinygettext
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/tinygettext-targets.cmake")
+export(PACKAGE tinygettext)
+install(EXPORT tinygettext-targets
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/tinygettext/")
+
 if(BUILD_TESTS)
   foreach(TEST tinygettext_test po_parser_test)
     add_executable(${TEST} test/${TEST}.cpp)
@@ -68,13 +94,5 @@ if(BUILD_TESTS)
     target_link_libraries(${TEST} PRIVATE tinygettext)
   endforeach(TEST)
 endif()
-
-configure_file(tinygettext.pc.in tinygettext.pc @ONLY)
-
-install(TARGETS tinygettext
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME})
-install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # EOF #
