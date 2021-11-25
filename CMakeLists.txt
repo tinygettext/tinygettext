@@ -45,7 +45,9 @@ target_include_directories(tinygettext PUBLIC
 target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
 target_compile_definitions(tinygettext PRIVATE VERSION=${TINYGETTEXT_VERSION})
 
-if(TINYGETTEXT_WITH_SDL)
+if(TINYGETTEXT_UTF8_ONLY)
+  target_compile_definitions(tinygettext PUBLIC TINYGETTEXT_UTF8_ONLY)
+elseif(TINYGETTEXT_WITH_SDL)
   find_package(PkgConfig REQUIRED)
   pkg_search_module(SDL2 REQUIRED sdl2 IMPORTED_TARGET)
   target_compile_definitions(tinygettext PUBLIC TINYGETTEXT_WITH_SDL)

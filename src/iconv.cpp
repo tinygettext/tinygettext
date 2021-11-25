@@ -44,6 +44,33 @@ IConv::IConv(const std::string& from_charset_, const std::string& to_charset_)
   set_charsets(from_charset_, to_charset_);
 }
 
+#ifdef TINYGETTEXT_UTF8_ONLY
+
+IConv::~IConv() {}
+
+void
+IConv::set_charsets(const std::string& from_charset_, const std::string& to_charset_)
+{
+  if (from_charset_ != "UTF-8")
+  {
+    log_warning << "conversion from charset '" << from_charset_ << "' requested, but"
+                << " tinygettext built without character conversion support" << std::endl;
+  }
+  if (to_charset_ != "UTF-8")
+  {
+    log_warning << "conversion to charset '" << to_charset_ << "' requested, but"
+                << " tinygettext built without character conversion support" << std::endl;
+  }
+}
+
+std::string
+IConv::convert(const std::string& text)
+{
+  return text;
+}
+
+#else  // TINYGETTEXT_UTF8_ONLY
+
 IConv::~IConv()
 {
   if (cd)
@@ -140,6 +167,8 @@ IConv::convert(const std::string& text)
     return result;
   }
 }
+
+#endif  // !TINYGETTEXT_UTF8_ONLY
 
 } // namespace tinygettext
 

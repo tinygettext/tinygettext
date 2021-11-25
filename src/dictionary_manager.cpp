@@ -40,7 +40,7 @@ static bool has_suffix(const std::string& lhs, const std::string& rhs)
     return lhs.compare(lhs.length() - rhs.length(), rhs.length(), rhs) == 0;
 }
 
-DictionaryManager::DictionaryManager(const std::string& charset_) :
+DictionaryManager::DictionaryManager(const std::string& charset_, std::unique_ptr<FileSystem> filesystem_) :
   dictionaries(),
   search_path(),
   charset(charset_),
@@ -48,7 +48,7 @@ DictionaryManager::DictionaryManager(const std::string& charset_) :
   current_language(),
   current_dict(nullptr),
   empty_dict(),
-  filesystem(new UnixFileSystem)
+  filesystem(std::move(filesystem_))
 {
 }
 
