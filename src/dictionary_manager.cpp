@@ -28,7 +28,7 @@
 
 #include "tinygettext/log_stream.hpp"
 #include "tinygettext/po_parser.hpp"
-#include "tinygettext/unix_file_system.hpp"
+#include "tinygettext/file_system.hpp"
 
 namespace tinygettext {
 
@@ -40,7 +40,7 @@ static bool has_suffix(const std::string& lhs, const std::string& rhs)
     return lhs.compare(lhs.length() - rhs.length(), rhs.length(), rhs) == 0;
 }
 
-DictionaryManager::DictionaryManager(const std::string& charset_) :
+DictionaryManager::DictionaryManager(std::unique_ptr<FileSystem> filesystem_, const std::string& charset_) :
   dictionaries(),
   search_path(),
   charset(charset_),
@@ -48,7 +48,7 @@ DictionaryManager::DictionaryManager(const std::string& charset_) :
   current_language(),
   current_dict(nullptr),
   empty_dict(),
-  filesystem(new UnixFileSystem)
+  filesystem(std::move(filesystem_))
 {
 }
 
@@ -235,29 +235,25 @@ DictionaryManager::get_use_fuzzy() const
 void
 DictionaryManager::add_directory(const std::string& pathname, bool precedence /* = false */)
 {
-  clear_cache(); // adding directories invalidates cache
-  if (precedence)
-    search_path.push_front(pathname);
-  else
-    search_path.push_back(pathname);
+  if(std::find(search_path.begin(), search_path.end(), pathname) == search_path.end()) {
+    clear_cache(); // adding directories invalidates cache
+    if(precedence)
+      search_path.push_front(pathname);
+    else
+      search_path.push_back(pathname);
+  }
 }
 
 void
 DictionaryManager::remove_directory(const std::string& pathname)
 {
-  SearchPath::iterator it = std::find(search_path.begin(), search_path.end(), pathname);
-  if (it != search_path.end())
-  {
+  SearchPath::iterator it = find(search_path.begin(), search_path.end(), pathname);
+  if(it != search_path.end()) {
     clear_cache(); // removing directories invalidates cache
     search_path.erase(it);
   }
 }
 
-void
-DictionaryManager::set_filesystem(std::unique_ptr<FileSystem> filesystem_)
-{
-  filesystem = std::move(filesystem_);
-}
 // ----------------------------------------------------------------------------
 /** This function converts a .po filename (e.g. zh_TW.po) into a language
  *  specification (zh_TW). On case insensitive file systems (think windows)

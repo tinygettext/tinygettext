@@ -20,6 +20,8 @@
 #ifndef HEADER_TINYGETTEXT_DICTIONARY_MANAGER_HPP
 #define HEADER_TINYGETTEXT_DICTIONARY_MANAGER_HPP
 
+#include "tinygettext_Export.h"
+
 #include <deque>
 #include <memory>
 #include <set>
@@ -36,7 +38,7 @@ class FileSystem;
 /** Manager class for dictionaries, you give it a bunch of directories
     with .po files and it will then automatically load the right file
     on demand depending on which language was set. */
-class DictionaryManager
+class TINYGETTEXT_API DictionaryManager
 {
 private:
   typedef std::unordered_map<Language, Dictionary*, Language_hash> Dictionaries;
@@ -58,7 +60,7 @@ private:
   void clear_cache();
 
 public:
-  DictionaryManager(const std::string& charset_ = "UTF-8");
+  DictionaryManager(std::unique_ptr<FileSystem> filesystem, const std::string& charset_ = "UTF-8");
   ~DictionaryManager();
 
   /** Return the currently active dictionary, if none is set, an empty
@@ -91,7 +93,6 @@ public:
   /** Return a set of the available languages in their country code */
   std::set<Language> get_languages();
 
-  void set_filesystem(std::unique_ptr<FileSystem> filesystem);
   std::string convertFilename2Language(const std::string &s_in) const;
 
 private:

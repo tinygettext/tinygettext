@@ -21,6 +21,13 @@
 
 #include <filesystem>
 #include <fstream>
+
+#ifdef WIN32
+#  include "tinygettext/dirent.h"
+#else
+# include <dirent.h>
+#endif
+
 #include <stdlib.h>
 
 namespace tinygettext {
