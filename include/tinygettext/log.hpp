@@ -24,7 +24,7 @@
 
 namespace tinygettext {
 
-class TINYGETTEXT_API Log
+class Log
 {
 public:
   typedef void (*log_callback_t)(const std::string&);

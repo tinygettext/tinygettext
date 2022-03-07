@@ -36,7 +36,7 @@ class FileSystem;
 /** Manager class for dictionaries, you give it a bunch of directories
     with .po files and it will then automatically load the right file
     on demand depending on which language was set. */
-class TINYGETTEXT_API DictionaryManager
+class DictionaryManager
 {
 private:
   typedef std::unordered_map<Language, Dictionary*, Language_hash> Dictionaries;

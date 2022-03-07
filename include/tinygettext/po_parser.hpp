@@ -28,7 +28,7 @@ namespace tinygettext {
 
 class Dictionary;
 
-class TINYGETTEXT_API POParser
+class POParser
 {
 private:
   std::string filename;

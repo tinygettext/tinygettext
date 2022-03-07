@@ -24,7 +24,7 @@
 
 namespace tinygettext {
 
-class TINYGETTEXT_API UnixFileSystem : public FileSystem
+class UnixFileSystem : public FileSystem
 {
 public:
   UnixFileSystem();

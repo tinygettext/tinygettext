@@ -28,7 +28,7 @@ namespace tinygettext {
 struct LanguageSpec;
 
 /** Lightweight wrapper around LanguageSpec */
-class TINYGETTEXT_API Language
+class Language
 {
 private:
   const LanguageSpec* language_spec;

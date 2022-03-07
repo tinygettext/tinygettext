@@ -26,7 +26,7 @@ namespace tinygettext {
 
 typedef unsigned int (*PluralFunc)(int n);
 
-class TINYGETTEXT_API PluralForms
+class PluralForms
 {
 private:
   unsigned int nplural;
