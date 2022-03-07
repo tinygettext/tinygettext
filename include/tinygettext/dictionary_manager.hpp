@@ -20,8 +20,6 @@
 #ifndef HEADER_TINYGETTEXT_DICTIONARY_MANAGER_HPP
 #define HEADER_TINYGETTEXT_DICTIONARY_MANAGER_HPP
 
-#include "tinygettext_Export.h"
-
 #include <deque>
 #include <memory>
 #include <set>

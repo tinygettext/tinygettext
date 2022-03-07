@@ -20,8 +20,6 @@
 #ifndef HEADER_TINYGETTEXT_DICTIONARY_HPP
 #define HEADER_TINYGETTEXT_DICTIONARY_HPP
 
-#include "tinygettext_Export.h"
-
 #include <string>
 #include <unordered_map>
 #include <vector>

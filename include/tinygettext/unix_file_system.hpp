@@ -20,8 +20,6 @@
 #ifndef HEADER_TINYGETTEXT_UNIX_FILE_SYSTEM_HPP
 #define HEADER_TINYGETTEXT_UNIX_FILE_SYSTEM_HPP
 
-#include "tinygettext_Export.h"
-
 #include "file_system.hpp"
 
 namespace tinygettext {

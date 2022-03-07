@@ -20,8 +20,6 @@
 #ifndef HEADER_TINYGETTEXT_LOG_HPP
 #define HEADER_TINYGETTEXT_LOG_HPP
 
-#include "tinygettext_Export.h"
-
 #include <sstream>
 
 namespace tinygettext {
