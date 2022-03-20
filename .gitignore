@@ -1,17 +1,7 @@
 *.o
 *~
 .DS_Store
-/CMakeCache.txt
-/CMakeFiles/
-/Makefile
 /build*/
-/cmake_install.cmake
-/libtinygettext.so
-/libtinygettext.dylib
-/src/libtinygettext.a
-/test/po_parser_test
-/test/tinygettext_test
-/tinygettext.pc
 /result
 /tinygettext_Export.h
 
