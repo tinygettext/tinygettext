@@ -58,6 +58,7 @@ private:
   void clear_cache();
 
 public:
+  DictionaryManager(const std::string& charset_ = "UTF-8");
   DictionaryManager(std::unique_ptr<FileSystem> filesystem, const std::string& charset_ = "UTF-8");
   ~DictionaryManager();
 

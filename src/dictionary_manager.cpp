@@ -26,9 +26,10 @@
 #include <fstream>
 #include <algorithm>
 
+#include "tinygettext/file_system.hpp"
 #include "tinygettext/log_stream.hpp"
 #include "tinygettext/po_parser.hpp"
-#include "tinygettext/file_system.hpp"
+#include "tinygettext/unix_file_system.hpp"
 
 namespace tinygettext {
 
@@ -38,6 +39,11 @@ static bool has_suffix(const std::string& lhs, const std::string& rhs)
     return false;
   else
     return lhs.compare(lhs.length() - rhs.length(), rhs.length(), rhs) == 0;
+}
+
+DictionaryManager::DictionaryManager(const std::string& charset_) :
+  DictionaryManager(std::unique_ptr<FileSystem>(new UnixFileSystem), charset_)
+{
 }
 
 DictionaryManager::DictionaryManager(std::unique_ptr<FileSystem> filesystem_, const std::string& charset_) :
