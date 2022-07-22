@@ -14,22 +14,21 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-      in rec {
-        packages = flake-utils.lib.flattenTree {
+      in {
+        packages = flake-utils.lib.flattenTree rec {
           tinygettext = pkgs.stdenv.mkDerivation {
             pname = "tinygettext";
             version = "0.2.0";
             src = nixpkgs.lib.cleanSource ./.;
             nativeBuildInputs = [
               pkgs.cmake
-              pkgs.ninja
-              pkgs.gcc
             ];
             buildInputs = [
-              tinycmmc.defaultPackage.${system}
+              tinycmmc.packages.${system}.default
             ];
-           };
+          };
+          default = tinygettext;
         };
-        defaultPackage = packages.tinygettext;
-      });
+      }
+    );
 }
