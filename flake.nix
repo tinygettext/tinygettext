@@ -11,23 +11,13 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, tinycmmc }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in {
+   tinycmmc.lib.eachSystemWithPkgs (pkgs:
+     {
         packages = flake-utils.lib.flattenTree rec {
-          tinygettext = pkgs.stdenv.mkDerivation {
-            pname = "tinygettext";
-            version = "0.2.0";
-            src = nixpkgs.lib.cleanSource ./.;
-            nativeBuildInputs = [
-              pkgs.cmake
-            ];
-            buildInputs = [
-              tinycmmc.packages.${system}.default
-            ];
-          };
           default = tinygettext;
+          tinygettext = pkgs.callPackage ./tinygettext.nix {
+            tinycmmc = tinycmmc.packages.${pkgs.system}.default;
+          };
         };
       }
     );
