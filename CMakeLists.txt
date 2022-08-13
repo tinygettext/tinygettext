@@ -20,15 +20,9 @@
 
 cmake_minimum_required(VERSION 3.0)
 
-set(TINYCMMC_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/modules/")
-find_package(tinycmmc CONFIG)
-message(STATUS "tinycmmc module path: ${TINYCMMC_MODULE_PATH}")
-list(APPEND CMAKE_MODULE_PATH ${TINYCMMC_MODULE_PATH})
+include(mk/cmake/TinyCMMC.cmake)
 
 project(tinygettext VERSION "0.2.0")
-
-include(MaximumWarnings)
-include(GNUInstallDirs)
 
 file(GLOB TINYGETTEXT_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
 file(GLOB TINYGETTEXT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/tinygettext/*.hpp)
@@ -42,7 +36,7 @@ set_target_properties(tinygettext PROPERTIES
 target_include_directories(tinygettext PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_options(tinygettext PRIVATE ${WARNINGS_CXX_FLAGS})
+target_compile_options(tinygettext PRIVATE ${TINYCMMC_WARNINGS_CXX_FLAGS})
 target_compile_definitions(tinygettext PRIVATE VERSION=${TINYGETTEXT_VERSION})
 
 if(TINYGETTEXT_WITH_SDL)
@@ -69,16 +63,7 @@ install(FILES ${tinygettext_BINARY_DIR}/tinygettext.pc
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # CMake integration
-configure_file(tinygettext-config.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/tinygettext-config.cmake" @ONLY)
-install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/tinygettext-config.cmake"
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/tinygettext/")
-export(TARGETS tinygettext
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/tinygettext-targets.cmake")
-export(PACKAGE tinygettext)
-install(EXPORT tinygettext-targets
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/tinygettext/")
+tinycmmc_export_and_install_library(tinygettext)
 
 if(BUILD_TESTS)
   foreach(TEST tinygettext_test po_parser_test)
@@ -87,7 +72,7 @@ if(BUILD_TESTS)
       CXX_STANDARD 17
       CXX_STANDARD_REQUIRED ON
       CXX_EXTENSIONS OFF)
-    target_compile_options(${TEST} PRIVATE ${WARNINGS_CXX_FLAGS})
+    target_compile_options(${TEST} PRIVATE ${TINYCMMC_WARNINGS_CXX_FLAGS})
     if(WIN32)
       target_compile_definitions(${TEST} PRIVATE _CRT_SECURE_NO_WARNINGS)
     endif()
