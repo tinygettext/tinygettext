@@ -2,7 +2,7 @@
   description = "A minimal replacement for gettext written in C++";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
 
     tinycmmc.url = "github:grumbel/tinycmmc";
@@ -13,7 +13,7 @@
   outputs = { self, nixpkgs, flake-utils, tinycmmc }:
    tinycmmc.lib.eachSystemWithPkgs (pkgs:
      {
-        packages = flake-utils.lib.flattenTree rec {
+        packages = rec {
           default = tinygettext;
           tinygettext = pkgs.callPackage ./tinygettext.nix {
             tinycmmc = tinycmmc.packages.${pkgs.system}.default;
