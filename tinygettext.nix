@@ -13,7 +13,7 @@ stdenv.mkDerivation {
   src = lib.cleanSource ./.;
 
   postFixup = ""
-  + (lib.optionalString stdenv.targetPlatform.isWindows ''
+  + (lib.optionalString stdenv.hostPlatform.isWindows ''
     # This is rather ugly, but functional. Nix has a win-dll-link.sh
     # for this, but that's currently broken:
     # https://github.com/NixOS/nixpkgs/issues/38451
