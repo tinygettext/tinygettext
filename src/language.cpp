@@ -282,10 +282,10 @@ static const LanguageSpec languages[] = {
   { "xh", 0,    0, "Xhosa"                       , 0                          },
   { "yi", 0,    0, "Yiddish"                     , "ייִדיש"                      },
   { "yo", 0,    0, "Yoruba"                      , 0                          },
-  { "zh", 0,    0, "Chinese"                     , "中文"                      },
-  { "zh", "CN", 0, "Chinese (simplified)"        , 0                          },
-  { "zh", "HK", 0, "Chinese (Hong Kong)"         , 0                          },
-  { "zh", "TW", 0, "Chinese (traditional)"       , 0                          },
+  { "zh", 0,    0, "Chinese"                     , "中文"                     },
+  { "zh", "CN", 0, "Chinese (simplified)"        , "中文 (简体)"              },
+  { "zh", "HK", 0, "Chinese (Hong Kong)"         , "中文 (香港)"              },
+  { "zh", "TW", 0, "Chinese (traditional)"       , "中文 (繁體)"              },
   { "zu", 0,    0, "Zulu"                        , 0                          },
   { NULL, 0,    0, NULL                          , 0                          }
 };
