@@ -1,0 +1,10 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+msgid "apple"
+msgid_plural "apples"
+msgstr[0] "one"
+msgstr[1] "other"
+msgstr[2] "zero"
